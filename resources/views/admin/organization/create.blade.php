@@ -2,15 +2,19 @@
 
 @section('content')
     <div class="container">
-        <!-- Display Validation Errors -->
         @include('common.errors')
-
-        <form action="/admin/organization/create" class="form-horizontal">
+        <form action="organization/create" class="form-horizontal">
             {{ csrf_field() }}
+
             <div class="form-group">
                 <label for="fInputStatus" class="col-md-2 control-label">Статус организации</label>
-                <div class="col-md-10"><input type="text" class="form-control" id="fInputStatus"
-                                              placeholder="Статус организации"></div>
+                <div class="col-md-10">
+                    <select class="multiselect" name="status" multiple="multiple">
+                        @foreach($statuses as $status)
+                            <option value="{{$status->id}}">{{$status->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label for="fInputCode" class="col-md-2 control-label">ЄДРПОУ код</label>
@@ -20,7 +24,13 @@
             <div class="form-group">
                 <label for="fInputOPF" class="col-md-2 control-label"><abbr
                             title="организационно-правовая форма">ОПФ</abbr></label>
-                <div class="col-md-10"><input type="text" class="form-control" id="fInputOPF" placeholder="ОПФ"></div>
+                <div class="col-md-10">
+                    <select class="multiselect" name="opf" multiple="multiple">
+                        @foreach($opfs as $opf)
+                            <option value="{{$opf->id}}">{{$opf->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label for="fInputName" class="col-md-2 control-label">Название полное</label>

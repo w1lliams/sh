@@ -1,7 +1,18 @@
 @import "theme/variables";
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "bootstrap";
+@import "node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect";
 @import "theme/bootswatch";
+
+.multiselect-container > li > a > label > input[type=checkbox] { margin-bottom: -5px; }
 
 body {
   padding-top: 80px;
+}
+
+.mt-5 {
+  margin-top: -5px;
+}
+
+.fs20 {
+  font-size: 20px;
 }

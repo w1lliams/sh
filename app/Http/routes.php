@@ -26,13 +26,11 @@ Route::get('/', function () {
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
-});
 
-
-
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
-    Route::get('organization', ['uses' => 'OrganizationController@fetch']);
+Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin::'], function () {
+    Route::get('organization',        ['uses' => 'OrganizationController@fetch']);
     Route::get('organization/create', ['uses' => 'OrganizationController@create']);
+    Route::get('status',              ['uses' => 'StatusController@main', 'as' => 'status']);
+    Route::post('status/create',      ['uses' => 'StatusController@create']);
+    Route::delete('status/{status}',  ['uses' => 'StatusController@delete']);
 });
