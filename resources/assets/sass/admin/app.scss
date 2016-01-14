@@ -4,6 +4,12 @@
 @import "theme/bootswatch";
 
 .multiselect-container > li > a > label > input[type=checkbox] { margin-bottom: -5px; }
+.active input[type="radio"]:checked {
+  &:before { background-color: #fff; }
+  &:after { border-color: #fff; }
+}
+.form-group { margin-bottom: 22px; }
+
 
 body {
   padding-top: 80px;
