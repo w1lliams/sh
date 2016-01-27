@@ -19,12 +19,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputCode" class="col-md-2 control-label">ЄДРПОУ код</label>
-                <div class="col-md-10">
-                    <input type="number" value="{{old('edrpou')}}" name="edrpou" class="form-control" id="fInputCode" placeholder="ЄДРПОУ код">
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="fInputOPF" class="col-md-2 control-label">
                     <abbr title="организационно-правовая форма">ОПФ</abbr>
                 </label>
@@ -34,6 +28,22 @@
                             <option value="{{$opf->id}}" @if(old('opf') == $opf->id) selected="selected" @endif>{{$opf->name}}</option>
                         @endforeach
                     </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fInputType" class="col-md-2 control-label">Тип</label>
+                <div class="col-md-10">
+                    <select class="multiselect" name="type">
+                        @foreach($types as $type)
+                            <option value="{{$type->id}}" @if(old('type') == $type->id) selected="selected" @endif>{{$type->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fInputCode" class="col-md-2 control-label">ЄДРПОУ код</label>
+                <div class="col-md-10">
+                    <input type="number" value="{{old('edrpou')}}" name="edrpou" class="form-control" id="fInputCode" placeholder="ЄДРПОУ код">
                 </div>
             </div>
             <div class="form-group">
@@ -49,9 +59,26 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="fInputPostCode" class="col-md-2 control-label">Почтовый индекс</label>
+                <div class="col-md-10">
+                    <input type="number" class="form-control" name="postCode" id="fInputPostCode" placeholder="Почтовый индекс">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fInputCity" class="col-md-2 control-label">Город</label>
+                <div class="col-md-10">
+                    <select class="multiselect" name="city">
+                        <option value="">Выберите город</option>
+                        @foreach($cities as $city)
+                            <option value="{{$city->id}}" @if(old('city') == $city->id) selected="selected" @endif>{{$city->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="fInputAddress" class="col-md-2 control-label">Адрес</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" id="fInputAddress" placeholder="Адрес">
+                    <input type="text" class="form-control" name="address" id="fInputAddress" placeholder="Адрес">
                 </div>
             </div>
             <div class="form-group">

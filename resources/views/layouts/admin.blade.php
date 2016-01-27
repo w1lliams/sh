@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1">
     <title>Admin Panel :: StopHab</title>
 </head>
 
@@ -30,6 +32,8 @@
                     <ul class="dropdown-menu" aria-labelledby="misc">
                         <li><a href="{{url('admin/status')}}">статусы организаций</a></li>
                         <li><a href="{{url('admin/opf')}}">ОПФ (организационно-правовая форма)</a></li>
+                        <li><a href="{{url('admin/type')}}">Типы</a></li>
+                        <li><a href="{{url('admin/city')}}">Города</a></li>
                     </ul>
                 </li>
             </ul>

@@ -40,4 +40,12 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::get('opf',                 ['uses' => 'OpfController@main', 'as' => 'opf']);
     Route::post('opf/create',         ['uses' => 'OpfController@create']);
     Route::delete('opf/{opf}',        ['uses' => 'OpfController@delete']);
+
+    Route::get('type',                 ['uses' => 'TypeController@main', 'as' => 'type']);
+    Route::post('type/create',         ['uses' => 'TypeController@create']);
+    Route::delete('type/{type}',        ['uses' => 'TypeController@delete']);
+
+    Route::get('city',                 ['uses' => 'CityController@main', 'as' => 'city']);
+    Route::post('city/create',         ['uses' => 'CityController@create']);
+    Route::delete('city/{city}',       ['uses' => 'CityController@delete']);
 });
