@@ -4,6 +4,8 @@
     "gulp": "^3.8.8"
   },
   "dependencies": {
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
     "bootstrap-multiselect": "^0.9.13-1",
     "bootstrap-sass": "^3.0.0",
     "laravel-elixir": "^4.0.0"

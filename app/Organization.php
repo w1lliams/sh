@@ -9,7 +9,7 @@ class Organization extends Model
   /**
    * @var array
    */
-  protected $fillable = ['name', 'edrpou', 'fullName', 'postCode', 'address', 'email', 'phone'];
+  protected $fillable = ['shortName', 'edrpou', 'fullName', 'postCode', 'address', 'email', 'phone'];
 
   /**
    * @return []

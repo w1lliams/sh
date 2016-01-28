@@ -55,13 +55,13 @@
             <div class="form-group">
                 <label for="fInputNameShort" class="col-md-2 control-label">Название сокращенное</label>
                 <div class="col-md-10">
-                    <input type="text" value="{{old('name')}}" name="name" class="form-control" id="fInputNameShort" placeholder="Название сокращенное">
+                    <input type="text" value="{{old('shortName')}}" name="shortName" class="form-control" id="fInputNameShort" placeholder="Название сокращенное">
                 </div>
             </div>
             <div class="form-group">
                 <label for="fInputPostCode" class="col-md-2 control-label">Почтовый индекс</label>
                 <div class="col-md-10">
-                    <input type="number" class="form-control" name="postCode" id="fInputPostCode" placeholder="Почтовый индекс">
+                    <input type="number" class="form-control" name="postCode"  value="{{old('postCode')}}" id="fInputPostCode" placeholder="Почтовый индекс">
                 </div>
             </div>
             <div class="form-group">
@@ -78,21 +78,21 @@
             <div class="form-group">
                 <label for="fInputAddress" class="col-md-2 control-label">Адрес</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="address" id="fInputAddress" placeholder="Адрес">
+                    <input type="text" class="form-control" value="{{old('address')}}" name="address" id="fInputAddress" placeholder="Адрес">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-2">Телефон</label>
                 <div class="col-md-10">
-                    <input type="text" name="phone[]" class="form-control" placeholder="Телефон" id="phoneblk">
-                    <a class="pull-right" href="javascript:formHelper.duplicate('#phoneblk', {prepend: true})">добавить еще телефон</a>
+                    <input type="text" name="phone[]" class="form-control" placeholder="Телефон">
+                    <a class="pull-right duplicateForm">добавить еще телефон</a>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">E-Mail</label>
                 <div class="col-md-10">
-                    <input type="email" name="email[]" class="form-control" placeholder="E-Mail" id="emailblk">
-                    <a class="pull-right" href="javascript:formHelper.duplicate('#emailblk', {prepend: true})">добавить еще e-mail</a>
+                    <input type="email" name="email[]" class="form-control" placeholder="E-Mail">
+                    <a class="pull-right duplicateForm">добавить еще e-mail</a>
                 </div>
             </div>
 

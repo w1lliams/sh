@@ -29,7 +29,7 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin::'], function () {
 
-    Route::get('organization',         ['uses' => 'OrganizationController@fetch']);
+    Route::get('organization',         ['uses' => 'OrganizationController@fetch', 'as' => 'organization']);
     Route::get('organization/create',  ['uses' => 'OrganizationController@createPage']);
     Route::post('organization/create', ['uses' => 'OrganizationController@create']);
 

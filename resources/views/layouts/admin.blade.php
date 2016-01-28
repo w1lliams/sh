@@ -22,7 +22,7 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="orgz">Организации <span class="caret"></span></a>
                     <ul class="dropdown-menu" aria-labelledby="orgz">
-                        <li><a href="{{url('admin/organization/list')}}">Все организации</a></li>
+                        <li><a href="{{url('admin/organization')}}">Все организации</a></li>
                         <li><a href="{{url('admin/organization/create')}}">Создать организацию</a></li>
                     </ul>
                 </li>
@@ -47,6 +47,7 @@
 <link rel="stylesheet" href="{{ App::environment('local') ? '/css/admin.css' : elixir('css/admin.css') }}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="{{ App::environment('local') ? '/js/admin.js' : elixir('js/admin.js') }}"></script>
+<script src="{{ App::environment('local') ? '/js/admin_browserify.js' : elixir('js/admin_browserify.js') }}"></script>
 @yield('scripts')
 
 </body>

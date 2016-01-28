@@ -14,11 +14,22 @@ use Illuminate\Support\Facades\App;
 
 class OrganizationController extends Controller
 {
+    /**
+     * Список организаций
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function fetch()
     {
-
+        $organizations = Organization::with('status', 'city')->paginate(15);
+        return view('admin.organization.list', [
+            'organizations' => $organizations
+        ]);
     }
 
+    /**
+     * Страница создания организации
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function createPage()
     {
         return view('admin.organization.create', [
@@ -29,6 +40,11 @@ class OrganizationController extends Controller
         ]);
     }
 
+    /**
+     * Создание новой организации
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function create(Request $request)
     {
         $this->validate($request, [
@@ -38,11 +54,10 @@ class OrganizationController extends Controller
             'opf'       => 'required|numeric',
             'type'      => 'required|numeric',
             'fullName'  => 'required|string|max:512',
-            'name'      => 'required|string|max:256',
+            'shortName' => 'string|max:255',
             'postCode'  => 'required|numeric',
             'address'   => 'required',
-            'email.*'   => 'required|email',
-            'phone.*'   => 'required'
+            'email.*'   => 'email'
         ]);
 
         $oraganization = new Organization($request->all());
@@ -52,6 +67,6 @@ class OrganizationController extends Controller
         $oraganization->status()->associate($request->status);
         $oraganization->save();
 
-        exit('dgdf');
+        return redirect()->route('admin::organization');
     }
 }
