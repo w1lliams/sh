@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Статусы предприятия
- * Class Status
+ * Должность сотрудника
+ * Class Position
  * @package App
  */
-class Status extends Model
+class Position extends Model
 {
   /**
    * @var array

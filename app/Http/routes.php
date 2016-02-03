@@ -48,4 +48,8 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::get('city',                 ['uses' => 'CityController@main', 'as' => 'city']);
     Route::post('city/create',         ['uses' => 'CityController@create']);
     Route::delete('city/{city}',       ['uses' => 'CityController@delete']);
+
+    Route::get('position',                 ['uses' => 'PositionController@main', 'as' => 'position']);
+    Route::post('position/create',         ['uses' => 'PositionController@create']);
+    Route::delete('position/{position}',   ['uses' => 'PositionController@delete']);
 });

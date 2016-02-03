@@ -3,7 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Opf;
+use App\Organization;
 use App\Status;
+use App\City;
+use App\Worker;
+use App\Position;
+use App\Type;
 use Illuminate\Console\Command;
 
 class ParseOrganizations extends Command
@@ -28,11 +33,17 @@ class ParseOrganizations extends Command
      */
     protected $data = [];
 
+    /**
+     * Списки которые нужно проверить на нновые значения до начала парсинга
+     * @var array
+     */
     protected $lists = [
         'Stan' => Status::class,
         'Opf' => Opf::class,
 
     ];
+
+     protected $misc = [];
 
     /**
      * Create a new command instance.
@@ -71,7 +82,17 @@ class ParseOrganizations extends Command
             $fields = [];
             foreach(explode("\n", $row) as $line) {
                 if(preg_match('~^([\s\w]+):(.*)$~u', $line, $matches)) {
-                    $fields[trim($matches[1])] = trim($matches[2]);
+                    $key   = trim($matches[1]);
+                    $value = trim($matches[2]);
+
+                    if(isset($fields[$key])) {
+                        if(!is_array($fields[$key])) {
+                            $old = $fields[$key];
+                            $fields[$key] = [$old];
+                        }
+                        $fields[$key][] = $value;
+                    }
+                    else $fields[$key] = $value;
                 }
             }
             if(!empty($fields))
@@ -112,6 +133,97 @@ class ParseOrganizations extends Command
 
     protected function createOrganizations()
     {
+        $this->misc['statuses']  = Status::all()->keyBy('name');
+        $this->misc['opfs']      = Opf::all()->keyBy('name');
+        $this->misc['cities']    = City::all()->keyBy('name');
+        $this->misc['positions'] = Position::all()->keyBy('name');
+        $this->misc['types']     = Type::all()->keyBy('name');
 
+        $data = $this->data[0];
+        $this->createOrganization($data);
+
+        dd($this->data[0]);
+    }
+
+    /**
+     * Создание организации
+     * @param array $data
+     * @return Organization|null
+     */
+    protected function createOrganization(array $data)
+    {
+        $organization = new Organization;
+        $organization->status()->associate($this->misc['statuses']->get(mb_convert_case(array_get($data, 'Stan'), MB_CASE_TITLE)));
+        $organization->opf()->associate($this->misc['opfs']->get(mb_convert_case(array_get($data, 'Opf'), MB_CASE_TITLE)));
+        // если передан тип значит это подорганизация, иначе это главная организация и она - юр лицо
+        $organization->type()->associate(array_get($data, 'type', $this->misc['types']['Юридична особа']));
+        $organization->fullName  = array_get($data, 'Name', '');
+        $organization->shortName = array_get($data, 'ShortName', '');
+        $organization->edrpou    = array_get($data, 'Kod', '');
+        $organization->address   = array_get($data, 'Address', '');
+
+        if(!empty($organization->address)) {
+            // почтовый индекс
+            if(preg_match('~^(\d+),~u', $organization->address, $matches))
+                $organization->postCode = $matches[1];
+            // вытягиваем город из адреса
+            if(preg_match('~,\s*(?:м.|місто)\s*(\w+)\s*,~u', $organization->address, $matches))
+                $organization->city()->associate($this->misc['cities'][mb_convert_case($matches[1], MB_CASE_TITLE)]);
+        }
+
+        if(!$organization->save())
+            return null;
+
+        // создаем под организации
+        if(isset($data['Pidrozdil'])) {
+            if(is_array($data['Pidrozdil']))
+                foreach($data['Pidrozdil'] as $subOrg) {
+                    $subOrgData = $this->parseSubOrganization($subOrg);
+                    $organization->organizations()->save($this->createOrganization($subOrgData));
+                }
+            else {
+                $subOrgData = $this->parseSubOrganization($data['Pidrozdil']);
+                $organization->organizations()->save($this->createOrganization($subOrgData));
+            }
+        }
+
+        // если указан руководитель, добавляем его в БД
+        if(isset($data['Kerivnik'])) {
+            $worker = new Worker;
+            $worker->position()->associate($this->misc['positions']['Керівник']);
+
+            // поднимаем первые буквы в вверхний регист, остальные в нижний
+            $worker->fio = implode(' ', array_map(function ($item) {
+                $parts = explode('-', $item);
+                if(count($parts) == 1)
+                    return mb_convert_case($item, MB_CASE_TITLE);
+                else {
+                    return implode('-', array_map(function($it){
+                        return mb_convert_case($it, MB_CASE_TITLE);
+                    }, $parts));
+                }
+            }, explode(' ', mb_strtolower($data['Kerivnik']))));
+            $worker->organization()->associate($organization);
+            $worker->save();
+        }
+
+        return $organization;
+    }
+
+    /**
+     * Распаршиваем строку с подрозделением
+     * @param string $sourceData
+     * @return array
+     */
+    protected function parseSubOrganization($sourceData)
+    {
+        exit('СДЕЛАТЬ СТАТУС <РАБОТАЕТ>!!!!');
+        $sourceData = explode('|', $sourceData);
+        return [
+            'type' => $this->misc['types']['Підрозділ'],
+            'Name' => $sourceData[0],
+            'Kod' => $sourceData[1],
+            'Address' => $sourceData[2]
+        ];
     }
 }

@@ -16,11 +16,12 @@ class CreateOrganizationTable extends Migration
             $table->increments('id');
             $table->string('shortName');
             $table->string('fullName', 512);
-            $table->integer('status_id');
+            $table->integer('status_id')->nullable();
             $table->string('edrpou');
-            $table->integer('opf_id');
+            $table->integer('opf_id')->nullable();
             $table->integer('type_id');
-            $table->integer('city_id');
+            $table->integer('city_id')->nullable();
+            $table->integer('parent_id');
             $table->integer('postCode');
             $table->string('address', 512);
             $table->string('email', 512);

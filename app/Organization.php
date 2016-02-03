@@ -74,4 +74,12 @@ class Organization extends Model
   {
     return $this->belongsTo('App\Type');
   }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function organizations()
+  {
+    return $this->hasMany('App\Organization', 'parent_id');
+  }
 }
