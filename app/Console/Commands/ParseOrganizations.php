@@ -40,6 +40,7 @@ class ParseOrganizations extends Command
     protected $lists = [
         'Stan' => Status::class,
         'Opf' => Opf::class,
+        'Address|||~,\s*(?:м.|місто)\s*(\w+)\s*,~ui' => City::class  // передаем регулярку, которой вырезать нужное значение
 
     ];
 
@@ -113,14 +114,33 @@ class ParseOrganizations extends Command
                 return mb_strtolower($item->name);
             });
 
-            foreach($this->data as $row) {
-                if(!isset($row[$field])) continue;
-                $val = mb_strtolower($row[$field]);
-                if (!isset($notFound[$val]) && $values->search($val) === false) {
-                    $notFound[$val] = true;
-                    $this->line("\t{$val}");
-                }
+            // определяем функцию поиска новых значений (с регуляркой или без)
+            $tmp = explode('|||', $field);
+            if(count($tmp) > 1) { // передали регулярное выражение
+                $searchFunc = function($row) use ($tmp, &$values, $field, &$notFound) {
+                    $field = $tmp[0];
+                    $regExp = $tmp[1];
+                    if(!isset($row[$field])) return;
+                    if(!preg_match($regExp, $row[$field], $matches)) return;
+
+                    $val = mb_strtolower($matches[1]);
+                    if (!isset($notFound[$val]) && $values->search($val) === false) {
+                        $notFound[$val] = true;
+                        $this->line("\t{$val}");
+                    }
+                };
+            } else {
+                $searchFunc = function($row) use (&$values, $field, &$notFound) {
+                    if(!isset($row[$field])) return;
+                    $val = mb_strtolower($row[$field]);
+                    if (!isset($notFound[$val]) && $values->search($val) === false) {
+                        $notFound[$val] = true;
+                        $this->line("\t{$val}");
+                    }
+                };
             }
+
+            array_walk($this->data, $searchFunc);
 
             if(count($notFound) > 0 && $this->confirm('Добавить эти значения в БД?')) {
                 foreach($notFound as $name => $v) {
@@ -131,6 +151,9 @@ class ParseOrganizations extends Command
         }
     }
 
+    /**
+     *
+     */
     protected function createOrganizations()
     {
         $this->misc['statuses']  = Status::all()->keyBy('name');
@@ -139,21 +162,26 @@ class ParseOrganizations extends Command
         $this->misc['positions'] = Position::all()->keyBy('name');
         $this->misc['types']     = Type::all()->keyBy('name');
 
-        $data = $this->data[0];
-        $this->createOrganization($data);
-
-        dd($this->data[0]);
+        foreach($this->data as $row)
+            $this->createOrganization($row);
     }
 
     /**
      * Создание организации
      * @param array $data
+     * @param Organization $parent
      * @return Organization|null
      */
-    protected function createOrganization(array $data)
+    protected function createOrganization(array $data, Organization $parent = null)
     {
         $organization = new Organization;
-        $organization->status()->associate($this->misc['statuses']->get(mb_convert_case(array_get($data, 'Stan'), MB_CASE_TITLE)));
+        // если есть родительская организация, берем статус из нее
+        if($parent === null)
+            $organization->status()->associate($this->misc['statuses']->get(
+              mb_convert_case(array_get($data, 'Stan'), MB_CASE_TITLE)
+            ));
+        else $organization->status()->associate($parent->status);
+
         $organization->opf()->associate($this->misc['opfs']->get(mb_convert_case(array_get($data, 'Opf'), MB_CASE_TITLE)));
         // если передан тип значит это подорганизация, иначе это главная организация и она - юр лицо
         $organization->type()->associate(array_get($data, 'type', $this->misc['types']['Юридична особа']));
@@ -167,7 +195,7 @@ class ParseOrganizations extends Command
             if(preg_match('~^(\d+),~u', $organization->address, $matches))
                 $organization->postCode = $matches[1];
             // вытягиваем город из адреса
-            if(preg_match('~,\s*(?:м.|місто)\s*(\w+)\s*,~u', $organization->address, $matches))
+            if(preg_match('~,\s*(?:м.|місто)\s*(\w+)\s*,~ui', $organization->address, $matches))
                 $organization->city()->associate($this->misc['cities'][mb_convert_case($matches[1], MB_CASE_TITLE)]);
         }
 
@@ -179,11 +207,11 @@ class ParseOrganizations extends Command
             if(is_array($data['Pidrozdil']))
                 foreach($data['Pidrozdil'] as $subOrg) {
                     $subOrgData = $this->parseSubOrganization($subOrg);
-                    $organization->organizations()->save($this->createOrganization($subOrgData));
+                    $organization->organizations()->save($this->createOrganization($subOrgData, $organization));
                 }
             else {
                 $subOrgData = $this->parseSubOrganization($data['Pidrozdil']);
-                $organization->organizations()->save($this->createOrganization($subOrgData));
+                $organization->organizations()->save($this->createOrganization($subOrgData, $organization));
             }
         }
 
@@ -217,13 +245,12 @@ class ParseOrganizations extends Command
      */
     protected function parseSubOrganization($sourceData)
     {
-        exit('СДЕЛАТЬ СТАТУС <РАБОТАЕТ>!!!!');
         $sourceData = explode('|', $sourceData);
         return [
-            'type' => $this->misc['types']['Підрозділ'],
-            'Name' => $sourceData[0],
-            'Kod' => $sourceData[1],
-            'Address' => $sourceData[2]
+            'type'      => $this->misc['types']['Підрозділ'],
+            'Name'      => $sourceData[0],
+            'Kod'       => $sourceData[1],
+            'Address'   => $sourceData[2]
         ];
     }
 }

@@ -20,7 +20,7 @@ class OrganizationController extends Controller
      */
     public function fetch()
     {
-        $organizations = Organization::with('status', 'city')->paginate(15);
+        $organizations = Organization::with('status', 'city')->where('parent_id', 0)->paginate(15);
         return view('admin.organization.list', [
             'organizations' => $organizations
         ]);

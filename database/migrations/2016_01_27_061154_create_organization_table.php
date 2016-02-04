@@ -16,7 +16,7 @@ class CreateOrganizationTable extends Migration
             $table->increments('id');
             $table->string('shortName');
             $table->string('fullName', 512);
-            $table->integer('status_id')->nullable();
+            $table->integer('status_id');
             $table->string('edrpou');
             $table->integer('opf_id')->nullable();
             $table->integer('type_id');

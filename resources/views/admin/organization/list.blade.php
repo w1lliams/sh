@@ -21,7 +21,7 @@
                 <tr>
                     <td>{{$organization->edrpou}}</td>
                     <td>{{$organization->fullName}}</td>
-                    <td>{{$organization->city->name}}</td>
+                    <td>{{$organization->city->name or '' }}</td>
                     <td>{{$organization->status->name}}</td>
                     <td>
                         <form action="{{url("admin/organization/{$organization->id}/remove")}}" method="post">
