@@ -16,6 +16,8 @@ class Organization extends Model
    */
   public function getPhoneAttribute()
   {
+    if(empty($this->attributes['phone']))
+      return [];
     return json_decode($this->attributes['phone']);
   }
 
@@ -32,6 +34,8 @@ class Organization extends Model
    */
   public function getEmailAttribute()
   {
+    if(empty($this->attributes['email']))
+      return [];
     return json_decode($this->attributes['email']);
   }
 

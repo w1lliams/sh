@@ -20,14 +20,22 @@
             @foreach($organizations as $organization)
                 <tr>
                     <td>{{$organization->edrpou}}</td>
-                    <td>{{$organization->fullName}}</td>
+                    <td>
+                        {{$organization->fullName}}
+                        <br>
+                        <small>{{$organization->opf->name}}</small>
+                    </td>
                     <td>{{$organization->city->name or '' }}</td>
                     <td>{{$organization->status->name}}</td>
-                    <td>
+                    <td width="70">
+                        <a href="{{url("admin/organization/{$organization->id}/edit")}}" class="fs20 btn-invisible pull-left">
+                            <i class="ion-ios-compose-outline"></i>
+                        </a>
+
                         <form action="{{url("admin/organization/{$organization->id}/remove")}}" method="post">
                             {{csrf_field()}}
                             {{method_field('DELETE')}}
-                            <button type="submit" class="fs20 btn-invisible">
+                            <button type="submit" class="fs20 btn-invisible ml-20">
                                 <i class="ion-ios-trash-outline"></i>
                             </button>
                         </form>

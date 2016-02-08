@@ -22,7 +22,7 @@ class CreateOrganizationTable extends Migration
             $table->integer('type_id');
             $table->integer('city_id')->nullable();
             $table->integer('parent_id');
-            $table->integer('postCode');
+            $table->string('postCode');
             $table->string('address', 512);
             $table->string('email', 512);
             $table->string('phone', 512);

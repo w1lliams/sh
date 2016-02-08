@@ -9,89 +9,78 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <label for="fInputStatus" class="col-md-2 control-label">Статус организации</label>
+                {!! Form::label('status', 'Статус организации', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <select class="multiselect" name="status">
-                        @foreach($statuses as $status)
-                            <option value="{{$status->id}}" @if(old('status') == $status->id) selected="selected" @endif>{{$status->name}}</option>
-                        @endforeach
-                    </select>
+                    {!! Form::select('status', $statuses, isset($organization) && $organization->status ? $organization->status->id : old('status'), ['class' => 'multiselect']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputOPF" class="col-md-2 control-label">
-                    <abbr title="организационно-правовая форма">ОПФ</abbr>
-                </label>
+                {!! Form::label('opf', 'ОПФ', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <select class="multiselect" name="opf">
-                        @foreach($opfs as $opf)
-                            <option value="{{$opf->id}}" @if(old('opf') == $opf->id) selected="selected" @endif>{{$opf->name}}</option>
-                        @endforeach
-                    </select>
+                    {!! Form::select('opf', $opfs, isset($organization) && $organization->opf ? $organization->opf->id : old('opf'), ['class' => 'multiselect']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputType" class="col-md-2 control-label">Тип</label>
+                {!! Form::label('type', 'Тип', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <select class="multiselect" name="type">
-                        @foreach($types as $type)
-                            <option value="{{$type->id}}" @if(old('type') == $type->id) selected="selected" @endif>{{$type->name}}</option>
-                        @endforeach
-                    </select>
+                    {!! Form::select('type', $types, isset($organization) && $organization->type ? $organization->type->id : old('type'), ['class' => 'multiselect']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputCode" class="col-md-2 control-label">ЄДРПОУ код</label>
+                {!! Form::label('edrpou', 'ЄДРПОУ код', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <input type="number" value="{{old('edrpou')}}" name="edrpou" class="form-control" id="fInputCode" placeholder="ЄДРПОУ код">
+                    {!! Form::text('edrpou', old('edrpou'), ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputName" class="col-md-2 control-label">Название полное</label>
+                {!! Form::label('fullName', 'Название полное', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <input type="text" value="{{old('fullName')}}" name="fullName" class="form-control" id="fInputName" placeholder="Название полное">
+                    {!! Form::text('fullName', old('fullName'), ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputNameShort" class="col-md-2 control-label">Название сокращенное</label>
+                {!! Form::label('shortName', 'Название сокращенное', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <input type="text" value="{{old('shortName')}}" name="shortName" class="form-control" id="fInputNameShort" placeholder="Название сокращенное">
+                    {!! Form::text('shortName', old('shortName'), ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputPostCode" class="col-md-2 control-label">Почтовый индекс</label>
+                {!! Form::label('postCode', 'Почтовый индекс', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <input type="number" class="form-control" name="postCode"  value="{{old('postCode')}}" id="fInputPostCode" placeholder="Почтовый индекс">
+                    {!! Form::text('postCode', old('postCode'), ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputCity" class="col-md-2 control-label">Город</label>
+                {!! Form::label('city', 'Город', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <select class="multiselect" name="city">
-                        <option value="">Выберите город</option>
-                        @foreach($cities as $city)
-                            <option value="{{$city->id}}" @if(old('city') == $city->id) selected="selected" @endif>{{$city->name}}</option>
-                        @endforeach
-                    </select>
+                    {!! Form::select('city', $cities, isset($organization) && $organization->city ? $organization->city->id : old('city'), ['class' => 'multiselect']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="fInputAddress" class="col-md-2 control-label">Адрес</label>
+                {!! Form::label('address', 'Адрес', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    <input type="text" class="form-control" value="{{old('address')}}" name="address" id="fInputAddress" placeholder="Адрес">
+                    {!! Form::text('address', old('address'), ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-2">Телефон</label>
                 <div class="col-md-10">
-                    <input type="text" name="phone[]" class="form-control" placeholder="Телефон">
+                    @forelse($phone as $val)
+                        <input type="text" name="phone[]" value="{{$val}}" class="form-control" >
+                    @empty
+                        <input type="text" name="phone[]" class="form-control" >
+                    @endforelse
                     <a class="pull-right duplicateForm">добавить еще телефон</a>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">E-Mail</label>
                 <div class="col-md-10">
-                    <input type="email" name="email[]" class="form-control" placeholder="E-Mail">
+                    @forelse($email as $val)
+                        <input type="email" name="email[]" value="{{$val}}" class="form-control">
+                    @empty
+                        <input type="email" name="email[]" class="form-control">
+                    @endforelse
                     <a class="pull-right duplicateForm">добавить еще e-mail</a>
                 </div>
             </div>

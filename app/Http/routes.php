@@ -32,6 +32,8 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::get('organization',         ['uses' => 'OrganizationController@fetch', 'as' => 'organization']);
     Route::get('organization/create',  ['uses' => 'OrganizationController@createPage']);
     Route::post('organization/create', ['uses' => 'OrganizationController@create']);
+    Route::get('organization/{organization}/edit',    ['uses' => 'OrganizationController@editPage']);
+    Route::post('organization/{organization}/edit',   ['uses' => 'OrganizationController@edit']);
 
     Route::get('status',              ['uses' => 'StatusController@main', 'as' => 'status']);
     Route::post('status/create',      ['uses' => 'StatusController@create']);

@@ -5667,6 +5667,9 @@ body {
 .mt-5 {
   margin-top: -5px; }
 
+.ml-20 {
+  margin-left: 20px !important; }
+
 .fs20 {
   font-size: 20px; }
 
