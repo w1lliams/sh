@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="container">
-        <h4>Создание организации</h4>
+        <h4>{{isset($organization) ? 'Редактирование организации' : 'Создание организации'}}</h4>
         <br>
         @include('common.errors')
-        <form action="{{url('admin/organization/create')}}" method="post" class="form-horizontal">
+        <form action="{{isset($organization) ? url('admin/organization/'. $organization->id .'/edit') : url('admin/organization/create')}}" method="post" class="form-horizontal">
             {{ csrf_field() }}
 
             <div class="form-group">
@@ -45,6 +45,12 @@
                 </div>
             </div>
             <div class="form-group">
+                {!! Form::label('address', 'Адрес', ['class' => 'col-md-2 control-label']) !!}
+                <div class="col-md-10">
+                    {!! Form::text('address', old('address'), ['class' => 'form-control']) !!}
+                </div>
+            </div>
+            <div class="form-group">
                 {!! Form::label('postCode', 'Почтовый индекс', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
                     {!! Form::text('postCode', old('postCode'), ['class' => 'form-control']) !!}
@@ -54,12 +60,6 @@
                 {!! Form::label('city', 'Город', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
                     {!! Form::select('city', $cities, isset($organization) && $organization->city ? $organization->city->id : old('city'), ['class' => 'multiselect']) !!}
-                </div>
-            </div>
-            <div class="form-group">
-                {!! Form::label('address', 'Адрес', ['class' => 'col-md-2 control-label']) !!}
-                <div class="col-md-10">
-                    {!! Form::text('address', old('address'), ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">

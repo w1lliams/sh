@@ -23,6 +23,10 @@ body {
   margin-left: 20px!important;
 }
 
+.mr-20 {
+  margin-right: 20px!important
+}
+
 .fs20 {
   font-size: 20px;
 }
@@ -35,5 +39,11 @@ body {
   color: $brand-primary;
   &:hover {
     color: darken($brand-primary, 10%);
+  }
+}
+
+.page-organizations {
+  .form-group {
+    margin: 0 20px 20px 0;
   }
 }

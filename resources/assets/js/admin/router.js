@@ -6,10 +6,9 @@ class Router {
    * @param url
    */
   constructor(url = window.location.pathname) {
-    console.log('asdas');
     // роуты добавлять здесь
     let rules = [
-      [organization.create, /admin\/organization\/create$/]
+      [organization.create.bind(organization), /admin\/organization\/(create|\d+\/edit)$/]
     ];
 
     for(let rule of rules) {

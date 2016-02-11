@@ -18,10 +18,41 @@ var organization = exports.organization = {
    * Страница создания организации
    */
   create: function create() {
-    $('.duplicateForm').click(function (e) {
-      var $parent = $(e.target.parentNode);
-      $parent.prepend($parent.find('input:first').clone().val(''));
-    });
+    $('.duplicateForm').click(this._cloneFormField);
+    $('input[name=address]').on('change', this._onChangeAddress);
+  },
+
+  /**
+   * При изменении адреса парсим почтовый индекс и город
+   * @param e
+   * @private
+   */
+  _onChangeAddress: function _onChangeAddress(e) {
+    var $address = $(e.currentTarget);
+    //  если есть почтовый индекс в адресе вставляем его в соответствующее поле
+    var matches = /^(\d+)/.exec($address.val());
+    if (matches) $('input[name=postCode]').val(matches[1]);
+
+    // ищем город и выбираем его в выпадающем списке
+    matches = /(?:місто|м\.)\s+([а-яїґ]+)/i.exec($address.val());
+    if (matches) {
+      var $select = $('select[name=city]');
+      var $option = $select.find('option').filter(function (key, option) {
+        return $(option).text().toLowerCase() == matches[1].toLowerCase();
+      });
+      $option.attr('selected', 'true');
+      $select.multiselect('refresh');
+    }
+  },
+
+  /**
+   * Дублирование поля ввода
+   * @param e
+   * @private
+   */
+  _cloneFormField: function _cloneFormField(e) {
+    var $parent = $(e.target.parentNode);
+    $parent.prepend($parent.find('input:first').clone().val(''));
   }
 };
 
@@ -47,9 +78,8 @@ function Router() {
 
   _classCallCheck(this, Router);
 
-  console.log('asdas');
   // роуты добавлять здесь
-  var rules = [[_organization.organization.create, /admin\/organization\/create$/]];
+  var rules = [[_organization.organization.create.bind(_organization.organization), /admin\/organization\/(create|\d+\/edit)$/]];
 
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;

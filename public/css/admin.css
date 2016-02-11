@@ -5670,6 +5670,9 @@ body {
 .ml-20 {
   margin-left: 20px !important; }
 
+.mr-20 {
+  margin-right: 20px !important; }
+
 .fs20 {
   font-size: 20px; }
 
@@ -5681,5 +5684,8 @@ body {
   color: #2196F3; }
   .btn-invisible:hover {
     color: #0c7cd5; }
+
+.page-organizations .form-group {
+  margin: 0 20px 20px 0; }
 
 /*# sourceMappingURL=admin.css.map */

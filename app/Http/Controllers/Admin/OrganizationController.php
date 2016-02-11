@@ -15,13 +15,27 @@ class OrganizationController extends Controller
 {
     /**
      * Список организаций
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function fetch()
+    public function fetch(Request $request)
     {
-        $organizations = Organization::with('status', 'city', 'opf')->where('parent_id', 0)->paginate(15);
+        $request->flash();
+
+        $organizations = Organization::filter($request->all())
+          ->with('status', 'city', 'opf')
+          ->orderBy('id', 'desc')
+          ->paginate(15);
+
+        $organizations->appends($request->all());
+
+
         return view('admin.organization.list', [
-            'organizations' => $organizations
+            'organizations' => $organizations,
+            'statuses' => Status::lists('name', 'id'),
+            'opfs'     => Opf::lists('name', 'id'),
+            'types'    => Type::lists('name', 'id'),
+            'cities'   => City::lists('name', 'id'),
         ]);
     }
 
@@ -66,26 +80,10 @@ class OrganizationController extends Controller
     /**
      * Создание новой организации
      * @param Request $request
+     * @param Organization $organization
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function create(Request $request)
-    {
-        $this->_validateOrganization($request);
-
-        $oraganization = new Organization($request->all());
-        $oraganization->opf()->associate($request->opf);
-        $oraganization->type()->associate($request->type);
-        $oraganization->city()->associate($request->city);
-        $oraganization->status()->associate($request->status);
-        $oraganization->save();
-
-        return redirect()->route('admin::organization');
-    }
-
-    /**
-     * @param Request $request
-     */
-    private function _validateOrganization(Request $request)
+    public function create(Request $request, Organization $organization = null)
     {
         $this->validate($request, [
           'status'    => 'required|numeric',
@@ -99,5 +97,14 @@ class OrganizationController extends Controller
           'address'   => 'required',
           'email.*'   => 'email'
         ]);
+
+        $organization->fill($request->all());
+        $organization->opf()->associate($request->opf);
+        $organization->type()->associate($request->type);
+        $organization->city()->associate($request->city);
+        $organization->status()->associate($request->status);
+        $organization->save();
+
+        return redirect()->route('admin::organization');
     }
 }
