@@ -78,6 +78,16 @@ class OrganizationController extends Controller
     }
 
     /**
+     * Страница с сотрудниками
+     * @param Organization $organization
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function workersPage(Organization $organization)
+    {
+        return view('admin.organization.workers');
+    }
+
+    /**
      * Создание новой организации
      * @param Request $request
      * @param Organization $organization

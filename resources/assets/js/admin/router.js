@@ -1,4 +1,5 @@
-import {organization} from './controllers/organization';
+import {organizationCreate} from './controllers/organization_create';
+import {organizationWorkers} from './controllers/organization_workers';
 
 class Router {
   /**
@@ -8,7 +9,8 @@ class Router {
   constructor(url = window.location.pathname) {
     // роуты добавлять здесь
     let rules = [
-      [organization.create.bind(organization), /admin\/organization\/(create|\d+\/edit)$/]
+      [organizationCreate.index.bind(organizationCreate), /admin\/organization\/(create|\d+\/edit)$/],
+      [organizationWorkers.index.bind(organizationWorkers), /admin\/organization\/\d+\/workers$/]
     ];
 
     for(let rule of rules) {

@@ -1,3 +1,4 @@
+@import "../bourbon/bourbon";
 @import "theme/variables";
 @import "bootstrap";
 @import "node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect";
@@ -45,5 +46,13 @@ body {
 .page-organizations {
   .form-group {
     margin: 0 20px 20px 0;
+  }
+
+  .actions {
+    @include display(flex);
+    > * {
+      display: inline-block;
+      margin: 0 5px;
+    }
   }
 }

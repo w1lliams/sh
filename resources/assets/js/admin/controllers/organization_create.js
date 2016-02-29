@@ -1,8 +1,8 @@
-export let organization = {
+export let organizationCreate = {
   /**
    * Страница создания организации
    */
-  create: function () {
+  index: function () {
     $('.duplicateForm').click(this._cloneFormField);
     $('input[name=address]').on('change', this._onChangeAddress);
   },

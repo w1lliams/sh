@@ -7,17 +7,17 @@ $('.multiselect').multiselect({
   nonSelectedText: 'Выберите значение'
 });
 
-},{"./router":3}],2:[function(require,module,exports){
+},{"./router":4}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var organization = exports.organization = {
+var organizationCreate = exports.organizationCreate = {
   /**
    * Страница создания организации
    */
-  create: function create() {
+  index: function index() {
     $('.duplicateForm').click(this._cloneFormField);
     $('input[name=address]').on('change', this._onChangeAddress);
   },
@@ -62,9 +62,144 @@ var organization = exports.organization = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var organizationWorkers = exports.organizationWorkers = {
+  CHECK_SYMBOLS: /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),-=.\/0123456789;:I]/,
+
+  /**
+   * Страница импорта файла работников
+   */
+  index: function index() {
+    $('input[name=file]').on('change', this._onSelectFile.bind(this));
+  },
+
+  /**
+   * Пользователь выбрал файл
+   * @param e
+   * @private
+   */
+  _onSelectFile: function _onSelectFile(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+
+    var fileReader = new FileReader();
+    fileReader.onload = this._checkFile.bind(this);
+    fileReader.readAsText(file, 'cp1251');
+  },
+
+  /**
+   * И тут начинается пиздорез с проверкой
+   * @param e
+   * @private
+   */
+  _checkFile: function _checkFile(e) {
+    var lines = e.target.result.split("\n");
+    var errors = [],
+        warnings = [];
+
+    errors = errors.concat(this._checkFirstLine(lines[0]));
+
+    // получаем сотрудников
+    var workers = { main: [] },
+        currentCategory = null,
+        matches = undefined;
+
+    for (var i = 1; i < lines.length; i++) {
+      var line = lines[i].trim();
+      // проверяем на неразрещенные символы
+      matches = this.CHECK_SYMBOLS.exec(line);
+      if (matches) {
+        errors.push('Неразрещенный символ. line: ' + (i + 1));
+      }
+
+      // =категория
+      matches = /^=([^=]+)$/.exec(line);
+      if (matches) {
+        if (currentCategory) errors.push('Открытие категории, но предыдущая еще не закрылась. line: ' + (i + 1));
+        currentCategory = matches[1];
+        continue;
+      }
+
+      // закрытие категории "=="
+      if (/^\s*==\s*$/.test(line)) {
+        if (!currentCategory) errors.push('Закрытие категории, но открытия не было. line: ' + (i + 1));
+        currentCategory = null;
+        continue;
+      }
+
+      var cat = currentCategory ? currentCategory : 'main';
+      if (!workers[cat]) workers[cat] = [];
+
+      this._parseWorker(line, {
+        workers: workers[cat],
+        errors: errors,
+        line: i + 1
+      });
+    }
+
+    this._showErrors(errors, '.errors');
+    this._showErrors(warnings, '.warnings');
+  },
+
+  /**
+   *
+   * @param value
+   * @returns {Array}
+   * @private
+   */
+  _checkFirstLine: function _checkFirstLine(value) {
+    var data = value.split(','),
+        date = data[0].trim(),
+        workersCount = data[1].trim(),
+        errors = [];
+
+    // проверяем дату
+    if (!/^\d{2}\.\d{2}\.\d{4}$/.test(date)) errors.push('Неверный формат даты "' + date + '" (должен быть <11.11.2222>)');
+
+    // кол-во сотрудников
+    if (!/^(\d+|-)$/.test(workersCount)) errors.push('Кол-во сотрудников указано неверно "' + workersCount + '" (должно быть число либо <->)');
+
+    return errors;
+  },
+
+  /**
+   *
+   * @param value
+   * @param opt
+   * @private
+   */
+  _parseWorker: function _parseWorker(value, opt) {
+    var matches = /([^,]+),(.*)$/.exec(value);
+    if (!matches) {
+      opt.errors.push('Невозможно распознать ФИО и должность. line: ' + opt.line);
+      return;
+    }
+    opt.workers.push({ fio: matches[1].trim(), position: matches[2].trim() });
+  },
+
+  /**
+   * Выводим ошибки проверки файла
+   * @param errors
+   * @param selector
+  * @private
+   */
+  _showErrors: function _showErrors(errors, selector) {
+    var html = '';
+    if (errors && errors.length > 0) html = '<div class="alert alert-danger">' + errors.join('<br>') + '</div>';
+    $(selector).html(html);
+  }
+};
+
+},{}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.router = undefined;
 
-var _organization = require('./controllers/organization');
+var _organization_create = require('./controllers/organization_create');
+
+var _organization_workers = require('./controllers/organization_workers');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -79,7 +214,7 @@ function Router() {
   _classCallCheck(this, Router);
 
   // роуты добавлять здесь
-  var rules = [[_organization.organization.create.bind(_organization.organization), /admin\/organization\/(create|\d+\/edit)$/]];
+  var rules = [[_organization_create.organizationCreate.index.bind(_organization_create.organizationCreate), /admin\/organization\/(create|\d+\/edit)$/], [_organization_workers.organizationWorkers.index.bind(_organization_workers.organizationWorkers), /admin\/organization\/\d+\/workers$/]];
 
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
@@ -113,6 +248,6 @@ function Router() {
 
 var router = exports.router = new Router();
 
-},{"./controllers/organization":2}]},{},[1]);
+},{"./controllers/organization_create":2,"./controllers/organization_workers":3}]},{},[1]);
 
 //# sourceMappingURL=admin_browserify.js.map
