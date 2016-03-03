@@ -64,6 +64,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 var organizationWorkers = exports.organizationWorkers = {
   CHECK_SYMBOLS: /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),-=.\/0123456789;:I]/,
+  CHECK_LETTERS: /[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}/,
 
   /**
    * Страница импорта файла работников
@@ -108,7 +109,7 @@ var organizationWorkers = exports.organizationWorkers = {
       // проверяем на неразрещенные символы
       matches = this.CHECK_SYMBOLS.exec(line);
       if (matches) {
-        errors.push('Неразрещенный символ. line: ' + (i + 1));
+        errors.push('Неразрещенный символ. line: ' + (i + 1) + ', symbol: ' + matches.index);
       }
 
       // =категория
@@ -126,6 +127,7 @@ var organizationWorkers = exports.organizationWorkers = {
         continue;
       }
 
+      // парсим работников
       var cat = currentCategory ? currentCategory : 'main';
       if (!workers[cat]) workers[cat] = [];
 
@@ -136,8 +138,21 @@ var organizationWorkers = exports.organizationWorkers = {
       });
     }
 
-    this._showErrors(errors, '.errors');
-    this._showErrors(warnings, '.warnings');
+    if (currentCategory) errors.push('Неверно открыты/закрыты категории. "' + currentCategory + '"');
+
+    // проверяем работников по БД
+    this._checkWorkers(workers, { errors: errors }).then(function (fioErrors) {
+      warnings = warnings.concat(fioErrors);
+      this._showErrors({
+        errors: errors,
+        selector: '.errors'
+      });
+      this._showErrors({
+        errors: warnings,
+        selector: '.warnings',
+        className: 'alert-warning'
+      });
+    }.bind(this));
   },
 
   /**
@@ -173,19 +188,64 @@ var organizationWorkers = exports.organizationWorkers = {
       opt.errors.push('Невозможно распознать ФИО и должность. line: ' + opt.line);
       return;
     }
-    opt.workers.push({ fio: matches[1].trim(), position: matches[2].trim() });
+
+    var position = matches[2].trim();
+    if (!this.CHECK_LETTERS.test(position)) {
+      opt.errors.push('Невозможно распознать ФИО и должность. line: ' + opt.line);
+      return;
+    }
+
+    opt.workers.push({ fio: matches[1].trim(), position: position });
+  },
+
+  _checkWorkers: function _checkWorkers(workers) {
+    // отправляем на сервер только массив ФИО
+    var data = [];
+    for (var i in workers) {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = workers[i][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var worker = _step.value;
+
+          data.push(worker.fio);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    }return $.ajax({
+      url: '/admin/workers/check_new_workers',
+      method: 'post',
+      data: {
+        workers: JSON.stringify(data),
+        _token: window._token
+      }
+    });
   },
 
   /**
    * Выводим ошибки проверки файла
-   * @param errors
-   * @param selector
+   * @param {{errors: <Array>, selector: <String>, className: <String>}} opt
   * @private
    */
-  _showErrors: function _showErrors(errors, selector) {
+  _showErrors: function _showErrors(opt) {
+    opt = _.extend({ className: 'alert-danger' }, opt);
     var html = '';
-    if (errors && errors.length > 0) html = '<div class="alert alert-danger">' + errors.join('<br>') + '</div>';
-    $(selector).html(html);
+    if (opt.errors && opt.errors.length > 0) html = '<div class="alert ' + opt.className + '">' + opt.errors.join('<br>') + '</div>';
+    $(opt.selector).html(html);
   }
 };
 

@@ -18,7 +18,7 @@ class ParseOrganizations extends Command
      *
      * @var string
      */
-    protected $signature = 'organizations:parse {file}';
+    protected $signature = 'parse:organizations {file}';
 
     /**
      * The console command description.

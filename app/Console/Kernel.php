@@ -13,8 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-         Commands\ParseOrganizations::class,
-         Commands\ParseFio::class,
+        Commands\ParseOrganizations::class,
+        Commands\ParseFio::class,
+        Commands\ParseNames::class,
     ];
 
     /**

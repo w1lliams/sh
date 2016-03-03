@@ -49,6 +49,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="{{ App::environment('local') ? '/js/admin.js' : elixir('js/admin.js') }}"></script>
 <script src="{{ App::environment('local') ? '/js/admin_browserify.js' : elixir('js/admin_browserify.js') }}"></script>
+<script>window._token = '{{csrf_token()}}';</script>
 @yield('scripts')
 
 </body>

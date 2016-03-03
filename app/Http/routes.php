@@ -36,6 +36,8 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::post('organization/{organization}/edit',   ['uses' => 'OrganizationController@create']);
     Route::get('organization/{organization}/workers', ['uses' => 'OrganizationController@workersPage']);
 
+    Route::post('workers/check_new_workers', ['uses' => 'WorkerController@checkNewWorkers']);
+
     Route::get('status',              ['uses' => 'StatusController@main', 'as' => 'status']);
     Route::post('status/create',      ['uses' => 'StatusController@create']);
     Route::delete('status/{status}',  ['uses' => 'StatusController@delete']);

@@ -14,7 +14,7 @@ class ParseFio extends Command
    *
    * @var string
    */
-  protected $signature = 'fio:parse {file}';
+  protected $signature = 'parse:fio {file}';
 
   /**
    * The console command description.
