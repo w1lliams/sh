@@ -1,7 +1,8 @@
-import {organizationCreate} from './controllers/organization_create';
-import {organizationWorkers} from './controllers/organization_workers';
+import organizationCreate from './controllers/organization_create';
+import organizationWorkers from './controllers/organization_workers';
+import organizationList from './controllers/organization_list';
 
-class Router {
+export default class Router {
   /**
    * Прогоняем роутфы и выполняем первый подходящий
    * @param url
@@ -9,6 +10,7 @@ class Router {
   constructor(url = window.location.pathname) {
     // роуты добавлять здесь
     let rules = [
+      [organizationList.index.bind(organizationList), /admin\/organization$/],
       [organizationCreate.index.bind(organizationCreate), /admin\/organization\/(create|\d+\/edit)$/],
       [organizationWorkers.index.bind(organizationWorkers), /admin\/organization\/\d+\/workers$/]
     ];
@@ -23,5 +25,3 @@ class Router {
     }
   }
 }
-
-export let router = new Router();

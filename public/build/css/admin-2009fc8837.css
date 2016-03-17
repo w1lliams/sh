@@ -5661,6 +5661,9 @@ input[type="checkbox"],
 .form-group {
   margin-bottom: 22px; }
 
+.container-fluid {
+  max-width: 1500px; }
+
 body {
   padding-top: 80px; }
 
@@ -5688,7 +5691,41 @@ body {
 .page-organizations .form-group {
   margin: 0 20px 20px 0; }
 
-.page-organizations .actions {
+.page-organizations .option-btn {
+  font-size: 22px;
+  text-align: center;
+  cursor: pointer; }
+  .page-organizations .option-btn:hover {
+    color: #2196F3; }
+
+.page-organizations table td {
+  line-height: 15px !important; }
+
+#preloader {
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  box-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -o-align-items: center;
+  align-items: center;
+  -ms-flex-align: center;
+  box-pack: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  -o-justify-content: center;
+  justify-content: center;
+  -ms-flex-pack: center; }
+
+body.preloader #preloader {
   display: -webkit-box;
   display: -moz-box;
   display: box;
@@ -5696,8 +5733,30 @@ body {
   display: -moz-flex;
   display: -ms-flexbox;
   display: flex; }
-  .page-organizations .actions > * {
-    display: inline-block;
-    margin: 0 5px; }
+
+.page-workers .error-sym {
+  background-color: red;
+  color: white; }
+
+.page-workers .warning-sym {
+  background-color: orange;
+  color: white; }
+
+.page-workers .alert {
+  margin-bottom: 0;
+  padding: 0 15px; }
+
+.tt-dataset {
+  display: block !important; }
+
+.tt-suggestion {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 10px 5px;
+  font-size: 12px;
+  min-width: 300px;
+  cursor: pointer; }
+  .tt-suggestion:hover {
+    background-color: #2196F3;
+    color: #fff; }
 
 /*# sourceMappingURL=admin.css.map */

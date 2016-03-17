@@ -3,8 +3,6 @@
 @section('content')
 <div class="container page-workers">
     <h4>Работники</h4>
-    <div class="errors"></div>
-    <div class="warnings"></div>
     <form action="" method="post">
         {{csrf_field()}}
         <div class="input-group input-group-lg">
@@ -12,5 +10,7 @@
             <span class="input-group-btn"><button class="btn btn-primary" type="submit">Загрузить</button></span>
         </div>
     </form>
+
+    <div class="file"></div>
 </div>
 @endsection

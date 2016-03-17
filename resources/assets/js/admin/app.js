@@ -1,5 +1,11 @@
-import {router} from './router';
+import Router from './router';
 
-$('.multiselect').multiselect({
-  nonSelectedText: 'Выберите значение'
+$(() => {
+  console.log('ready');
+  const router = new Router;
+
+  $('.multiselect').multiselect({
+    nonSelectedText: 'Выберите значение',
+    numberDisplayed: 1
+  });
 });

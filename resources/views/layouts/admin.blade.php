@@ -42,6 +42,8 @@
     </div>
 </div>
 
+<div id="preloader"><img src="/images/preloader.gif"></div>
+
 @yield('content')
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">

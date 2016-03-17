@@ -97,12 +97,20 @@ class Organization extends Model
    */
   public function scopeFilter($query, array $params)
   {
-    if(!empty($params['status']))
-      $query->where('status_id', $params['status']);
-    if(!empty($params['opf']))
-      $query->where('opf_id', $params['opf']);
+    $inCriteria = function($paramName, $fieldName) use ($query, $params) {
+      if(isset($params[$paramName])) {
+        $params[$paramName] = array_filter($params[$paramName]);
+        if (!empty($params[$paramName]))
+          $query->whereIn($fieldName, $params[$paramName]);
+      }
+    };
+
+    $inCriteria('status', 'status_id');
+    $inCriteria('opf', 'opf_id');
+    $inCriteria('type', 'type_id');
+
     if(!empty($params['edrpou']))
-      $query->where('edrpou', $params['edrpou']);
+      $query->where('edrpou', 'like', $params['edrpou'].'%');
     if(!empty($params['name'])) {
       $query->where(function ($query) use ($params) {
         $query->orWhere('fullName', 'like', "%{$params['name']}%");

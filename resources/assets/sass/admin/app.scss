@@ -11,6 +11,9 @@
 }
 .form-group { margin-bottom: 22px; }
 
+.container-fluid {
+  max-width: 1500px;
+}
 
 body {
   padding-top: 80px;
@@ -48,11 +51,70 @@ body {
     margin: 0 20px 20px 0;
   }
 
-  .actions {
-    @include display(flex);
-    > * {
-      display: inline-block;
-      margin: 0 5px;
+  .option-btn {
+    font-size: 22px;
+    text-align: center;
+    cursor: pointer;
+    &:hover { color: $brand-primary; }
+  }
+
+  table {
+    td {
+      line-height: 15px!important;
     }
+  }
+}
+
+#preloader {
+  background-color: rgba(#000, .6);
+  z-index: 2000;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  @include align-items(center);
+  @include justify-content(center);
+}
+
+body.preloader {
+  #preloader {
+    @include display(flex);
+  }
+}
+
+.page-workers {
+  .error-sym {
+    background-color: red;
+    color: white;
+  }
+
+  .warning-sym {
+    background-color: orange;
+    color: white;
+  }
+
+  .alert {
+    margin-bottom: 0;
+    padding: 0 15px;
+  }
+}
+
+
+.tt-dataset {
+  display: block!important;
+}
+
+.tt-suggestion {
+  border-bottom: 1px solid $dropdown-border;
+  padding: 10px 5px;
+  font-size: 12px;
+  min-width: 300px;
+  cursor: pointer;
+  &:hover {
+    background-color: $brand-primary;
+    color: #fff;
   }
 }

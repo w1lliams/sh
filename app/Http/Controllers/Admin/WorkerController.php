@@ -17,7 +17,7 @@ class WorkerController extends Controller
     $result = [];
     $workers = json_decode(Input::get('workers'), true);
 
-    foreach(array_chunk($workers, 200) as $chunk) {
+    foreach(array_chunk($workers, 1000) as $chunk) {
       Fio::checkFIO($chunk, $result);
     }
 

@@ -29,14 +29,15 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin::'], function () {
 
-    Route::get('organization',         ['uses' => 'OrganizationController@fetch', 'as' => 'organization']);
-    Route::get('organization/create',  ['uses' => 'OrganizationController@createPage']);
-    Route::post('organization/create', ['uses' => 'OrganizationController@create']);
-    Route::get('organization/{organization}/edit',    ['uses' => 'OrganizationController@editPage']);
-    Route::post('organization/{organization}/edit',   ['uses' => 'OrganizationController@create']);
-    Route::get('organization/{organization}/workers', ['uses' => 'OrganizationController@workersPage']);
+    Route::get('organization',         'OrganizationController@fetch')->name('organization');
+    Route::get('organization/create',  'OrganizationController@createPage');
+    Route::post('organization/create', 'OrganizationController@create');
+    Route::get('organization/{organization}/edit',    'OrganizationController@editPage');
+    Route::post('organization/{organization}/edit',   'OrganizationController@create');
+    Route::get('organization/{organization}/workers', 'OrganizationController@workersPage');
+    Route::get('organization/search', 'OrganizationController@search');
 
-    Route::post('workers/check_new_workers', ['uses' => 'WorkerController@checkNewWorkers']);
+    Route::post('workers/check_new_workers', 'WorkerController@checkNewWorkers');
 
     Route::get('status',              ['uses' => 'StatusController@main', 'as' => 'status']);
     Route::post('status/create',      ['uses' => 'StatusController@create']);

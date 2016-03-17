@@ -11,7 +11,7 @@
             <div class="form-group">
                 {!! Form::label('status', 'Статус организации', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    {!! Form::select('status', $statuses, isset($organization) && $organization->status ? $organization->status->id : old('status'), ['class' => 'multiselect']) !!}
+                    {!! Form::select('status', $statuses, isset($organization) && $organization->status ? $organization->status->id : '', ['class' => 'multiselect']) !!}
                 </div>
             </div>
             <div class="form-group">

@@ -18,7 +18,8 @@ class Fio extends Model
 
   /**
    * Проверяем на "валидность" ФИО  работников
-   * @param [string] $workers
+   * @param array $workers
+   * @param $result
    */
   public static function checkFIO(array $workers, &$result)
   {
@@ -26,7 +27,10 @@ class Fio extends Model
     $exists = self::whereIn('name', $workers)->pluck('name')->all();
 
     // отсеиваем всех кого мы нашли по ФИО
-    $notExists = array_diff($workers, $exists);
+    $notExists   = array_diff($workers, $exists);
+    $firstNames  = [];
+    $lastNames   = [];
+    $middleNames = [];
 
     foreach($notExists as $fio) {
       // разбиваем фио на имя, фамилия, отчество
@@ -37,13 +41,31 @@ class Fio extends Model
         continue;
       }
 
-      // проверяем отдельно имя фамилию отчество
-      $r = (
-        FirstName::where('nameUA', $fioExp[1])->first() &&
-        LastName::where('nameUA', $fioExp[0])->first() &&
-        MiddleName::where('nameUA', $fioExp[2])->first()
-      );
-      if(!$r) $result[] = $fio;
+      // собираем отдельно имена, фамилии и отчества
+      $firstNames[$fioExp[1]]  = $fio;
+      $lastNames[$fioExp[0]]   = $fio;
+      $middleNames[$fioExp[2]] = $fio;
+    }
+
+    static::_checkNames($firstNames, FirstName::class, $result);
+    static::_checkNames($lastNames, LastName::class, $result);
+    static::_checkNames($middleNames, MiddleName::class, $result);
+  }
+
+  /**
+   * Вынес поиск по таблицам "firstName", "lastName"... отдельно
+   * @param array $names
+   * @param string $Model
+   * @param array $result
+   */
+  private static function _checkNames(array $names, $Model, &$result)
+  {
+    $existsNames = call_user_func($Model.'::whereIn', 'nameUA', array_keys($names))->pluck('nameUA')->all();
+    if(count($existsNames) != count($names)) {
+      foreach($names as $name => $fio) {
+        if(!in_array($name, $existsNames))
+          $result[] = $fio;
+      }
     }
   }
 }

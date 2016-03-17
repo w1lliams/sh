@@ -10,6 +10,7 @@ use App\City;
 use App\Organization;
 use Collective\Html\FormFacade;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class OrganizationController extends Controller
 {
@@ -20,15 +21,10 @@ class OrganizationController extends Controller
      */
     public function fetch(Request $request)
     {
-        $request->flash();
-
         $organizations = Organization::filter($request->all())
-          ->with('status', 'city', 'opf')
+          ->with('status', 'city', 'opf', 'type')
           ->orderBy('id', 'desc')
-          ->paginate(15);
-
-        $organizations->appends($request->all());
-
+          ->get();
 
         return view('admin.organization.list', [
             'organizations' => $organizations,
@@ -116,5 +112,15 @@ class OrganizationController extends Controller
         $organization->save();
 
         return redirect()->route('admin::organization');
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $organizations = Organization::filter($request->all())->limit(10)->get();
+        return response()->json($organizations);
     }
 }
