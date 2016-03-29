@@ -5746,6 +5746,15 @@ body.preloader #preloader {
   margin-bottom: 0;
   padding: 0 15px; }
 
+.page-workers .organization, .page-workers .file {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #bbb; }
+
+.page-workers .done {
+  margin-top: 15px;
+  display: none; }
+
 .tt-dataset {
   display: block !important; }
 
@@ -5758,5 +5767,13 @@ body.preloader #preloader {
   .tt-suggestion:hover {
     background-color: #2196F3;
     color: #fff; }
+
+.page-workers .workers-list ul {
+  margin-bottom: 15px; }
+
+.page-workers .workers-list .department {
+  list-style: none; }
+  .page-workers .workers-list .department span {
+    font-weight: bold; }
 
 /*# sourceMappingURL=admin.css.map */

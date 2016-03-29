@@ -12,7 +12,7 @@ export default class Router {
     let rules = [
       [organizationList.index.bind(organizationList), /admin\/organization$/],
       [organizationCreate.index.bind(organizationCreate), /admin\/organization\/(create|\d+\/edit)$/],
-      [organizationWorkers.index.bind(organizationWorkers), /admin\/organization\/\d+\/workers$/]
+      [organizationWorkers.index.bind(organizationWorkers), /admin\/organization\/\d+\/addWorkers$/]
     ];
 
     for(let rule of rules) {

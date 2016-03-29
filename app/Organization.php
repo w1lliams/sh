@@ -31,13 +31,13 @@ class Organization extends Model
   }
 
   /**
-   * @return []
+   * @return array|mixed
    */
   public function getEmailAttribute()
   {
     if(empty($this->attributes['email']))
       return [];
-    return json_decode($this->attributes['email']);
+    return json_decode($this->attributes['email'], true);
   }
 
   /**
@@ -81,6 +81,14 @@ class Organization extends Model
   }
 
   /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function chief()
+  {
+    return $this->belongsTo('App\Worker');
+  }
+
+  /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
   public function organizations()
@@ -109,8 +117,15 @@ class Organization extends Model
     $inCriteria('opf', 'opf_id');
     $inCriteria('type', 'type_id');
 
+    if(!empty($params['chief'])) {
+      $query->whereHas('chief', function($query) use ($params) {
+        $query->where('fio', 'like', "%{$params['chief']}%");
+      });
+    }
+
     if(!empty($params['edrpou']))
       $query->where('edrpou', 'like', $params['edrpou'].'%');
+
     if(!empty($params['name'])) {
       $query->where(function ($query) use ($params) {
         $query->orWhere('fullName', 'like', "%{$params['name']}%");

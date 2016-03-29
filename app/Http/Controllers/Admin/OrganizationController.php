@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Snapshot;
 use App\Status;
 use App\Opf;
 use App\Type;
@@ -10,7 +11,6 @@ use App\City;
 use App\Organization;
 use Collective\Html\FormFacade;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 
 class OrganizationController extends Controller
 {
@@ -22,7 +22,7 @@ class OrganizationController extends Controller
     public function fetch(Request $request)
     {
         $organizations = Organization::filter($request->all())
-          ->with('status', 'city', 'opf', 'type')
+          ->with('status', 'city', 'opf', 'type', 'chief')
           ->orderBy('id', 'desc')
           ->get();
 
@@ -74,16 +74,6 @@ class OrganizationController extends Controller
     }
 
     /**
-     * Страница с сотрудниками
-     * @param Organization $organization
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function workersPage(Organization $organization)
-    {
-        return view('admin.organization.workers');
-    }
-
-    /**
      * Создание новой организации
      * @param Request $request
      * @param Organization $organization
@@ -120,7 +110,9 @@ class OrganizationController extends Controller
      */
     public function search(Request $request)
     {
-        $organizations = Organization::filter($request->all())->limit(10)->get();
+        $organizations = Organization::filter($request->all())
+          ->limit(10)
+          ->get();
         return response()->json($organizations);
     }
 }

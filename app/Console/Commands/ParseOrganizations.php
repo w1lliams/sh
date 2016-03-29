@@ -7,7 +7,6 @@ use App\Organization;
 use App\Status;
 use App\City;
 use App\Worker;
-use App\Position;
 use App\Type;
 use Illuminate\Console\Command;
 
@@ -159,7 +158,6 @@ class ParseOrganizations extends Command
         $this->misc['statuses']  = Status::all()->keyBy('name');
         $this->misc['opfs']      = Opf::all()->keyBy('name');
         $this->misc['cities']    = City::all()->keyBy('name');
-        $this->misc['positions'] = Position::all()->keyBy('name');
         $this->misc['types']     = Type::all()->keyBy('name');
 
         foreach($this->data as $row)
@@ -218,7 +216,7 @@ class ParseOrganizations extends Command
         // если указан руководитель, добавляем его в БД
         if(isset($data['Kerivnik'])) {
             $worker = new Worker;
-            $worker->position()->associate($this->misc['positions']['Керівник']);
+            $worker->position = 'Керівник';
 
             // поднимаем первые буквы в вверхний регист, остальные в нижний
             $worker->fio = implode(' ', array_map(function ($item) {
@@ -233,6 +231,8 @@ class ParseOrganizations extends Command
             }, explode(' ', mb_strtolower($data['Kerivnik']))));
             $worker->organization()->associate($organization);
             $worker->save();
+            $organization->chief()->associate($worker);
+            $organization->save();
         }
 
         return $organization;

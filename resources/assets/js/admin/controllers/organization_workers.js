@@ -2,9 +2,13 @@ import {helpers} from '../helpers';
 
 class Controller {
   constructor() {
-    this.errors = {};
+    this.clear();
     this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),-=.\/0123456789;:I]/;
     this.CHECK_LETTERS = /[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}/;
+  }
+
+  clear () {
+    this.errors = {};
   }
 
   /**
@@ -12,6 +16,7 @@ class Controller {
    */
   index () {
     $('input[name=file]').on('change', this._onSelectFile.bind(this));
+    $('.done').click(this._saveWorkers.bind(this));
   }
 
   /**
@@ -20,10 +25,26 @@ class Controller {
    * @param line
    * @param symbol
    */
-  addError(str, line, symbol = null) {
+  addError (str, line, symbol = null) {
     if(!this.errors[line])
       this.errors[line] = [];
     this.errors[line].push([str, symbol]);
+  }
+
+  /**
+   *
+   * @returns {Promise}
+   * @private
+   */
+  _saveWorkers () {
+    return $.ajax({
+      url: `/admin/api/organization/${this.originOrganization.id}/push_workers`,
+      method: 'post',
+      data: {workers: this.workers},
+      success: () => {
+        window.location.href = `/admin/organization/${this.originOrganization.id}/workers`;
+      }
+    });
   }
 
   /**
@@ -32,6 +53,7 @@ class Controller {
    * @private
    */
   _onSelectFile (e) {
+    this.clear();
     const file = e.target.files[0];
     if(!file) return;
 
@@ -45,23 +67,70 @@ class Controller {
     fileReader.onload = (e) => {
       this.lines = e.target.result.split("\n");
 
-      this._checkFile(edrpou).then((FIOErrors, workers, organization) => {
-        this.organization = organization;
-        this.workers = workers;
-        this.FIOErrors = FIOErrors;
+      this._checkFile(edrpou).then((opt) => {
+        this.organization = opt.organization;
+        this.workers = opt.workers;
+        this.fioErrors = opt.fioErrors;
 
-        this._showFile();
-        helpers.hidePreloader();
-      });
-        //.then(this._showFile.bind(this))
-        //.then(this._checkOrganization)
-        //.then(helpers.hidePreloader);
+        return Promise.resolve();
+      })
+        .then(this._showFile.bind(this))
+        .then(this._showOrganization.bind(this))
+        .then(this._checkErrors.bind(this))
+        .then(helpers.hidePreloader)
+        .catch(helpers.hidePreloader);
     };
     fileReader.readAsText(file, 'cp1251');
   }
 
-  _checkOrganization (opt) {
-    console.log(opt);
+  /**
+   * Достаем с сервера организацию по ЕДРПОУ из файла и выводим ее,
+   * чтобы можератор мог убедиться что редактирует нужную организацию
+   *
+   * @returns {Promise}
+   * @private
+   */
+  _showOrganization () {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/admin/api/organization/search',
+        method: 'get',
+        data: {
+          edrpou: this.organization.edrpou
+        },
+        success: (data) => {
+          const $el = $('.organization');
+          $el.html('');
+
+          if(!data || data.length == 0) {
+            alert(`<p class="alert alert-danger">Организация с ЕДРПОУ ${this.organization.edrpou} не найдена</p>`);
+            reject();
+          } else {
+            this.originOrganization = data[0];
+            $el.html(`[${this.organization.edrpou}] ${this.organization.text} = [${this.originOrganization.edrpou}] ${this.originOrganization.fullName}`);
+            resolve();
+          }
+        }
+      });
+    });
+  }
+
+  /**
+   * Проверяем, если есть ошибки, сообщаем пользователю.
+   * Если нет то выводим кнопку "сохранить работников"
+   *
+   * @returns {*}
+   * @private
+   */
+  _checkErrors () {
+    if(_.isEmpty(this.errors)) {
+      $('.done').show();
+      return Promise.resolve();
+    }
+
+    $('.done').hide();
+    alert('В файле есть ошибки');
+    return Promise.reject();
   }
 
   /**
@@ -97,6 +166,8 @@ class Controller {
 
       for(let i = 1; i < this.lines.length; i++) {
         const line = this.lines[i].trim();
+        if(line.length == 0) continue;
+
         // проверяем на неразрещенные символы
         matches = this.CHECK_SYMBOLS.exec(line);
         if(matches) {
@@ -165,7 +236,7 @@ class Controller {
 
       // проверяем работников по БД
       this._checkWorkers(workers).then(function(fioErrors) {
-        resolve(fioErrors, workers, organization);
+        resolve({fioErrors, workers, organization});
       }.bind(this));
     });
   }
@@ -235,11 +306,10 @@ class Controller {
     }
 
     return $.ajax({
-      url: '/admin/workers/check_new_workers',
+      url: '/admin/api/workers/check_new_workers',
       method: 'post',
       data: {
-        workers: JSON.stringify(data),
-        _token: window._token
+        workers: JSON.stringify(data)
       }
     });
   }
@@ -271,7 +341,7 @@ class Controller {
       // если в строке работник и по нему есть ошибки, выводим их
       if(i != 0 && !/^(--|==)/.test(line) && line.length != 0) {
         let matches = /([^,]+),/.exec(line);
-        if(matches && this.FIOErrors.indexOf(matches[1]) >= 0) {
+        if(matches && this.fioErrors.indexOf(matches[1]) >= 0) {
           line = `<span class="warning-sym">${matches[1]}</span>` + line.substr(matches[1].length);
         }
       }
@@ -280,6 +350,8 @@ class Controller {
       if(lineErrors)
         $el.append(`<p class="alert alert-danger">${lineErrors}</p>`);
     }
+
+    return Promise.resolve();
   }
 }
 

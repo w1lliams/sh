@@ -100,6 +100,17 @@ body.preloader {
     margin-bottom: 0;
     padding: 0 15px;
   }
+
+  .organization, .file {
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid $gray-light;
+  }
+
+  .done {
+    margin-top: 15px;
+    display: none;
+  }
 }
 
 
@@ -116,5 +127,20 @@ body.preloader {
   &:hover {
     background-color: $brand-primary;
     color: #fff;
+  }
+}
+
+.page-workers {
+  .workers-list {
+    ul {
+      margin-bottom: 15px;
+    }
+
+    .department {
+      list-style: none;
+      span {
+        font-weight: bold;
+      }
+    }
   }
 }

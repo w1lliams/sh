@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePositionsTable extends Migration
+class AddChiefToOrganizations extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,8 @@ class CreatePositionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('positions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->timestamps();
+        Schema::table('organizations', function (Blueprint $table) {
+            $table->integer('chief_id');
         });
     }
 
@@ -26,6 +24,8 @@ class CreatePositionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('positions');
+        Schema::table('organizations', function (Blueprint $table) {
+            $table->dropColumn(['chief_id']);
+        });
     }
 }

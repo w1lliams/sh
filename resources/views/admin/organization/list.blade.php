@@ -22,6 +22,10 @@
                 {!! Form::text('name', request('name'), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
             </div>
             <div class="form-group">
+                {!! Form::label('chief', 'Руководитель', ['class' => 'control-label']) !!}<br>
+                {!! Form::text('chief', request('chief'), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+            </div>
+            <div class="form-group">
                 {!! Form::label('type', 'Тип', ['class' => 'control-label']) !!}<br>
                 {!! Form::select('type[]', $types->toArray(), request('type'), ['class' => 'multiselect', 'multiple']) !!}
             </div>
@@ -42,11 +46,11 @@
                 <th>Статус</th>
                 <th>ЕДРПОУ</th>
                 <th>Название</th>
+                <th>Руководитель</th>
                 <th>Тип</th>
                 <th>ОПФ</th>
                 <th>Город</th>
                 <th>Адрес</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -54,23 +58,13 @@
                 <tr>
                     <td>{{$i + 1}}</td>
                     <td>{{$organization->status->name or ''}}</td>
-                    <td>{{$organization->edrpou}}</td>
-                    <td>{{$organization->fullName}}</td>
+                    <td><a href="{{url("admin/organization/{$organization->id}/edit")}}">{{$organization->edrpou}}</a></td>
+                    <td><a href="{{url("admin/organization/{$organization->id}/edit")}}">{{$organization->fullName}}</a></td>
+                    <td>{{$organization->chief->fio or ''}}</td>
                     <td>{{$organization->type->name or ''}}</td>
                     <td>{{$organization->opf->name or ''}}</td>
                     <td>{{$organization->city->name or '' }}</td>
                     <td>{{$organization->address}}</td>
-                    <td width="40">
-                        <div class="dropdown">
-                            <div data-toggle="dropdown" class="option-btn" aria-haspopup="true" aria-expanded="false">
-                                <i class="ion-android-more-vertical"></i>
-                            </div>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{url("admin/organization/{$organization->id}/edit")}}">Редактировать</a></li>
-                                <li><a href="{{url("admin/organization/{$organization->id}/workers")}}">Работники</a></li>
-                            </ul>
-                        </div>
-                    </td>
                 </tr>
             @endforeach
         </tbody>

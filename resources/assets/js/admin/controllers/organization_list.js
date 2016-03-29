@@ -5,22 +5,31 @@ export default new class {
   index() {
     // быстрый поиск по названию и ЕДРПОУ
     const typeahead = (name, field) => {
-      const $tp = $(`input[name=${name}]`).typeahead({
-        classNames: {
-          dataset: 'dropdown-menu tt-dataset'
-        }
-      }, {
-        display: field,
-        source: (query, callback, asyncCallback) => {
-          const data = {};
-          data[name] = query;
+      const $tp = $(`input[name=${name}]`).typeahead(
+        {
+          highlight: true,
+          classNames: { dataset: 'dropdown-menu tt-dataset' }
+        },
+        {
+          async: true,
+          limit: 7,
+          display: field,
+          templates: {
+            notFound: () => 'Ничего не найдено',
+            pending: () => 'Загружаем...'
+          },
 
-          $.ajax({
-            url: '/admin/organization/search',
-            data: data
-          }).then(asyncCallback);
+          source: _.debounce((query, callback, asyncCallback) => {
+            const data = {};
+            data[name] = query;
+
+            $.ajax({
+              url: '/admin/api/organization/search',
+              data: data
+            }).then(asyncCallback);
+          }, 500)
         }
-      });
+      );
 
       $tp.bind('typeahead:select', function(e, suggestion) {
         window.open(`/admin/organization/${suggestion.id}/edit`);
@@ -29,5 +38,6 @@ export default new class {
 
     typeahead('name', 'fullName');
     typeahead('edrpou', 'edrpou');
+    typeahead('chief', 'fullName');
   }
 };

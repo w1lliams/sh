@@ -11,6 +11,14 @@ $(function () {
   console.log('ready');
   var router = new _router2.default();
 
+  // добавляем всем ajax запросам csrf token
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-Token': window._token
+    }
+  });
+
+  // плагин для селектов
   $('.multiselect').multiselect({
     nonSelectedText: 'Выберите значение',
     numberDisplayed: 1
@@ -113,20 +121,30 @@ exports.default = new (function () {
       // быстрый поиск по названию и ЕДРПОУ
       var typeahead = function typeahead(name, field) {
         var $tp = $('input[name=' + name + ']').typeahead({
-          classNames: {
-            dataset: 'dropdown-menu tt-dataset'
-          }
+          highlight: true,
+          classNames: { dataset: 'dropdown-menu tt-dataset' }
         }, {
+          async: true,
+          limit: 7,
           display: field,
-          source: function source(query, callback, asyncCallback) {
+          templates: {
+            notFound: function notFound() {
+              return 'Ничего не найдено';
+            },
+            pending: function pending() {
+              return 'Загружаем...';
+            }
+          },
+
+          source: _.debounce(function (query, callback, asyncCallback) {
             var data = {};
             data[name] = query;
 
             $.ajax({
-              url: '/admin/organization/search',
+              url: '/admin/api/organization/search',
               data: data
             }).then(asyncCallback);
-          }
+          }, 500)
         });
 
         $tp.bind('typeahead:select', function (e, suggestion) {
@@ -136,6 +154,7 @@ exports.default = new (function () {
 
       typeahead('name', 'fullName');
       typeahead('edrpou', 'edrpou');
+      typeahead('chief', 'fullName');
     }
   }]);
 
@@ -159,19 +178,26 @@ var Controller = function () {
   function Controller() {
     _classCallCheck(this, Controller);
 
-    this.errors = {};
+    this.clear();
     this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),-=.\/0123456789;:I]/;
     this.CHECK_LETTERS = /[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}/;
   }
 
-  /**
-   * Страница импорта файла работников
-   */
-
   _createClass(Controller, [{
+    key: 'clear',
+    value: function clear() {
+      this.errors = {};
+    }
+
+    /**
+     * Страница импорта файла работников
+     */
+
+  }, {
     key: 'index',
     value: function index() {
       $('input[name=file]').on('change', this._onSelectFile.bind(this));
+      $('.done').click(this._saveWorkers.bind(this));
     }
 
     /**
@@ -191,6 +217,27 @@ var Controller = function () {
     }
 
     /**
+     *
+     * @returns {Promise}
+     * @private
+     */
+
+  }, {
+    key: '_saveWorkers',
+    value: function _saveWorkers() {
+      var _this = this;
+
+      return $.ajax({
+        url: '/admin/api/organization/' + this.originOrganization.id + '/push_workers',
+        method: 'post',
+        data: { workers: this.workers },
+        success: function success() {
+          window.location.href = '/admin/organization/' + _this.originOrganization.id + '/workers';
+        }
+      });
+    }
+
+    /**
      * Пользователь выбрал файл
      * @param e
      * @private
@@ -199,8 +246,9 @@ var Controller = function () {
   }, {
     key: '_onSelectFile',
     value: function _onSelectFile(e) {
-      var _this = this;
+      var _this2 = this;
 
+      this.clear();
       var file = e.target.files[0];
       if (!file) return;
 
@@ -212,26 +260,75 @@ var Controller = function () {
       _helpers.helpers.showPreloader();
       var fileReader = new FileReader();
       fileReader.onload = function (e) {
-        _this.lines = e.target.result.split("\n");
+        _this2.lines = e.target.result.split("\n");
 
-        _this._checkFile(edrpou).then(function (FIOErrors, workers, organization) {
-          _this.organization = organization;
-          _this.workers = workers;
-          _this.FIOErrors = FIOErrors;
+        _this2._checkFile(edrpou).then(function (opt) {
+          _this2.organization = opt.organization;
+          _this2.workers = opt.workers;
+          _this2.fioErrors = opt.fioErrors;
 
-          _this._showFile();
-          _helpers.helpers.hidePreloader();
-        });
-        //.then(this._showFile.bind(this))
-        //.then(this._checkOrganization)
-        //.then(helpers.hidePreloader);
+          return Promise.resolve();
+        }).then(_this2._showFile.bind(_this2)).then(_this2._showOrganization.bind(_this2)).then(_this2._checkErrors.bind(_this2)).then(_helpers.helpers.hidePreloader).catch(_helpers.helpers.hidePreloader);
       };
       fileReader.readAsText(file, 'cp1251');
     }
+
+    /**
+     * Достаем с сервера организацию по ЕДРПОУ из файла и выводим ее,
+     * чтобы можератор мог убедиться что редактирует нужную организацию
+     *
+     * @returns {Promise}
+     * @private
+     */
+
   }, {
-    key: '_checkOrganization',
-    value: function _checkOrganization(opt) {
-      console.log(opt);
+    key: '_showOrganization',
+    value: function _showOrganization() {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        $.ajax({
+          url: '/admin/api/organization/search',
+          method: 'get',
+          data: {
+            edrpou: _this3.organization.edrpou
+          },
+          success: function success(data) {
+            var $el = $('.organization');
+            $el.html('');
+
+            if (!data || data.length == 0) {
+              alert('<p class="alert alert-danger">Организация с ЕДРПОУ ' + _this3.organization.edrpou + ' не найдена</p>');
+              reject();
+            } else {
+              _this3.originOrganization = data[0];
+              $el.html('[' + _this3.organization.edrpou + '] ' + _this3.organization.text + ' = [' + _this3.originOrganization.edrpou + '] ' + _this3.originOrganization.fullName);
+              resolve();
+            }
+          }
+        });
+      });
+    }
+
+    /**
+     * Проверяем, если есть ошибки, сообщаем пользователю.
+     * Если нет то выводим кнопку "сохранить работников"
+     *
+     * @returns {*}
+     * @private
+     */
+
+  }, {
+    key: '_checkErrors',
+    value: function _checkErrors() {
+      if (_.isEmpty(this.errors)) {
+        $('.done').show();
+        return Promise.resolve();
+      }
+
+      $('.done').hide();
+      alert('В файле есть ошибки');
+      return Promise.reject();
     }
 
     /**
@@ -260,10 +357,10 @@ var Controller = function () {
   }, {
     key: '_checkFile',
     value: function _checkFile(edrpou) {
-      var _this2 = this;
+      var _this4 = this;
 
       return new Promise(function (resolve, reject) {
-        var organization = _this2._parseFirstLine(_this2.lines[0]);
+        var organization = _this4._parseFirstLine(_this4.lines[0]);
         organization.edrpou = edrpou;
 
         // получаем сотрудников
@@ -272,25 +369,27 @@ var Controller = function () {
             currentSubCategory = null,
             matches = undefined;
 
-        for (var i = 1; i < _this2.lines.length; i++) {
-          var line = _this2.lines[i].trim();
+        for (var i = 1; i < _this4.lines.length; i++) {
+          var line = _this4.lines[i].trim();
+          if (line.length == 0) continue;
+
           // проверяем на неразрещенные символы
-          matches = _this2.CHECK_SYMBOLS.exec(line);
+          matches = _this4.CHECK_SYMBOLS.exec(line);
           if (matches) {
-            _this2.addError('Неразрещенный символ', i, matches.index);
+            _this4.addError('Неразрещенный символ', i, matches.index);
           }
 
           // =категория
           matches = /^=([^=]+)$/.exec(line);
           if (matches) {
-            if (currentCategory) _this2.addError('Открытие категории, но предыдущая еще не закрылась', i);
+            if (currentCategory) _this4.addError('Открытие категории, но предыдущая еще не закрылась', i);
             currentCategory = matches[1];
             continue;
           }
 
           // закрытие категории "=="
           if (/^\s*==\s*$/.test(line)) {
-            if (!currentCategory) _this2.addError('Закрытие категории, но открытия не было', i);
+            if (!currentCategory) _this4.addError('Закрытие категории, но открытия не было', i);
             currentCategory = null;
             continue;
           }
@@ -298,15 +397,15 @@ var Controller = function () {
           // -подкатегория
           matches = /^-([^-].*)$/.exec(line);
           if (matches) {
-            if (currentSubCategory) _this2.addError('Открытие подкатегории, но предыдущая еще не закрылась', i);
-            if (!currentCategory) _this2.addError('Открытие подкатегории, но родительская категория не была найдена', i);
+            if (currentSubCategory) _this4.addError('Открытие подкатегории, но предыдущая еще не закрылась', i);
+            if (!currentCategory) _this4.addError('Открытие подкатегории, но родительская категория не была найдена', i);
             currentSubCategory = matches[1];
             continue;
           }
 
           // закрытие подкатегории "--"
           if (/^\s*--\s*$/.test(line)) {
-            if (!currentSubCategory) _this2.addError('Закрытие подкатегории, но открытия не было', i);
+            if (!currentSubCategory) _this4.addError('Закрытие подкатегории, но открытия не было', i);
             currentSubCategory = null;
             continue;
           }
@@ -324,18 +423,18 @@ var Controller = function () {
             curCategoryWorkers = workers[cat].sub[currentSubCategory];
           } else curCategoryWorkers = workers[cat].workers;
 
-          _this2._parseWorker(line, {
+          _this4._parseWorker(line, {
             workers: curCategoryWorkers,
             line: i
           });
         }
 
-        if (currentCategory) _this2.addError('Неверно открыты/закрыты категории.', _this2.lines.length);
+        if (currentCategory) _this4.addError('Неверно открыты/закрыты категории.', _this4.lines.length);
 
         // проверяем работников по БД
-        _this2._checkWorkers(workers).then(function (fioErrors) {
-          resolve(fioErrors, workers, organization);
-        }.bind(_this2));
+        _this4._checkWorkers(workers).then(function (fioErrors) {
+          resolve({ fioErrors: fioErrors, workers: workers, organization: organization });
+        }.bind(_this4));
       });
     }
 
@@ -457,11 +556,10 @@ var Controller = function () {
       }
 
       return $.ajax({
-        url: '/admin/workers/check_new_workers',
+        url: '/admin/api/workers/check_new_workers',
         method: 'post',
         data: {
-          workers: JSON.stringify(data),
-          _token: window._token
+          workers: JSON.stringify(data)
         }
       });
     }
@@ -474,7 +572,7 @@ var Controller = function () {
   }, {
     key: '_showFile',
     value: function _showFile() {
-      var _this3 = this;
+      var _this5 = this;
 
       var $el = $('.file');
       $el.html('');
@@ -482,12 +580,12 @@ var Controller = function () {
       // выводим построчно весь файл
 
       var _loop = function _loop(i) {
-        var line = _this3.lines[i],
+        var line = _this5.lines[i],
             lineErrors = undefined;
 
         // ошибки в этой строке
-        if (_this3.errors[i]) {
-          lineErrors = _this3.errors[i].map(function (err) {
+        if (_this5.errors[i]) {
+          lineErrors = _this5.errors[i].map(function (err) {
             // если есть позиция символа, выделяем его
             if (err[1]) {
               var s = line.substr(err[1], 1);
@@ -500,7 +598,7 @@ var Controller = function () {
         // если в строке работник и по нему есть ошибки, выводим их
         if (i != 0 && !/^(--|==)/.test(line) && line.length != 0) {
           var matches = /([^,]+),/.exec(line);
-          if (matches && _this3.FIOErrors.indexOf(matches[1]) >= 0) {
+          if (matches && _this5.fioErrors.indexOf(matches[1]) >= 0) {
             line = '<span class="warning-sym">' + matches[1] + '</span>' + line.substr(matches[1].length);
           }
         }
@@ -512,6 +610,8 @@ var Controller = function () {
       for (var i = 0; i < this.lines.length; i++) {
         _loop(i);
       }
+
+      return Promise.resolve();
     }
   }]);
 
@@ -533,6 +633,7 @@ var helpers = exports.helpers = {
 
   hidePreloader: function hidePreloader() {
     $('body').removeClass('preloader');
+    return Promise.resolve();
   }
 };
 
@@ -570,7 +671,7 @@ function Router() {
   _classCallCheck(this, Router);
 
   // роуты добавлять здесь
-  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/\d+\/workers$/]];
+  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/\d+\/addWorkers$/]];
 
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;

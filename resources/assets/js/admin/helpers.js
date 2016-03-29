@@ -5,5 +5,6 @@ export let helpers = {
 
   hidePreloader: () => {
     $('body').removeClass('preloader');
+    return Promise.resolve();
   },
 };

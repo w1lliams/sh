@@ -9,15 +9,15 @@ class Worker extends Model
   /**
    * @var array
    */
-  protected $fillable = ['fio'];
+  protected $fillable = ['fio', 'position', 'department', 'subDepartment'];
 
 
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
-  public function position()
+  public function snapshot()
   {
-    return $this->belongsTo('App\Position');
+    return $this->belongsTo('App\Snapshot');
   }
 
   /**
