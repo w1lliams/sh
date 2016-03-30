@@ -39,5 +39,29 @@ export default new class {
     typeahead('name', 'fullName');
     typeahead('edrpou', 'edrpou');
     typeahead('chief', 'fullName');
+
+    // поиск по городу
+    $('input[name=city]').typeahead(
+      {
+        highlight: true,
+        classNames: { dataset: 'dropdown-menu tt-dataset' }
+      },
+      {
+        async: true,
+        limit: 7,
+        display: 'name',
+        templates: {
+          notFound: () => 'Ничего не найдено',
+          pending: () => 'Загружаем...'
+        },
+
+        source: _.debounce((query, callback, asyncCallback) => {
+          $.ajax({
+            url: '/admin/api/city/search',
+            data: {name: query}
+          }).then(asyncCallback);
+        }, 500)
+      }
+    );
   }
 };

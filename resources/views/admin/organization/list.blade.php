@@ -26,6 +26,10 @@
                 {!! Form::text('chief', request('chief'), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
             </div>
             <div class="form-group">
+                {!! Form::label('city', 'Город', ['class' => 'control-label']) !!}<br>
+                {!! Form::text('city', request('city'), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+            </div>
+            <div class="form-group">
                 {!! Form::label('type', 'Тип', ['class' => 'control-label']) !!}<br>
                 {!! Form::select('type[]', $types->toArray(), request('type'), ['class' => 'multiselect', 'multiple']) !!}
             </div>

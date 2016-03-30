@@ -32,10 +32,10 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::get('organization',                          'OrganizationController@fetch')->name('organization');
     Route::get('organization/create',                   'OrganizationController@createPage');
     Route::post('organization/create',                  'OrganizationController@create');
-    Route::get('organization/{organization}/edit',      'OrganizationController@editPage');
+    Route::get('organization/{organization}/edit',      'OrganizationController@editPage')->name('edit_organization');
     Route::post('organization/{organization}/edit',     'OrganizationController@create');
-    Route::get('organization/{organization}/workers',   'WorkerController@workersPage');
-    Route::get('organization/{organization}/addWorkers', 'WorkerController@addWorkersPage');
+    Route::get('organization/{organization}/workers',   'WorkerController@workersPage')->name('workers');
+    Route::get('organization/{organization}/addWorkers', 'WorkerController@addWorkersPage')->name('add_workers');
     Route::get('organization/{organization}/snapshot/{snapshot}', 'WorkerController@snapshotPage');
 
     Route::get('status',                                ['uses' => 'StatusController@main', 'as' => 'status']);
@@ -59,5 +59,6 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
         Route::get('organization/search',                           'OrganizationController@search');
         Route::post('workers/check_new_workers',                    'WorkerController@checkNewWorkers');
         Route::post('organization/{organization}/push_workers',     'WorkerController@pushWorkers');
+        Route::get('city/search',                                   'CityController@search');
     });
 });

@@ -19,7 +19,10 @@ class WorkerController extends Controller
    */
   public function addWorkersPage(Organization $organization)
   {
-    return view('admin.organization.add_workers');
+    return view('admin.organization.add_workers', [
+      'organization' => $organization,
+      'menu' => 'add_workers'
+    ]);
   }
 
   /**
@@ -33,7 +36,8 @@ class WorkerController extends Controller
 
     return view('admin.organization.snapshots', [
       'organization' => $organization,
-      'snapshots' => $snapshots
+      'snapshots' => $snapshots,
+      'menu' => 'workers'
     ]);
   }
 
@@ -67,7 +71,8 @@ class WorkerController extends Controller
     return view('admin.organization.workers', [
       'organization' => $organization,
       'snapshot' => $snapshot,
-      'workers' => $result
+      'workers' => $result,
+      'menu' => 'workers'
     ]);
   }
 

@@ -123,6 +123,12 @@ class Organization extends Model
       });
     }
 
+    if(!empty($params['city'])) {
+      $query->whereHas('city', function($query) use ($params) {
+        $query->where('name', 'like', "%{$params['city']}%");
+      });
+    }
+
     if(!empty($params['edrpou']))
       $query->where('edrpou', 'like', $params['edrpou'].'%');
 

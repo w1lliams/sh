@@ -46,4 +46,10 @@ class CityController extends Controller
     $city->delete();
     return redirect()->route('admin::city');
   }
+
+  public function search(Request $request)
+  {
+    $cities = City::where('name', 'like', "%{$request->name}%")->limit(10)->get();
+    return response()->json($cities);
+  }
 }

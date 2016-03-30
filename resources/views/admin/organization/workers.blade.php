@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 @section('content')
 <div class="container page-workers">
+    @include('admin.organization.menu')
     <h4>Список работников от &laquo;{{$snapshot->created_at}}&raquo;</h4>
     <ul class="workers-list">
         @foreach($workers as $departmentName => $department)

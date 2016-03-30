@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container page-workers">
-    <h4>Работники</h4>
+    @include('admin.organization.menu')
     <input type="file" class="form-control input-lg" name="file">
 
     <div class="btn btn-block btn-primary done">Все верно, сохранить работников</div>

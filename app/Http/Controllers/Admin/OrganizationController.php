@@ -9,6 +9,7 @@ use App\Opf;
 use App\Type;
 use App\City;
 use App\Organization;
+use App\Worker;
 use Collective\Html\FormFacade;
 use Illuminate\Http\Request;
 
@@ -60,6 +61,7 @@ class OrganizationController extends Controller
      */
     public function editPage(Organization $organization)
     {
+        $organization->load('chief');
         FormFacade::model($organization);
         return view('admin.organization.create', [
           'statuses' => Status::lists('name', 'id'),
@@ -70,6 +72,7 @@ class OrganizationController extends Controller
           'organization' => $organization,
           'phone' => $organization->phone,
           'email' => $organization->email,
+          'menu' => 'edit'
         ]);
     }
 
@@ -99,6 +102,21 @@ class OrganizationController extends Controller
         $organization->type()->associate($request->type);
         $organization->city()->associate($request->city);
         $organization->status()->associate($request->status);
+
+        // редактирование существующего начальника
+        if(isset($request->chief['id']) && !is_null($chief = Worker::find($request->chief['id']))) {
+            $chief->fio = $request->chief['fio'];
+            $organization->chief()->associate($chief);
+            $chief->save();
+        }
+        // создание нового сотрудника "руководитель"
+        elseif (!empty($request->chief['fio'])) {
+            $chief = new Worker;
+            $chief->fio = $request->chief['fio'];
+            $chief->position = 'Керівник';
+            $chief->save();
+            $organization->chief()->associate($chief);
+        }
         $organization->save();
 
         return redirect()->route('admin::organization');

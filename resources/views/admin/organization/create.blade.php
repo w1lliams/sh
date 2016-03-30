@@ -2,8 +2,10 @@
 
 @section('content')
     <div class="container">
-        <h4>{{isset($organization) ? 'Редактирование организации' : 'Создание организации'}}</h4>
-        <br>
+        @if(isset($organization))
+            @include('admin.organization.menu')
+        @endif
+
         @include('common.errors')
         <form action="{{isset($organization) ? url('admin/organization/'. $organization->id .'/edit') : url('admin/organization/create')}}" method="post" class="form-horizontal">
             {{ csrf_field() }}
@@ -82,6 +84,15 @@
                         <input type="email" name="email[]" class="form-control">
                     @endforelse
                     <a class="pull-right duplicateForm">добавить еще e-mail</a>
+                </div>
+            </div>
+
+            {{Form::hidden('chief[id]')}}
+
+            <div class="form-group">
+                {!! Form::label('chief[fio]', 'Руководитель', ['class' => 'col-md-2 control-label']) !!}
+                <div class="col-md-10">
+                    {!! Form::text('chief[fio]', old('chief.fio'), ['class' => 'form-control']) !!}
                 </div>
             </div>
 

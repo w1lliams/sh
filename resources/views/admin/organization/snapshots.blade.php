@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container page-snapshots">
-    <h4>Снимки списков работников</h4>
+    @include('admin.organization.menu')
     <div class="list-group">
         @foreach($snapshots as $snapshot)
             <a href="{{url("/admin/organization/{$organization->id}/snapshot/{$snapshot->id}")}}" class="list-group-item">
