@@ -6,7 +6,7 @@
     <div class="list-group">
         @foreach($snapshots as $snapshot)
             <a href="{{url("/admin/organization/{$organization->id}/snapshot/{$snapshot->id}")}}" class="list-group-item">
-                {{$snapshot->created_at}}
+                {{$snapshot->date ? $snapshot->date->format('d.m.Y') : ''}} - загружен {{$snapshot->created_at}}
             </a>
         @endforeach
     </div>

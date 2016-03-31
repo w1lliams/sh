@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Organization;
 use App\Snapshot;
 use App\Worker;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -107,6 +108,7 @@ class WorkerController extends Controller
     $snapshot = new Snapshot;
     $snapshot->name = $organization->fullName;
     $snapshot->edrpou = $organization->edrpou;
+    $snapshot->date = Carbon::parse($request->get('date'));
     $snapshot->organization()->associate($organization);
     $snapshot->save();
 
@@ -129,6 +131,37 @@ class WorkerController extends Controller
     }
 
     Worker::insert($workers);
+  }
+
+  /**
+   * Редактирование работника
+   * @param Request $request
+   * @param Worker $worker
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function update(Request $request, Worker $worker)
+  {
+    $worker->update($request->all());
+    return response()->json($worker);
+  }
+
+  /**
+   * Редактирование названия отдела/подотдела
+   * @param Request $request
+   */
+  public function updateDepartment(Request $request)
+  {
+    $this->validate($request, [
+      'snapshot' => 'required|numeric',
+      'field' => 'in:department,subDepartment',
+      'name' => 'required',
+      'newName' => 'required'
+    ]);
+
+    $field = $request->get('field');
+    Worker::where('snapshot_id', $request->get('snapshot'))
+      ->where($field, $request->get('name'))
+      ->update([$field => $request->get('newName')]);
   }
 
   /**

@@ -40,7 +40,10 @@ class Controller {
     return $.ajax({
       url: `/admin/api/organization/${this.originOrganization.id}/push_workers`,
       method: 'post',
-      data: {workers: this.workers},
+      data: {
+        workers: this.workers,
+        date: this.organization.date
+      },
       success: () => {
         window.location.href = `/admin/organization/${this.originOrganization.id}/workers`;
       }
@@ -262,7 +265,8 @@ class Controller {
 
     return {
       workersCount: parseInt(data[1].trim()),
-      text: data.slice(2).join(',').trim()
+      text: data.slice(2).join(',').trim(),
+      date
     };
   }
 
@@ -306,7 +310,7 @@ class Controller {
     }
 
     return $.ajax({
-      url: '/admin/api/workers/check_new_workers',
+      url: '/admin/api/worker/check_new_workers',
       method: 'post',
       data: {
         workers: JSON.stringify(data)

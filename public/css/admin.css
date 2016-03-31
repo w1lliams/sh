@@ -5768,6 +5768,11 @@ body.preloader #preloader {
     background-color: #2196F3;
     color: #fff; }
 
+.page-workers .workers-list .worker, .page-workers .workers-list .department-name {
+  cursor: pointer; }
+  .page-workers .workers-list .worker:hover, .page-workers .workers-list .department-name:hover {
+    color: #2196F3; }
+
 .page-workers .workers-list ul {
   margin-bottom: 15px; }
 

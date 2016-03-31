@@ -132,6 +132,12 @@ body.preloader {
 
 .page-workers {
   .workers-list {
+    .worker, .department-name {
+      cursor: pointer;
+      &:hover {
+        color: $brand-primary;
+      }
+    }
     ul {
       margin-bottom: 15px;
     }

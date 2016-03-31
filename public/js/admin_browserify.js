@@ -25,7 +25,7 @@ $(function () {
   });
 });
 
-},{"./router":6}],2:[function(require,module,exports){
+},{"./router":7}],2:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -255,7 +255,10 @@ var Controller = function () {
       return $.ajax({
         url: '/admin/api/organization/' + this.originOrganization.id + '/push_workers',
         method: 'post',
-        data: { workers: this.workers },
+        data: {
+          workers: this.workers,
+          date: this.organization.date
+        },
         success: function success() {
           window.location.href = '/admin/organization/' + _this.originOrganization.id + '/workers';
         }
@@ -485,7 +488,8 @@ var Controller = function () {
 
       return {
         workersCount: parseInt(data[1].trim()),
-        text: data.slice(2).join(',').trim()
+        text: data.slice(2).join(',').trim(),
+        date: date
       };
     }
 
@@ -581,7 +585,7 @@ var Controller = function () {
       }
 
       return $.ajax({
-        url: '/admin/api/workers/check_new_workers',
+        url: '/admin/api/worker/check_new_workers',
         method: 'post',
         data: {
           workers: JSON.stringify(data)
@@ -645,7 +649,94 @@ var Controller = function () {
 
 exports.default = new Controller();
 
-},{"../helpers":5}],5:[function(require,module,exports){
+},{"../helpers":6}],5:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+exports.default = new (function () {
+  function _class() {
+    _classCallCheck(this, _class);
+  }
+
+  _createClass(_class, [{
+    key: 'index',
+    value: function index(orgnaization, snapshot) {
+      $('.worker').click(this.editWorker.bind(this));
+      $('.department-name').click(this.editDepartment.bind(this, snapshot));
+    }
+
+    /**
+     * Редактирование сотрудника
+     * @param e
+     * @returns {*}
+     */
+
+  }, {
+    key: 'editWorker',
+    value: function editWorker(e) {
+      var $el = $(e.currentTarget),
+          source = $el.text().split(','),
+          data = {};
+
+      // спрашиваем ФИО
+      var answer = undefined;
+      if (_.isEmpty(answer = prompt('ФИО', source[0]))) return;
+      data.fio = answer.trim();
+
+      // спрашиваем должность
+      if (_.isEmpty(answer = prompt('должность', source[1].trim()))) return;
+      data.position = answer.trim();
+
+      return $.ajax({
+        method: 'post',
+        url: '/admin/api/worker/' + $el.data('id'),
+        data: data,
+        success: function success(data) {
+          return $el.html(data.fio + ', ' + data.position);
+        }
+      });
+    }
+
+    /**
+     * Редактирование название отдела
+     * @param snapshot
+     * @param e
+     */
+
+  }, {
+    key: 'editDepartment',
+    value: function editDepartment(snapshot, e) {
+      var $el = $(e.currentTarget),
+          name = $el.text();
+      var result = prompt('Отдел', name);
+      if (_.isEmpty(result)) return;
+
+      $.ajax({
+        method: 'post',
+        url: '/admin/api/worker/change_department',
+        data: {
+          snapshot: snapshot, name: name,
+          newName: result.trim(),
+          field: $el.data('sub') ? 'subDepartment' : 'department'
+        },
+        success: function success(data) {
+          return $el.html(result);
+        }
+      });
+    }
+  }]);
+
+  return _class;
+}())();
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -662,7 +753,7 @@ var helpers = exports.helpers = {
   }
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -677,11 +768,17 @@ var _organization_workers = require('./controllers/organization_workers');
 
 var _organization_workers2 = _interopRequireDefault(_organization_workers);
 
+var _workers = require('./controllers/workers');
+
+var _workers2 = _interopRequireDefault(_workers);
+
 var _organization_list = require('./controllers/organization_list');
 
 var _organization_list2 = _interopRequireDefault(_organization_list);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -695,9 +792,11 @@ function Router() {
 
   _classCallCheck(this, Router);
 
+  url = url.replace(/\/$/, '');
   // роуты добавлять здесь
-  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/\d+\/addWorkers$/]];
+  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/(\d+)\/addWorkers$/], [_workers2.default.index.bind(_workers2.default), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/]];
 
+  var matches = undefined;
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
@@ -706,9 +805,9 @@ function Router() {
     for (var _iterator = rules[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var rule = _step.value;
 
-      if (rule[1].test(url)) {
+      if (matches = rule[1].exec(url)) {
         if (typeof rule[0] != 'function') throw new Error('invalid route method \'' + rule[1] + '\'');
-        rule[0]();
+        rule[0].apply(rule, _toConsumableArray(matches.slice(1)));
         break;
       }
     }
@@ -730,6 +829,6 @@ function Router() {
 
 exports.default = Router;
 
-},{"./controllers/organization_create":2,"./controllers/organization_list":3,"./controllers/organization_workers":4}]},{},[1]);
+},{"./controllers/organization_create":2,"./controllers/organization_list":3,"./controllers/organization_workers":4,"./controllers/workers":5}]},{},[1]);
 
 //# sourceMappingURL=admin_browserify.js.map

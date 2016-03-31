@@ -8,6 +8,8 @@ class Snapshot extends Model
 {
   protected $fillable = ['name', 'edrpou'];
 
+  protected $dates = ['date'];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */

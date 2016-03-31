@@ -57,7 +57,9 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     // API
     Route::group(['prefix' => 'api'], function () {
         Route::get('organization/search',                           'OrganizationController@search');
-        Route::post('workers/check_new_workers',                    'WorkerController@checkNewWorkers');
+        Route::post('worker/check_new_workers',                     'WorkerController@checkNewWorkers');
+        Route::post('worker/change_department',                     'WorkerController@updateDepartment');
+        Route::post('worker/{worker}',                              'WorkerController@update');
         Route::post('organization/{organization}/push_workers',     'WorkerController@pushWorkers');
         Route::get('city/search',                                   'CityController@search');
     });

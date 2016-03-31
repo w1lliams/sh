@@ -2,15 +2,15 @@
 @section('content')
 <div class="container page-workers">
     @include('admin.organization.menu')
-    <h4>Список работников от &laquo;{{$snapshot->created_at}}&raquo;</h4>
+    <h4>Список работников от {{$snapshot->date ? $snapshot->date->format('d.m.Y') : ''}} <small class="text-muted">(загружен {{$snapshot->created_at}})</small></h4>
     <ul class="workers-list">
         @foreach($workers as $departmentName => $department)
             <li class="department">
                 @if(!empty($department['workers']))
-                    <span>{{$departmentName}}</span>
+                    <span class="department-name">{{$departmentName}}</span>
                     <ul>
                     @foreach($department['workers'] as $worker)
-                        <li>{{$worker->fio}}, {{$worker->position}}</li>
+                        <li class="worker" data-id="{{$worker->id}}">{{$worker->fio}}, {{$worker->position}}</li>
                     @endforeach
                     </ul>
                 @endif
@@ -19,10 +19,10 @@
                     @foreach($department['sub'] as $subDepartmentName => $subWorkers)
                         <ul>
                             <li class="department">
-                                <span>{{$subDepartmentName}}</span>
+                                <span class="department-name" data-sub="true">{{$subDepartmentName}}</span>
                                 <ul>
                                 @foreach($subWorkers as $worker)
-                                    <li>{{$worker->fio}}, {{$worker->position}}</li>
+                                    <li class="worker" data-id="{{$worker->id}}">{{$worker->fio}}, {{$worker->position}}</li>
                                 @endforeach
                                 </ul>
                             </li>
