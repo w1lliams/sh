@@ -40,28 +40,16 @@ export default new class {
     typeahead('edrpou', 'edrpou');
     typeahead('chief', 'fullName');
 
-    // поиск по городу
-    $('input[name=city]').typeahead(
-      {
-        highlight: true,
-        classNames: { dataset: 'dropdown-menu tt-dataset' }
-      },
-      {
-        async: true,
-        limit: 7,
-        display: 'name',
-        templates: {
-          notFound: () => 'Ничего не найдено',
-          pending: () => 'Загружаем...'
-        },
+    $('.show-department-btn').click(this._showDepartments.bind(this));
+  }
 
-        source: _.debounce((query, callback, asyncCallback) => {
-          $.ajax({
-            url: '/admin/api/city/search',
-            data: {name: query}
-          }).then(asyncCallback);
-        }, 500)
-      }
-    );
+  /**
+   * Выводим подразделения
+   * @param e
+   * @private
+   */
+  _showDepartments(e) {
+    const organizationId = $(e.currentTarget).data('organization');
+    $(`.department${organizationId}`).fadeToggle('fast');
   }
 };

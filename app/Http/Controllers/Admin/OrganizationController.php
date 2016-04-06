@@ -23,7 +23,8 @@ class OrganizationController extends Controller
     public function fetch(Request $request)
     {
         $organizations = Organization::filter($request->all())
-          ->with('status', 'city', 'opf', 'type', 'chief')
+          ->with('status', 'city', 'opf', 'type', 'chief', 'organizations', 'organizations.city',
+            'organizations.type', 'organizations.chief', 'organizations.status', 'organizations.opf')
           ->orderBy('id', 'desc')
           ->get();
 
@@ -46,11 +47,33 @@ class OrganizationController extends Controller
         return view('admin.organization.create', [
             'statuses' => Status::lists('name', 'id'),
             'opfs'     => Opf::lists('name', 'id'),
-            'types'    => Type::lists('name', 'id'),
             'cities'   => City::lists('name', 'id'),
+            'type'     => 1, // Юр лицо
 
             'phone' => $request->old('phone', []),
             'email' => $request->old('email', []),
+        ]);
+    }
+
+    /**
+     * Страница добавления подразделения
+     * @param Request $request
+     * @param Organization $organization
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function addDepartmentPage(Request $request, Organization $organization)
+    {
+        return view('admin.organization.create', [
+          'statuses' => Status::lists('name', 'id'),
+          'opfs'     => Opf::lists('name', 'id'),
+          'cities'   => City::lists('name', 'id'),
+          'type'     => 2, // Подразделение
+          'parent'   => $organization->id,
+
+          'organization' => $organization,
+          'phone' => $request->old('phone', []),
+          'email' => $request->old('email', []),
+          'menu' => 'add_department'
         ]);
     }
 
@@ -63,11 +86,12 @@ class OrganizationController extends Controller
     {
         $organization->load('chief');
         FormFacade::model($organization);
+
         return view('admin.organization.create', [
           'statuses' => Status::lists('name', 'id'),
           'opfs'     => Opf::lists('name', 'id'),
-          'types'    => Type::lists('name', 'id'),
           'cities'   => City::lists('name', 'id'),
+          'type'     => $organization->type_id,
 
           'organization' => $organization,
           'phone' => $organization->phone,
@@ -103,6 +127,10 @@ class OrganizationController extends Controller
         $organization->city()->associate($request->city);
         $organization->status()->associate($request->status);
 
+        // если передали родительскую организацию, сохраняем связь
+        if(!empty($request->parent))
+            $organization->parent_id = $request->parent;
+
         // редактирование существующего начальника
         if(isset($request->chief['id']) && !is_null($chief = Worker::find($request->chief['id']))) {
             $chief->fio = $request->chief['fio'];
@@ -119,7 +147,8 @@ class OrganizationController extends Controller
         }
         $organization->save();
 
-        return redirect()->route('admin::organization');
+        $request->session()->flash('save', 'done');
+        return redirect()->route('admin::edit_organization', $organization->id);
     }
 
     /**

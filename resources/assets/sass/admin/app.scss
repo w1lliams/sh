@@ -150,3 +150,24 @@ body.preloader {
     }
   }
 }
+
+.page-organizations {
+  .show-department-btn {
+    cursor: pointer;
+    border-bottom: 1px dashed $text-color;
+    margin-top: 10px;
+    font-weight: bold;
+    display: inline-block;
+  }
+
+  .department {
+    display: none;
+    background-color: darken(#fff, 3%);
+    &:last-child .relation {
+      &:before, &:after {
+        bottom: auto;
+        height: 16px;
+      }
+    }
+  }
+}

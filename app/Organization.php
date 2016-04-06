@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Organization extends Model
 {
+  use RevisionableTrait;
+
   /**
    * @var array
    */
@@ -113,19 +115,16 @@ class Organization extends Model
       }
     };
 
+    $query->where('type_id', 1);
+
     $inCriteria('status', 'status_id');
     $inCriteria('opf', 'opf_id');
     $inCriteria('type', 'type_id');
+    $inCriteria('city', 'city_id');
 
     if(!empty($params['chief'])) {
       $query->whereHas('chief', function($query) use ($params) {
         $query->where('fio', 'like', "%{$params['chief']}%");
-      });
-    }
-
-    if(!empty($params['city'])) {
-      $query->whereHas('city', function($query) use ($params) {
-        $query->where('name', 'like', "%{$params['city']}%");
       });
     }
 

@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 {!! Form::label('city', 'Город', ['class' => 'control-label']) !!}<br>
-                {!! Form::text('city', request('city'), ['class' => 'form-control', 'autocomplete' => 'off']) !!}
+                {!! Form::select('city[]', $cities->toArray(), request('city'), ['class' => 'multiselect', 'multiple']) !!}
             </div>
             <div class="form-group">
                 {!! Form::label('type', 'Тип', ['class' => 'control-label']) !!}<br>
@@ -43,7 +43,7 @@
     </div>
 
     <div>Всего: {{count($organizations)}}</div>
-    <table class="table table-striped">
+    <table class="table">
         <thead>
             <tr>
                 <th>№</th>
@@ -59,17 +59,42 @@
         </thead>
         <tbody>
             @foreach($organizations as $i => $organization)
-                <tr>
+                <tr class="organization">
                     <td>{{$i + 1}}</td>
                     <td>{{$organization->status->name or ''}}</td>
                     <td><a href="{{url("admin/organization/{$organization->id}/edit")}}">{{$organization->edrpou}}</a></td>
-                    <td><a href="{{url("admin/organization/{$organization->id}/edit")}}">{{$organization->fullName}}</a></td>
+                    <td>
+                        <a href="{{url("admin/organization/{$organization->id}/edit")}}">{{$organization->fullName}}</a>
+                        @if(count($organization->organizations) > 0)
+                            <div>
+                                <div class="show-department-btn" data-organization="{{$organization->id}}">Показать подразделения ({{count($organization->organizations)}})</div>
+                            </div>
+                        @endif
+                    </td>
                     <td>{{$organization->chief->fio or ''}}</td>
                     <td>{{$organization->type->name or ''}}</td>
                     <td>{{$organization->opf->name or ''}}</td>
                     <td>{{$organization->city->name or '' }}</td>
                     <td>{{$organization->address}}</td>
                 </tr>
+
+                @if(count($organization->organizations) > 0)
+                    @foreach($organization->organizations as $department)
+                        <tr class="department department{{$organization->id}}">
+                            <td class="relation"></td>
+                            <td>{{$department->status->name or ''}}</td>
+                            <td><a href="{{url("admin/organization/{$department->id}/edit")}}">{{$department->edrpou}}</a></td>
+                            <td>
+                                <a href="{{url("admin/organization/{$department->id}/edit")}}">{{$department->fullName}}</a>
+                            </td>
+                            <td>{{$department->chief->fio or ''}}</td>
+                            <td>{{$department->type->name or ''}}</td>
+                            <td>{{$department->opf->name or ''}}</td>
+                            <td>{{$department->city->name or '' }}</td>
+                            <td>{{$department->address}}</td>
+                        </tr>
+                    @endforeach
+                @endif
             @endforeach
         </tbody>
     </table>

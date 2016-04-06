@@ -5781,4 +5781,18 @@ body.preloader #preloader {
   .page-workers .workers-list .department span {
     font-weight: bold; }
 
+.page-organizations .show-department-btn {
+  cursor: pointer;
+  border-bottom: 1px dashed #666;
+  margin-top: 10px;
+  font-weight: bold;
+  display: inline-block; }
+
+.page-organizations .department {
+  display: none;
+  background-color: #f7f7f7; }
+  .page-organizations .department:last-child .relation:before, .page-organizations .department:last-child .relation:after {
+    bottom: auto;
+    height: 16px; }
+
 /*# sourceMappingURL=admin.css.map */

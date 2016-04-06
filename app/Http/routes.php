@@ -34,6 +34,7 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::post('organization/create',                  'OrganizationController@create');
     Route::get('organization/{organization}/edit',      'OrganizationController@editPage')->name('edit_organization');
     Route::post('organization/{organization}/edit',     'OrganizationController@create');
+    Route::get('organization/{organization}/addDepartment', 'OrganizationController@addDepartmentPage')->name('add_department');
     Route::get('organization/{organization}/workers',   'WorkerController@workersPage')->name('workers');
     Route::get('organization/{organization}/addWorkers', 'WorkerController@addWorkersPage')->name('add_workers');
     Route::get('organization/{organization}/snapshot/{snapshot}', 'WorkerController@snapshotPage');

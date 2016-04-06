@@ -7,8 +7,16 @@
         @endif
 
         @include('common.errors')
-        <form action="{{isset($organization) ? url('admin/organization/'. $organization->id .'/edit') : url('admin/organization/create')}}" method="post" class="form-horizontal">
+        @if(session()->get('save'))
+        <p class="alert alert-success">Сохранено</p>
+        @endif
+        <form action="{{isset($organization) && !isset($parent) ? url('admin/organization/'. $organization->id .'/edit') : url('admin/organization/create')}}" method="post" class="form-horizontal">
             {{ csrf_field() }}
+
+            {!! Form::hidden('type', $type) !!}
+            @if(isset($parent))
+                {!! Form::hidden('parent', $parent) !!}
+            @endif
 
             <div class="form-group">
                 {!! Form::label('status', 'Статус организации', ['class' => 'col-md-2 control-label']) !!}
@@ -20,12 +28,6 @@
                 {!! Form::label('opf', 'ОПФ', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
                     {!! Form::select('opf', $opfs, isset($organization) && $organization->opf ? $organization->opf->id : old('opf'), ['class' => 'multiselect']) !!}
-                </div>
-            </div>
-            <div class="form-group">
-                {!! Form::label('type', 'Тип', ['class' => 'col-md-2 control-label']) !!}
-                <div class="col-md-10">
-                    {!! Form::select('type', $types, isset($organization) && $organization->type ? $organization->type->id : old('type'), ['class' => 'multiselect']) !!}
                 </div>
             </div>
             <div class="form-group">
@@ -61,7 +63,7 @@
             <div class="form-group">
                 {!! Form::label('city', 'Город', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    {!! Form::select('city', $cities, isset($organization) && $organization->city ? $organization->city->id : old('city'), ['class' => 'multiselect']) !!}
+                    {!! Form::select('city', ['' => 'Другой'] + $cities->toArray(), isset($organization) && $organization->city ? $organization->city->id : old('city'), ['class' => 'multiselect']) !!}
                 </div>
             </div>
             <div class="form-group">

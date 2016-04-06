@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Worker extends Model
 {
+  use RevisionableTrait;
   /**
    * @var array
    */

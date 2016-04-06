@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
  * Статусы предприятия
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Status extends Model
 {
+  use RevisionableTrait;
+
   /**
    * @var array
    */
