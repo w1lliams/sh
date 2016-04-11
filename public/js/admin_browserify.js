@@ -25,7 +25,7 @@ $(function () {
   });
 });
 
-},{"./router":7}],2:[function(require,module,exports){
+},{"./router":8}],2:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -67,12 +67,13 @@ exports.default = new (function () {
       if (matches) $('input[name=postCode]').val(matches[1]);
 
       // ищем город и выбираем его в выпадающем списке
-      matches = /(?:місто|м\.)\s+([а-яїґ]+)/i.exec($address.val());
+      matches = /(?:місто|м\.)\s*([а-яїґ]+)/i.exec($address.val());
       if (matches) {
         var $select = $('select[name=city]');
         var $option = $select.find('option').filter(function (key, option) {
           return $(option).text().toLowerCase() == matches[1].toLowerCase();
         });
+
         $option.attr('selected', 'true');
         $select.multiselect('refresh');
       }
@@ -157,6 +158,7 @@ exports.default = new (function () {
       typeahead('chief', 'fullName');
 
       $('.show-department-btn').click(this._showDepartments.bind(this));
+      $('.show-all-departments').click(this._showAllDepartments.bind(this));
     }
 
     /**
@@ -170,6 +172,18 @@ exports.default = new (function () {
     value: function _showDepartments(e) {
       var organizationId = $(e.currentTarget).data('organization');
       $('.department' + organizationId).fadeToggle('fast');
+    }
+
+    /**
+     * Раскрываем все подразделения на странице
+     * @private
+     */
+
+  }, {
+    key: '_showAllDepartments',
+    value: function _showAllDepartments() {
+      var $el = $('tr.department');
+      if ($($el[0]).is(':visible')) $('tr.department').fadeOut('fast');else $('tr.department').fadeIn('fast');
     }
   }]);
 
@@ -639,7 +653,53 @@ var Controller = function () {
 
 exports.default = new Controller();
 
-},{"../helpers":6}],5:[function(require,module,exports){
+},{"../helpers":7}],5:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+exports.default = new (function () {
+  function _class() {
+    _classCallCheck(this, _class);
+  }
+
+  _createClass(_class, [{
+    key: 'fio',
+
+    /**
+     * Страница с переводом ФИО
+     */
+    value: function fio() {
+      $('.page-fio-translate button').click(this._translate.bind(this));
+    }
+  }, {
+    key: '_translate',
+    value: function _translate() {
+      return $.ajax({
+        url: '/admin/api/translate/fio',
+        method: 'post',
+        data: {
+          firstName: $('#i').val(),
+          lastName: $('#f').val(),
+          middleName: $('#o').val()
+        },
+        success: function success(data) {
+          console.log(data);
+        }
+      });
+    }
+  }]);
+
+  return _class;
+}())();
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -726,7 +786,7 @@ exports.default = new (function () {
   return _class;
 }())();
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -743,7 +803,7 @@ var helpers = exports.helpers = {
   }
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -766,6 +826,10 @@ var _organization_list = require('./controllers/organization_list');
 
 var _organization_list2 = _interopRequireDefault(_organization_list);
 
+var _translate = require('./controllers/translate');
+
+var _translate2 = _interopRequireDefault(_translate);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -784,7 +848,7 @@ function Router() {
 
   url = url.replace(/\/$/, '');
   // роуты добавлять здесь
-  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/(\d+)\/addWorkers$/], [_workers2.default.index.bind(_workers2.default), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/]];
+  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/\d+\/addDepartment$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/(\d+)\/addWorkers$/], [_workers2.default.index.bind(_workers2.default), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/], [_translate2.default.fio.bind(_translate2.default), /admin\/translate\/fio$/]];
 
   var matches = undefined;
   var _iteratorNormalCompletion = true;
@@ -819,6 +883,6 @@ function Router() {
 
 exports.default = Router;
 
-},{"./controllers/organization_create":2,"./controllers/organization_list":3,"./controllers/organization_workers":4,"./controllers/workers":5}]},{},[1]);
+},{"./controllers/organization_create":2,"./controllers/organization_list":3,"./controllers/organization_workers":4,"./controllers/translate":5,"./controllers/workers":6}]},{},[1]);
 
 //# sourceMappingURL=admin_browserify.js.map

@@ -25,6 +25,6 @@ elixir(function(mix) {
   mix.version(['css/admin.css', 'css/app.css', 'js/admin.js']);
 
   mix.browserSync({
-    proxy: 'stophab.y'
+    proxy: 'stophab.y:8080'
   });
 });

@@ -41,6 +41,7 @@ export default new class {
     typeahead('chief', 'fullName');
 
     $('.show-department-btn').click(this._showDepartments.bind(this));
+    $('.show-all-departments').click(this._showAllDepartments.bind(this));
   }
 
   /**
@@ -51,5 +52,16 @@ export default new class {
   _showDepartments(e) {
     const organizationId = $(e.currentTarget).data('organization');
     $(`.department${organizationId}`).fadeToggle('fast');
+  }
+
+  /**
+   * Раскрываем все подразделения на странице
+   * @private
+   */
+  _showAllDepartments() {
+    const $el = $('tr.department');
+    if($($el[0]).is(':visible'))
+      $('tr.department').fadeOut('fast');
+    else $('tr.department').fadeIn('fast');
   }
 };

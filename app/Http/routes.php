@@ -55,6 +55,8 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::post('city/create',                          ['uses' => 'CityController@create']);
     Route::delete('city/{city}',                        ['uses' => 'CityController@delete']);
 
+    Route::get('translate/fio',                         'TranslateController@fioPage');
+
     // API
     Route::group(['prefix' => 'api'], function () {
         Route::get('organization/search',                           'OrganizationController@search');
@@ -63,5 +65,6 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Admin', 'prefix' => 'admi
         Route::post('worker/{worker}',                              'WorkerController@update');
         Route::post('organization/{organization}/push_workers',     'WorkerController@pushWorkers');
         Route::get('city/search',                                   'CityController@search');
+        Route::post('translate/fio',                                'TranslateController@fio');
     });
 });

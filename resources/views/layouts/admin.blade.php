@@ -31,6 +31,13 @@
                 </li>
 
                 <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="translate">Перевод <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="translate">
+                        <li><a href="{{url('admin/translate/fio')}}">ФИО</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="misc">misc <span class="caret"></span></a>
                     <ul class="dropdown-menu" aria-labelledby="misc">
                         <li><a href="{{url('admin/status')}}">статусы организаций</a></li>

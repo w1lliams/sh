@@ -108,10 +108,9 @@ class OrganizationController extends Controller
      */
     public function create(Request $request, Organization $organization = null)
     {
-        $this->validate($request, [
+        $rules = [
           'status'    => 'required|numeric',
           'city'      => 'numeric',
-          'edrpou'    => 'required|numeric',
           'opf'       => 'required|numeric',
           'type'      => 'required|numeric',
           'fullName'  => 'required|string|max:512',
@@ -119,7 +118,14 @@ class OrganizationController extends Controller
           'postCode'  => 'required|numeric',
           'address'   => 'required',
           'email.*'   => 'email'
-        ]);
+        ];
+
+        // для подразделений edrpou необязательное поле
+        if(!empty($request->parent) || (!is_null($organization) && !empty($organization->parent_id)))
+            $rules['edrpou'] = 'numeric';
+        else $rules['edrpou'] = 'required|numeric';
+
+        $this->validate($request, $rules);
 
         $organization->fill($request->all());
         $organization->opf()->associate($request->opf);
@@ -157,7 +163,7 @@ class OrganizationController extends Controller
      */
     public function search(Request $request)
     {
-        $organizations = Organization::filter($request->all())
+        $organizations = Organization::filter($request->all(), true)
           ->limit(10)
           ->get();
         return response()->json($organizations);

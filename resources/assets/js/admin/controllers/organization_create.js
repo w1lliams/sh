@@ -19,12 +19,13 @@ export default new class {
     if(matches) $('input[name=postCode]').val(matches[1]);
 
     // ищем город и выбираем его в выпадающем списке
-    matches = /(?:місто|м\.)\s+([а-яїґ]+)/i.exec($address.val());
+    matches = /(?:місто|м\.)\s*([а-яїґ]+)/i.exec($address.val());
     if(matches) {
       const $select = $('select[name=city]');
       const $option = $select.find('option').filter((key, option) => {
         return $(option).text().toLowerCase() == matches[1].toLowerCase();
       });
+
       $option.attr('selected', 'true');
       $select.multiselect('refresh');
     }

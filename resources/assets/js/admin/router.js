@@ -2,6 +2,7 @@ import organizationCreate from './controllers/organization_create';
 import addWorkers from './controllers/organization_workers';
 import workers from './controllers/workers';
 import organizationList from './controllers/organization_list';
+import translate from './controllers/translate';
 
 export default class Router {
   /**
@@ -14,8 +15,10 @@ export default class Router {
     let rules = [
       [organizationList.index.bind(organizationList), /admin\/organization$/],
       [organizationCreate.index.bind(organizationCreate), /admin\/organization\/(create|\d+\/edit)$/],
+      [organizationCreate.index.bind(organizationCreate), /admin\/organization\/\d+\/addDepartment$/],
       [addWorkers.index.bind(addWorkers), /admin\/organization\/(\d+)\/addWorkers$/],
-      [workers.index.bind(workers), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/]
+      [workers.index.bind(workers), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/],
+      [translate.fio.bind(translate), /admin\/translate\/fio$/]
     ];
 
     let matches;

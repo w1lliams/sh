@@ -39,6 +39,8 @@
             </div>
             <button type="submit" class="btn btn-primary">Фильтр</button>
             <a href="{{url('admin/organization')}}" class="btn btn-link">Сбросить</a>
+
+            <div><div class="show-all-departments">Развернуть все подразделения</div></div>
         </form>
     </div>
 

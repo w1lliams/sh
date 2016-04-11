@@ -16,8 +16,33 @@ class Fio extends Model
    */
   protected $fillable = ['name', 'nameRU'];
 
+  public static function translate($firstName, $lastName, $middleName)
+  {
+    // если передали всё, то ищем сначала польностью по ФИО
+    $fio = null;
+    if(!empty($firstName) && !empty($lastName) && !empty($middleName))
+      $fio = $lastName .' '. $firstName .' '. $middleName;
+
+
+    $result = self::where('nameRU', $fio)->orderBy('c', 'desc')->limit(1)->first();
+    if(!is_null($result)) {
+      $arr = explode(' ', $result);
+      return [
+        'firstName'  => $arr[1],
+        'lastName'   => $arr[0],
+        'middleName' => $arr[2]
+      ];
+    }
+
+    return [
+      'firstName'  => FirstName::translate($firstName),
+      'lastName'   => LastName::translate($lastName),
+      'middleName' => MiddleName::translate($middleName)
+    ];
+  }
+
   /**
-   * Проверяем на "валидность" ФИО  работников
+   * Проверяем на "валидность" ФИО работников
    * @param array $workers
    * @param $result
    */

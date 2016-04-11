@@ -102,10 +102,11 @@ class Organization extends Model
    * Поиск организаций по параметрам
    * @param $query
    * @param array $params
+   * @param bool $withDepartments
    * @return mixed
    * @internal param Request $request
    */
-  public function scopeFilter($query, array $params)
+  public function scopeFilter($query, array $params, $withDepartments = false)
   {
     $inCriteria = function($paramName, $fieldName) use ($query, $params) {
       if(isset($params[$paramName])) {
@@ -115,7 +116,8 @@ class Organization extends Model
       }
     };
 
-    $query->where('type_id', 1);
+    if(!$withDepartments && !isset($params['type']))
+      $query->where('type_id', 1);
 
     $inCriteria('status', 'status_id');
     $inCriteria('opf', 'opf_id');
