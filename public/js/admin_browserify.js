@@ -690,7 +690,9 @@ exports.default = new (function () {
           middleName: $('#o').val()
         },
         success: function success(data) {
-          console.log(data);
+          $('#i2').val(data.firstName);
+          $('#f2').val(data.lastName);
+          $('#o2').val(data.middleName);
         }
       });
     }
@@ -848,7 +850,7 @@ function Router() {
 
   url = url.replace(/\/$/, '');
   // роуты добавлять здесь
-  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/\d+\/addDepartment$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/(\d+)\/addWorkers$/], [_workers2.default.index.bind(_workers2.default), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/], [_translate2.default.fio.bind(_translate2.default), /admin\/translate\/fio$/]];
+  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/\d+\/addDepartment$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/(\d+)\/addWorkers$/], [_workers2.default.index.bind(_workers2.default), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/], [_translate2.default.fio.bind(_translate2.default), /translate$/]];
 
   var matches = undefined;
   var _iteratorNormalCompletion = true;

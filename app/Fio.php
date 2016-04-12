@@ -26,7 +26,7 @@ class Fio extends Model
 
     $result = self::where('nameRU', $fio)->orderBy('c', 'desc')->limit(1)->first();
     if(!is_null($result)) {
-      $arr = explode(' ', $result);
+      $arr = explode(' ', $result->name);
       return [
         'firstName'  => $arr[1],
         'lastName'   => $arr[0],

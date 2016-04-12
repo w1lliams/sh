@@ -16,7 +16,9 @@ export default new class {
         middleName: $('#o').val()
       },
       success: (data) => {
-        console.log(data); 
+        $('#i2').val(data.firstName);
+        $('#f2').val(data.lastName);
+        $('#o2').val(data.middleName);
       }
     });
   }

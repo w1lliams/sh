@@ -18,7 +18,7 @@ export default class Router {
       [organizationCreate.index.bind(organizationCreate), /admin\/organization\/\d+\/addDepartment$/],
       [addWorkers.index.bind(addWorkers), /admin\/organization\/(\d+)\/addWorkers$/],
       [workers.index.bind(workers), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/],
-      [translate.fio.bind(translate), /admin\/translate\/fio$/]
+      [translate.fio.bind(translate), /translate$/]
     ];
 
     let matches;

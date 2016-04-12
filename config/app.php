@@ -150,6 +150,8 @@ return [
 
         Barryvdh\Debugbar\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Bican\Roles\RolesServiceProvider::class,
+
         /*
          * Application Service Providers...
          */

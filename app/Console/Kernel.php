@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\ParseOrganizations::class,
         Commands\ParseFio::class,
         Commands\ParseNames::class,
+        Commands\Roles::class,
     ];
 
     /**

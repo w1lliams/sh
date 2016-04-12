@@ -19,13 +19,13 @@
 
     <div class="row">
         <div class="col-xs-4">
-            <input type="text" class="form-control" placeholder="Фамилия UA">
+            <input id="f2" type="text" class="form-control" placeholder="Фамилия UA">
         </div>
         <div class="col-xs-4">
-            <input type="text" class="form-control" placeholder="Имя UA">
+            <input id="i2" type="text" class="form-control" placeholder="Имя UA">
         </div>
         <div class="col-xs-4">
-            <input type="text" class="form-control" placeholder="Отчество UA">
+            <input id="o2" type="text" class="form-control" placeholder="Отчество UA">
         </div>
     </div>
 </div>

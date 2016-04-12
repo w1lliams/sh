@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "barryvdh/laravel-debugbar": "^2.1",
         "laravelcollective/html": "^5.2",
-        "venturecraft/revisionable": "^1.27"
+        "venturecraft/revisionable": "^1.27",
+        "bican/roles": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

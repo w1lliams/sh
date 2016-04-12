@@ -33,7 +33,7 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="translate">Перевод <span class="caret"></span></a>
                     <ul class="dropdown-menu" aria-labelledby="translate">
-                        <li><a href="{{url('admin/translate/fio')}}">ФИО</a></li>
+                        <li><a href="{{route('translate')}}">ФИО</a></li>
                     </ul>
                 </li>
 
