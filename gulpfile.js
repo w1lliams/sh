@@ -22,7 +22,7 @@ elixir(function(mix) {
     '../../../node_modules/typeahead.js/dist/typeahead.bundle.js',
     '../../../node_modules/lodash/lodash.js'
   ], 'public/js/admin.js');
-  mix.version(['css/admin.css', 'css/app.css', 'js/admin.js']);
+  mix.version(['css/admin.css', 'css/app.css', 'js/admin.js', 'js/admin_browserify.js']);
 
   mix.browserSync({
     proxy: 'stophab.y:8080'
