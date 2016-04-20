@@ -9,6 +9,8 @@ use App\Opf;
 use App\Type;
 use App\City;
 use App\Organization;
+use App\Inquiry;
+use App\OrganizationInquiry;
 use App\Worker;
 use Collective\Html\FormFacade;
 use Illuminate\Http\Request;
@@ -99,6 +101,57 @@ class OrganizationController extends Controller
           'menu' => 'edit'
         ]);
     }
+
+
+    public function inquiryPage(Organization $organization)
+    {
+      $inquiryHistory = OrganizationInquiry::where('organization_id', $organization->id)->with('inquiry')->get();
+      return view('admin.organization.inquiries', [
+        'inquiries'             => Inquiry::all(),
+        'organization'          => $organization,
+        'organizationInquiries' => $inquiryHistory,
+        'menu'                  => 'inquiries'
+      ]);
+    }
+
+    /**
+     * Привязываем к огранизации новый запрос
+     * @param Request      $request
+     * @param Organization $organization
+     */
+    public function addInquiry(Request $request, Organization $organization)
+    {
+      $inquiry = new OrganizationInquiry();
+      $inquiry->organization()->associate($organization);
+      $inquiry->inquiry()->associate($request->inquiry);
+      $inquiry->note = $request->note;
+      $inquiry->save();
+
+      return redirect()->route('admin::organization_inquiries', $organization->id);
+    }
+
+    /**
+     * Удаление запроса к организации
+     * @param  Organization $organization
+     * @param  Inquiry      $inquiry
+     */
+    public function removeInquiry(Organization $organization, OrganizationInquiry $inquiry)
+    {
+      $inquiry->delete();
+      return redirect()->route('admin::organization_inquiries', $organization->id);
+    }
+
+    /**
+     * Редактирование примечания к запросу
+     * @param  Request             $request
+     * @param  OrganizationInquiry $inquiry
+     */
+    public function editInquiry(Request $request, OrganizationInquiry $inquiry)
+    {
+      $inquiry->note = $request->note;
+      $inquiry->save();
+    }
+
 
     /**
      * Создание новой организации

@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="container">
-        <h4>Статусы организаций</h4>
+        <h4>Статусы Запросов</h4>
         @include('common.errors')
-        <form action="{{url('admin/status/create')}}" method="post">
+        <form action="{{url('admin/inquiry/create')}}" method="post">
             {{csrf_field()}}
             <div class="input-group input-group-lg">
                 <input type="text" class="form-control" placeholder="Новый статус" name="name">
@@ -15,14 +15,14 @@
         <br>
         <br>
         <ul class="list-group">
-            @forelse ($statuses as $status)
+            @forelse ($inquiries as $inquiry)
                 <li class="list-group-item">
-                    <form action="{{url('admin/status/'. $status->id)}}" method="post" class="pull-right">
+                    <form action="{{url('admin/inquiry/'. $inquiry->id)}}" method="post" class="pull-right">
                         {{csrf_field()}}
                         {{method_field('DELETE')}}
                         <button type="submit" class="btn btn-link btn-sm mt-5"><i class="ion-ios-close-outline fs20"></i></button>
                     </form>
-                    {{$status->name}}
+                    {{$inquiry->name}}
                 </li>
             @empty
                 <p class="alert alert-warning">Еще нет ни одной записи</p>

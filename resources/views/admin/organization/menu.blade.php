@@ -5,6 +5,7 @@
     @if(isset($organization) && empty($organization->parent_id))
         <li role="presentation" @if($menu == 'add_department') class="active" @endif><a href="{{route('admin::add_department', $organization->id)}}">Добавить подразделение</a></li>
     @endif
+    <li role="presentation" @if($menu == 'inquiries') class="active" @endif><a href="{{route('admin::organization_inquiries', $organization->id)}}">Взаимодействия (Запросы)</a></li>
 </ul>
 <br>
 <br>

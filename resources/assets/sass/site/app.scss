@@ -1,0 +1,80 @@
+@import "../bourbon/bourbon";
+@import "theme/variables";
+@import "bootstrap";
+@import "home";
+
+.sprite {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  background-image: url(http://stophab.org/img/sprite.png);
+  background-repeat: none;
+
+  &.logo {
+    width: 92px;
+    height: 133px;
+  }
+
+  &.facebook {
+    height: 28px;
+    width: 28px;
+    background-position: -92px -37px;
+  }
+
+  &.vk {
+    height: 28px;
+    width: 28px;
+    background-position: -120px -37px;
+  }
+
+  &.brel {
+    height: 37px;
+    width: 37px;
+    background-position: -92px 0;
+  }
+}
+
+.g-head {
+  background-color: $brand-primary;
+  position: relative;
+  .social-links {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    margin-top: -14px;
+  }
+  .container {
+    @include display(flex);
+    @include align-items(center);
+    color: #fff;
+    height: 150px;
+
+    .info {
+      line-height: 1;
+      margin-left: 40px;
+      .title { font-size: 80px; }
+      p {
+        font-size: 17px;
+        margin: 5px 0 0 10px;
+      }
+    }
+  }
+}
+
+footer {
+  margin-top: 50px;
+  text-align: center;
+  background-color: #3a424c;
+  color: rgba(#fff, .5);
+  font-size: .95rem;
+  .social-links {
+    margin: 30px 0 15px 0;
+  }
+  .info a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .logo-icon {
+    margin: 25px 0;
+  }
+}

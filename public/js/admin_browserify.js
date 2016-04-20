@@ -25,7 +25,7 @@ $(function () {
   });
 });
 
-},{"./router":8}],2:[function(require,module,exports){
+},{"./router":9}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -97,6 +97,48 @@ exports.default = new (function () {
 }())();
 
 },{}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+exports.default = new (function () {
+  function _class() {
+    _classCallCheck(this, _class);
+  }
+
+  _createClass(_class, [{
+    key: 'index',
+
+    /**
+     * Страница со списком запросов
+     */
+    value: function index() {
+      $('.inquiry').click(function (e) {
+        var $el = $(e.currentTarget);
+        console.log($el.data('note'));
+        var newNote = prompt('Примечание к запросу:', $el.data('note'));
+        if (newNote === null) return;
+
+        return $.ajax({
+          url: '/admin/api/organization_inquiry/' + $el.data('id'),
+          method: 'post',
+          data: { note: newNote },
+          success: location.reload.bind(location)
+        });
+      });
+    }
+  }]);
+
+  return _class;
+}())();
+
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -190,7 +232,7 @@ exports.default = new (function () {
   return _class;
 }())();
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -653,7 +695,7 @@ var Controller = function () {
 
 exports.default = new Controller();
 
-},{"../helpers":7}],5:[function(require,module,exports){
+},{"../helpers":8}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -701,7 +743,7 @@ exports.default = new (function () {
   return _class;
 }())();
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -788,7 +830,7 @@ exports.default = new (function () {
   return _class;
 }())();
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -805,7 +847,7 @@ var helpers = exports.helpers = {
   }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -827,6 +869,10 @@ var _workers2 = _interopRequireDefault(_workers);
 var _organization_list = require('./controllers/organization_list');
 
 var _organization_list2 = _interopRequireDefault(_organization_list);
+
+var _organization_inquiry = require('./controllers/organization_inquiry');
+
+var _organization_inquiry2 = _interopRequireDefault(_organization_inquiry);
 
 var _translate = require('./controllers/translate');
 
@@ -850,7 +896,7 @@ function Router() {
 
   url = url.replace(/\/$/, '');
   // роуты добавлять здесь
-  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/\d+\/addDepartment$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/(\d+)\/addWorkers$/], [_workers2.default.index.bind(_workers2.default), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/], [_translate2.default.fio.bind(_translate2.default), /translate$/]];
+  var rules = [[_organization_list2.default.index.bind(_organization_list2.default), /admin\/organization$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/(create|\d+\/edit)$/], [_organization_create2.default.index.bind(_organization_create2.default), /admin\/organization\/\d+\/addDepartment$/], [_organization_inquiry2.default.index.bind(_organization_inquiry2.default), /admin\/organization\/\d+\/inquiry$/], [_organization_workers2.default.index.bind(_organization_workers2.default), /admin\/organization\/(\d+)\/addWorkers$/], [_workers2.default.index.bind(_workers2.default), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/], [_translate2.default.fio.bind(_translate2.default), /translate$/]];
 
   var matches = void 0;
   var _iteratorNormalCompletion = true;
@@ -885,6 +931,6 @@ function Router() {
 
 exports.default = Router;
 
-},{"./controllers/organization_create":2,"./controllers/organization_list":3,"./controllers/organization_workers":4,"./controllers/translate":5,"./controllers/workers":6}]},{},[1]);
+},{"./controllers/organization_create":2,"./controllers/organization_inquiry":3,"./controllers/organization_list":4,"./controllers/organization_workers":5,"./controllers/translate":6,"./controllers/workers":7}]},{},[1]);
 
 //# sourceMappingURL=admin_browserify.js.map

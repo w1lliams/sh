@@ -44,6 +44,7 @@
                         <li><a href="{{url('admin/opf')}}">ОПФ (организационно-правовая форма)</a></li>
                         <li><a href="{{url('admin/type')}}">Типы</a></li>
                         <li><a href="{{url('admin/city')}}">Города</a></li>
+                        <li><a href="{{url('admin/inquiry')}}">Статусы запросов</a></li>
                     </ul>
                 </li>
             </ul>

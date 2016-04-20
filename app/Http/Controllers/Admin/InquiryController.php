@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Type;
+use App\Inquiry;
 use Illuminate\Http\Request;
 
-class TypeController extends Controller
+class InquiryController extends Controller
 {
     /**
-     * Главная страница админки Типов оргонизаций
+     * Главная страница админки статусов запросов
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function main()
     {
-        return view('admin.type.main', [
-          'types' => Type::all()
+        return view('admin.inquiry.main', [
+          'inquiries' => Inquiry::all()
         ]);
     }
 
@@ -26,20 +26,18 @@ class TypeController extends Controller
           'name' => 'required|max:255'
         ]);
 
-        Type::create($request->all());
-        return redirect()->route('admin::type');
+        Inquiry::create($request->all());
+        return redirect()->route('admin::inquiry');
     }
 
     /**
-     * Удаление типа
-     *
-     * @param Type $type
+     * @param Inquiry $inquiry
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function delete(Type $type)
+    public function delete(Inquiry $inquiry)
     {
-        $type->delete();
-        return redirect()->route('admin::type');
+        $inquiry->delete();
+        return redirect()->route('admin::inquiry');
     }
 }
