@@ -65,7 +65,13 @@ Route::group(['middleware' => ['web', 'role:admin'], 'namespace' => 'Admin', 'pr
 
 // site
 Route::group(['middleware' => ['web'], 'namespace' => 'Site'], function () {
-  Route::get('/', 'HomeController@index');
+  Route::get('/', 'HomeController@index')->name('home');
+  Route::get('worker/{worker}', 'WorkerController@workerPage')->name('worker');
+  Route::get('organization/{organization}', 'OrganizationController@organizationPage')->name('organization');
+
+  Route::group(['prefix' => 'api'], function () {
+    Route::post('search', 'SearchController@searchApi');
+  });
 });
 
 Route::group(['middleware' => 'web'], function () {

@@ -1,0 +1,32 @@
+.organization-page {
+  h1 {
+    font-size: 2.1rem;
+    margin-bottom: 0;
+  }
+
+  .worker-list {
+    line-height: 1.5;
+
+    .subdepartment-name, .department-name {
+      // font-weight: 500;
+      color: #bbb;
+    }
+
+    .department-name {
+      margin-top: 25px;
+      // font-size: 1.2rem;
+    }
+
+    .subdepartment-name {
+      margin-left: 10px;
+      margin-top: 3px;
+    }
+
+    .department-worker {
+    }
+
+    .subdepartment-worker {
+      margin-left: 10px;
+    }
+  }
+}

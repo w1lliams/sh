@@ -51,28 +51,12 @@ class WorkerController extends Controller
   public function snapshotPage(Organization $organization, Snapshot $snapshot)
   {
     $workers = Worker::where('snapshot_id', $snapshot->id)->get();
-    // собираем работников в древовидную структуру
-    $result = [
-      'main' => [
-        'workers' => []
-      ]
-    ];
-
-    foreach($workers as $worker) {
-      if(empty($worker['department'])) {
-        $result['main']['workers'][] = $worker;
-      } else {
-        if(empty($worker['subDepartment']))
-          $result[$worker['department']]['workers'][] = $worker;
-        else
-          $result[$worker['department']]['sub'][$worker['subDepartment']][] = $worker;
-      }
-    }
+    $workers = Worker::structure($workers);
 
     return view('admin.organization.workers', [
       'organization' => $organization,
       'snapshot' => $snapshot,
-      'workers' => $result,
+      'workers' => $workers,
       'menu' => 'workers'
     ]);
   }

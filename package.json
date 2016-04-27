@@ -9,6 +9,7 @@
     "bootstrap-3-typeahead": "^4.0.0",
     "bootstrap-multiselect": "^0.9.13-1",
     "bootstrap-sass": "^3.0.0",
+    "eventemitter3": "^1.2.0",
     "laravel-elixir": "^4.0.0",
     "lodash": "^4.6.1",
     "typeahead.js": "^0.11.1"

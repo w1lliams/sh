@@ -14,6 +14,7 @@ $gray-dark:              #212121 !default;
 $gray:                   #666 !default;
 $gray-light:             #bbb !default;
 $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
+$orange-base:           #ffe2a8;
 
 $brand-primary:         #ec3f33 !default;
 $brand-success:         #4CAF50 !default;
@@ -343,12 +344,12 @@ $container-tablet:             (720px + $grid-gutter-width) !default;
 $container-sm:                 $container-tablet !default;
 
 // Medium screen / desktop
-$container-desktop:            (720px + $grid-gutter-width) !default;
+$container-desktop:            (940px + $grid-gutter-width) !default;
 //** For `$screen-md-min` and up.
 $container-md:                 $container-desktop !default;
 
 // Large screen / wide desktop
-$container-large-desktop:      (720px + $grid-gutter-width) !default;
+$container-large-desktop:      (940px + $grid-gutter-width) !default;
 //** For `$screen-lg-min` and up.
 $container-lg:                 $container-large-desktop !default;
 

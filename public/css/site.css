@@ -705,10 +705,10 @@ pre {
       width: 750px; } }
   @media (min-width: 992px) {
     .container {
-      width: 750px; } }
+      width: 970px; } }
   @media (min-width: 1200px) {
     .container {
-      width: 750px; } }
+      width: 970px; } }
 
 .container-fluid {
   margin-right: auto;
@@ -4982,40 +4982,9 @@ html {
     margin-top: 0; }
   .home-page .search-block form {
     margin-top: 30px; }
-  .home-page .search-block .stat-text {
-    margin-top: 10px; }
 
-.home-page .donate-block {
-  margin-top: 50px;
-  border: 1px solid rgba(0, 0, 0, 0.02);
-  border-radius: 3px;
-  padding-top: 10px;
-  padding-bottom: 10px; }
-  .home-page .donate-block p {
-    line-height: 1.5; }
-  .home-page .donate-block .btn {
-    margin-top: 25px; }
-  .home-page .donate-block .author {
-    display: -webkit-box;
-    display: -moz-box;
-    display: box;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    display: flex;
-    margin-bottom: 10px; }
-    .home-page .donate-block .author .info {
-      margin-left: 15px;
-      line-height: 1; }
-      .home-page .donate-block .author .info .name {
-        margin-top: 2px;
-        font-size: 1.13rem;
-        color: #000; }
-      .home-page .donate-block .author .info .position {
-        margin-top: 7px;
-        color: #666;
-        font-style: italic;
-        font-size: .88rem; }
+.home-page .g-donate-block {
+  margin-top: 50px; }
 
 .home-page .news-block {
   margin-top: 50px; }
@@ -5032,6 +5001,104 @@ html {
     .home-page .news-block .news p {
       font-size: .95rem;
       line-height: 1.5; }
+
+.g-search-block {
+  padding: 40px 0 15px;
+  background-color: #f6f6f6; }
+
+.g-search-form .stat-text {
+  margin-top: 10px; }
+
+.g-search-form form {
+  position: relative; }
+
+.g-search-form .results {
+  display: none;
+  left: 0;
+  right: 0;
+  top: 100%;
+  position: absolute;
+  z-index: 10;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+  .g-search-form .results .category {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+    .g-search-form .results .category:last-child {
+      border-bottom: none; }
+    .g-search-form .results .category:first-child {
+      padding-top: 0; }
+    .g-search-form .results .category .head {
+      margin-left: 10px; }
+    .g-search-form .results .category a {
+      display: block;
+      line-height: 1;
+      padding: 10px; }
+      .g-search-form .results .category a:hover {
+        text-decoration: none;
+        background-color: #ffe2a8; }
+      .g-search-form .results .category a .title {
+        font-size: 1.2rem;
+        color: #000;
+        display: block; }
+      .g-search-form .results .category a .sub-title {
+        display: block;
+        font-size: .85rem;
+        color: rgba(0, 0, 0, 0.5);
+        margin-top: 3px; }
+
+.g-donate-block {
+  margin-top: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  border-radius: 3px;
+  padding-top: 10px;
+  padding-bottom: 10px; }
+  .g-donate-block p {
+    line-height: 1.5; }
+  .g-donate-block .btn {
+    margin-top: 25px; }
+  .g-donate-block .author {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 10px; }
+    .g-donate-block .author .info {
+      margin-left: 15px;
+      line-height: 1; }
+      .g-donate-block .author .info .name {
+        margin-top: 2px;
+        font-size: 1.13rem;
+        color: #000; }
+      .g-donate-block .author .info .position {
+        margin-top: 7px;
+        color: #666;
+        font-style: italic;
+        font-size: .88rem; }
+
+.worker-page h1 {
+  font-size: 2.1rem;
+  margin-bottom: 0; }
+
+.organization-page h1 {
+  font-size: 2.1rem;
+  margin-bottom: 0; }
+
+.organization-page .worker-list {
+  line-height: 1.5; }
+  .organization-page .worker-list .subdepartment-name, .organization-page .worker-list .department-name {
+    color: #bbb; }
+  .organization-page .worker-list .department-name {
+    margin-top: 25px; }
+  .organization-page .worker-list .subdepartment-name {
+    margin-left: 10px;
+    margin-top: 3px; }
+  .organization-page .worker-list .subdepartment-worker {
+    margin-left: 10px; }
 
 .sprite {
   display: inline-block;

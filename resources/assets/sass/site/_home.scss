@@ -8,8 +8,6 @@
     background-size: cover;
     background: url('http://stophab.org/img/background.jpg') no-repeat center center;
 
-    .container {
-    }
     h1 {
       font-size: 32px;
       margin-top: 0;
@@ -17,46 +15,10 @@
     form {
       margin-top: 30px;
     }
-    .stat-text {
-      margin-top: 10px;
-    }
   }
 
-  .donate-block {
+  .g-donate-block {
     margin-top: 50px;
-    border: 1px solid rgba(#000, .02);
-    border-radius: 3px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    p {
-      line-height: 1.5;
-    }
-
-    .btn {
-      margin-top: 25px;
-    }
-
-    .author {
-      @include display(flex);
-      margin-bottom: 10px;
-      .info {
-        margin-left: 15px;
-        line-height: 1;
-
-        .name {
-          margin-top: 2px;
-          font-size: 1.13rem;
-          color: #000;
-        }
-        .position {
-          margin-top: 7px;
-          color: $gray;
-          font-style: italic;
-          font-size: .88rem;
-        }
-      }
-    }
   }
 
   .news-block {

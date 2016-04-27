@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic,cyrillic-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{ App::environment('local') ? '/css/site.css' : elixir('css/site.css') }}">
 
     <meta http-equiv=X-UA-Compatible content="IE=edge">
     <meta name=viewport content="width=device-width,initial-scale=1">
+    <meta name="_token" content="{{csrf_token()}}">
     <title>StopHab</title>
 </head>
 
@@ -42,7 +43,8 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script>window._token = '{{csrf_token()}}';</script>
+<script src="{{ App::environment('local') ? '/js/site.js' : elixir('js/site.js') }}"></script>
+<script src="{{ App::environment('local') ? '/js/site_browserify.js' : elixir('js/site_browserify.js') }}"></script>
 @yield('scripts')
 
 </body>

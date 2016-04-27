@@ -1,0 +1,36 @@
+.g-donate-block {
+  margin-top: 25px;
+  border: 1px solid rgba(#000, .02);
+  border-radius: 3px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  p {
+    line-height: 1.5;
+  }
+
+  .btn {
+    margin-top: 25px;
+  }
+
+  .author {
+    @include display(flex);
+    margin-bottom: 10px;
+    .info {
+      margin-left: 15px;
+      line-height: 1;
+
+      .name {
+        margin-top: 2px;
+        font-size: 1.13rem;
+        color: #000;
+      }
+      .position {
+        margin-top: 7px;
+        color: $gray;
+        font-style: italic;
+        font-size: .88rem;
+      }
+    }
+  }
+}

@@ -1,6 +1,8 @@
 {
   "css/admin.css": "css/admin-9b03ab995c.css",
-  "css/site.css": "css/site-6d406a1e24.css",
+  "css/site.css": "css/site-77738397b1.css",
   "js/admin.js": "js/admin-616a4e7348.js",
-  "js/admin_browserify.js": "js/admin_browserify-ad48a13cd6.js"
+  "js/admin_browserify.js": "js/admin_browserify-ad48a13cd6.js",
+  "js/site.js": "js/site-b8e3767273.js",
+  "js/site_browserify.js": "js/site_browserify-7d025fa78d.js"
 }
