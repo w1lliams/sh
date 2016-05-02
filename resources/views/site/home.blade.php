@@ -12,7 +12,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-md-8 news-block">
+      <div class="col-md-9 news-block">
         <h3>Новини</h3>
         @for($i = 0; $i < 3; $i++)
           <div class="news">

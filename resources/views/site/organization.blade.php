@@ -44,7 +44,7 @@
 
                   @if(!empty($department['sub']))
                     @foreach($department['sub'] as $subDepartmentName => $subWorkers)
-                      <div class="subdepartment-name">{{$subDepartmentName}}</div>
+                      <div class="subdepartment-name">{{$subDepartmentName}}:</div>
                       @foreach($subWorkers as $worker)
                         <div class="worker subdepartment-worker">
                           <a href="{{route('worker', $worker->id)}}">{{$worker->fio}}</a>, {{$worker->position}}

@@ -4,29 +4,25 @@
     margin-bottom: 0;
   }
 
+  h3 {
+    small {
+      font-size: .9rem;
+      position: relative;
+      top: -5px;
+    }
+  }
+
   .worker-list {
     line-height: 1.5;
 
-    .subdepartment-name, .department-name {
-      // font-weight: 500;
-      color: #bbb;
-    }
-
     .department-name {
+      font-size: 1.3rem;
+      font-weight: 500;
       margin-top: 25px;
-      // font-size: 1.2rem;
     }
 
     .subdepartment-name {
-      margin-left: 10px;
       margin-top: 3px;
-    }
-
-    .department-worker {
-    }
-
-    .subdepartment-worker {
-      margin-left: 10px;
     }
   }
 }

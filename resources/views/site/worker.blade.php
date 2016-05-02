@@ -10,7 +10,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-md-8 content-block">
+      <div class="col-md-9 content-block">
         <div class="info-block">
           <div class="icon"></div>
           <div class="info">

@@ -42,10 +42,6 @@
   background-color: $brand-primary;
   position: relative;
   .social-links {
-    position: absolute;
-    right: 50px;
-    top: 50%;
-    margin-top: -14px;
   }
   .container {
     @include display(flex);
@@ -54,6 +50,7 @@
     height: 150px;
 
     .info {
+      @include flex-grow(1);
       line-height: 1;
       margin-left: 40px;
       .title { font-size: 80px; }

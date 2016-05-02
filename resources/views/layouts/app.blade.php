@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic,cyrillic-ext' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{ App::environment('local') ? '/css/site.css' : elixir('css/site.css') }}">
 
     <meta http-equiv=X-UA-Compatible content="IE=edge">
@@ -12,15 +12,16 @@
 
 <body>
 <div class="g-head">
-  <div class="social-links">
-    <a href="#"><i class="sprite facebook"></i></a>
-    <a href="#"><i class="sprite vk"></i></a>
-  </div>
+
   <div class="container">
     <div class="logo-icon"><i class="sprite logo"></i></div>
     <div class="info">
       <div class="title">СтопХаб</div>
       <p>ГО "Громадський рух СтопХаб"</p>
+    </div>
+    <div class="social-links">
+      <a href="#"><i class="sprite facebook"></i></a>
+      <a href="#"><i class="sprite vk"></i></a>
     </div>
   </div>
 </div>
