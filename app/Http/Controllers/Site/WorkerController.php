@@ -10,8 +10,8 @@ use App\Worker;
 class WorkerController extends Controller
 {
     /**
-     *
-     * @return \Illuminate\Http\Response
+     * @param Worker $worker
+     * @return mixed
      */
     public function workerPage(Worker $worker)
     {

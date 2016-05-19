@@ -12,8 +12,7 @@ use App\Worker;
 class OrganizationController extends Controller
 {
     /**
-     *
-     * @return \Illuminate\Http\Response
+     * @param Organization $organization
      */
     public function organizationPage(Organization $organization)
     {

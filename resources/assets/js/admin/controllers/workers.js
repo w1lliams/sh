@@ -1,7 +1,7 @@
 export default new class
 {
   index(orgnaization, snapshot) {
-    $('.worker').click(this.editWorker.bind(this));
+    $('.worker .name').click(this.editWorker.bind(this));
     $('.department-name').click(this.editDepartment.bind(this, snapshot));
   }
 

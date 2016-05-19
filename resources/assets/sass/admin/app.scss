@@ -142,9 +142,16 @@ body.preloader {
       margin-bottom: 15px;
     }
 
+    .add-note {
+      font-size: 16px;
+      margin-left: 10px;
+      margin-top: -2px;
+      position: absolute;
+    }
+
     .department {
       list-style: none;
-      span {
+      .department-name {
         font-weight: bold;
       }
     }

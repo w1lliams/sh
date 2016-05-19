@@ -10,7 +10,10 @@
                     <span class="department-name">{{$departmentName}}</span>
                     <ul>
                     @foreach($department['workers'] as $worker)
-                        <li class="worker" data-id="{{$worker->id}}">{{$worker->fio}}, {{$worker->position}}</li>
+                        <li class="worker">
+                            <span class="name" data-id="{{$worker->id}}">{{$worker->fio}}, {{$worker->position}}</span>
+                            <a href="{{route('admin::worker_notes', $worker->id)}}" class="add-note"><i class="ion-ios-list-outline"></i></a>
+                        </li>
                     @endforeach
                     </ul>
                 @endif
@@ -22,7 +25,10 @@
                                 <span class="department-name" data-sub="true">{{$subDepartmentName}}</span>
                                 <ul>
                                 @foreach($subWorkers as $worker)
-                                    <li class="worker" data-id="{{$worker->id}}">{{$worker->fio}}, {{$worker->position}}</li>
+                                    <li class="worker">
+                                        <span class="name" data-id="{{$worker->id}}">{{$worker->fio}}, {{$worker->position}}</span>
+                                        <a href="{{route('admin::worker_notes', $worker->id)}}"  class="add-note"><i class="ion-ios-list-outline"></i></a>
+                                    </li>
                                 @endforeach
                                 </ul>
                             </li>
@@ -32,5 +38,24 @@
             </li>
         @endforeach
     </ul>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Добавление информации о сотруднике</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

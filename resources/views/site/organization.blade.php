@@ -13,7 +13,9 @@
       <div class="col-md-9 content-block">
 
         <div class="info-block">
-          <div class="icon"></div>
+          <div class="icon">
+            <i class="sprite tile organization"></i>
+          </div>
           <div class="info">
             <h1>{{$organization->fullName}}</h1>
             <div class="small address text-muted">
@@ -24,7 +26,9 @@
 
         @if(!is_null($snapshot))
           <div class="info-block">
-            <div class="icon"></div>
+            <div class="icon">
+              <i class="sprite tile workers"></i>
+            </div>
             <div class="info">
               <h3>
                 Перелик працивникив
@@ -54,6 +58,16 @@
                   @endif
                 @endforeach
               </div>
+            </div>
+          </div>
+        @else
+          <div class="info-block">
+            <div class="icon">
+              <i class="sprite tile workers"></i>
+            </div>
+            <div class="info">
+              <h3 class="mb-0">Перелик працивникив</h3>
+              <p>Очикуется вид рапорядника информации...</p>
             </div>
           </div>
         @endif

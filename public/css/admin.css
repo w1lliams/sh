@@ -5776,9 +5776,15 @@ body.preloader #preloader {
 .page-workers .workers-list ul {
   margin-bottom: 15px; }
 
+.page-workers .workers-list .add-note {
+  font-size: 16px;
+  margin-left: 10px;
+  margin-top: -2px;
+  position: absolute; }
+
 .page-workers .workers-list .department {
   list-style: none; }
-  .page-workers .workers-list .department span {
+  .page-workers .workers-list .department .department-name {
     font-weight: bold; }
 
 .page-organizations .show-department-btn, .page-organizations .show-all-departments {

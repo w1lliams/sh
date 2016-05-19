@@ -3,6 +3,13 @@ stophabapp:
   volumes:
     - /var/www/sh:/var/www/sh
 
+stophabnode:
+  image: node:latest
+  command: tail -f /dev/null
+  tty: true
+  volumes_from:
+    - stophabapp
+
 stophabphp:
   build: ./php
   restart: always

@@ -762,7 +762,7 @@ exports.default = new (function () {
   _createClass(_class, [{
     key: 'index',
     value: function index(orgnaization, snapshot) {
-      $('.worker').click(this.editWorker.bind(this));
+      $('.worker .name').click(this.editWorker.bind(this));
       $('.department-name').click(this.editDepartment.bind(this, snapshot));
     }
 

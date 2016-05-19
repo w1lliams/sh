@@ -30,6 +30,9 @@ Route::group(['middleware' => ['web', 'role:admin'], 'namespace' => 'Admin', 'pr
     Route::get('organization/{organization}/workers',                 'WorkerController@workersPage')->name('workers');
     Route::get('organization/{organization}/addWorkers',              'WorkerController@addWorkersPage')->name('add_workers');
     Route::get('organization/{organization}/snapshot/{snapshot}',     'WorkerController@snapshotPage');
+    Route::get('worker/{worker}',                                     'WorkerController@workerNotesPage')->name('worker_notes');
+    Route::post('worker/{worker}',                                    'WorkerController@addNote')->name('add_note');
+    Route::delete('note/{note}',                                      'WorkerController@deleteNote')->name('delete_note');
 
     Route::get('status',                                ['uses' => 'StatusController@main', 'as' => 'status']);
     Route::post('status/create',                        ['uses' => 'StatusController@create']);

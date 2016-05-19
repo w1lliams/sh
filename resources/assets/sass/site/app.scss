@@ -7,6 +7,15 @@
 @import "worker";
 @import "organization";
 
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  margin-bottom: 400px;
+}
+
 .sprite {
   display: inline-block;
   padding: 0;
@@ -36,6 +45,61 @@
     width: 37px;
     background-position: -92px 0;
   }
+
+  &.tile {
+    width: 52px;
+    height: 52px;
+  }
+
+  &.organization {
+    background-position: -200px -104px;
+  }
+
+  &.workers {
+    background-position: -200px 0;
+  }
+
+  &.worker {
+    background-position: -148px 0;
+  }
+
+  &.news {
+    background-position: -199px -52px;
+  }
+
+  &.money {
+    background-position: -252px -104px;
+  }
+
+  &.realty {
+    background-position: -148px -104px;
+  }
+
+  &.cars {
+    background-position: -304px -52px;
+  }
+
+  &.law {
+    background-position: -148px -52px;
+  }
+
+  &.business {
+    background-position: -252px -52px;
+  }
+}
+
+.info-block {
+  @include display(flex);
+  margin-top: 30px;
+
+  .icon {
+    @include flex-shrink(0);
+    width: 65px;
+  }
+
+  h5 {
+    margin-top: 0;
+  }
 }
 
 .g-head {
@@ -63,7 +127,10 @@
 }
 
 footer {
-  margin-top: 50px;
+  width: 100%;
+  height: 350px;
+  bottom: 0;
+  position: absolute;
   text-align: center;
   background-color: #3a424c;
   color: rgba(#fff, .5);

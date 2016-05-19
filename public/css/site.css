@@ -4953,6 +4953,12 @@ html {
   box-shadow: none;
   border-width: 2px; }
 
+h1, h2, h3 {
+  margin-top: 0; }
+
+.mb-0 {
+  margin-bottom: 0; }
+
 .home-page .search-block {
   display: -webkit-box;
   display: -moz-box;
@@ -5102,6 +5108,13 @@ html {
   .organization-page .worker-list .subdepartment-name {
     margin-top: 3px; }
 
+html {
+  min-height: 100%;
+  position: relative; }
+
+body {
+  margin-bottom: 400px; }
+
 .sprite {
   display: inline-block;
   padding: 0;
@@ -5123,6 +5136,44 @@ html {
     height: 37px;
     width: 37px;
     background-position: -92px 0; }
+  .sprite.tile {
+    width: 52px;
+    height: 52px; }
+  .sprite.organization {
+    background-position: -200px -104px; }
+  .sprite.workers {
+    background-position: -200px 0; }
+  .sprite.worker {
+    background-position: -148px 0; }
+  .sprite.news {
+    background-position: -199px -52px; }
+  .sprite.money {
+    background-position: -252px -104px; }
+  .sprite.realty {
+    background-position: -148px -104px; }
+  .sprite.cars {
+    background-position: -304px -52px; }
+  .sprite.law {
+    background-position: -148px -52px; }
+  .sprite.business {
+    background-position: -252px -52px; }
+
+.info-block {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 30px; }
+  .info-block .icon {
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    -ms-flex-negative: 0;
+    width: 65px; }
+  .info-block h5 {
+    margin-top: 0; }
 
 .g-head {
   background-color: #ec3f33;
@@ -5158,7 +5209,10 @@ html {
         margin: 5px 0 0 10px; }
 
 footer {
-  margin-top: 50px;
+  width: 100%;
+  height: 350px;
+  bottom: 0;
+  position: absolute;
   text-align: center;
   background-color: #3a424c;
   color: rgba(255, 255, 255, 0.5);

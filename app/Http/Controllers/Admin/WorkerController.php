@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Fio;
 use App\Http\Controllers\Controller;
+use App\Note;
 use App\Organization;
 use App\Snapshot;
 use App\Worker;
@@ -59,6 +60,42 @@ class WorkerController extends Controller
       'workers' => $workers,
       'menu' => 'workers'
     ]);
+  }
+
+  /**
+   * Страница с заметками к работнику (машины, недвижимость)
+   * @param Worker $worker
+   * @return mixed
+   */
+  public function workerNotesPage(Worker $worker)
+  {
+    return view('admin.organization.worker_notes', [
+      'worker' => $worker
+    ]);
+  }
+
+  /**
+   * Добалвение заметки к работнику
+   * @param Request $request
+   * @param Worker $worker
+   * @return mixed
+   */
+  public function addNote(Request $request, Worker $worker)
+  {
+    $this->validate($request, [
+      'text' => 'required',
+      'type' => 'required',
+      'url'  => 'url'
+    ]);
+
+    $worker->notes()->create($request->all());
+    return redirect()->route('admin::worker_notes', $worker->id);
+  }
+
+  public function deleteNote(Note $note)
+  {
+    $note->delete();
+    return redirect()->route('admin::worker_notes', $note->worker_id);
   }
 
   /**
