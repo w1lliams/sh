@@ -13,23 +13,40 @@
         <form action="{{isset($organization) && !isset($parent) ? url('admin/organization/'. $organization->id .'/edit') : url('admin/organization/create')}}" method="post" class="form-horizontal">
             {{ csrf_field() }}
 
+            {{-- нужно для определения того что добавляется подразделение к предприятию --}}
             {!! Form::hidden('type', $type) !!}
             @if(isset($parent))
-                {!! Form::hidden('parent', $parent) !!}
+                {!! Form::hidden('parent', $parent->id) !!}
             @endif
 
-            <div class="form-group">
-                {!! Form::label('status', 'Статус организации', ['class' => 'col-md-2 control-label']) !!}
-                <div class="col-md-10">
-                    {!! Form::select('status', $statuses, isset($organization) && $organization->status ? $organization->status->id : '', ['class' => 'multiselect']) !!}
+            @if(isset($parent))
+                <div class="form-group">
+                    {!! Form::label('status', 'Статус организации', ['class' => 'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        {{$parent->status->name}}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                {!! Form::label('opf', 'ОПФ', ['class' => 'col-md-2 control-label']) !!}
-                <div class="col-md-10">
-                    {!! Form::select('opf', $opfs, isset($organization) && $organization->opf ? $organization->opf->id : old('opf'), ['class' => 'multiselect']) !!}
+                <div class="form-group">
+                    {!! Form::label('opf', 'ОПФ', ['class' => 'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        {{$parent->opf->name}}
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="form-group">
+                    {!! Form::label('status', 'Статус организации', ['class' => 'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::select('status', $statuses, isset($organization) && $organization->status ? $organization->status->id : '', ['class' => 'multiselect']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('opf', 'ОПФ', ['class' => 'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        {!! Form::select('opf', $opfs, isset($organization) && $organization->opf ? $organization->opf->id : old('opf'), ['class' => 'multiselect']) !!}
+                    </div>
+                </div>
+            @endif
+
             <div class="form-group">
                 {!! Form::label('edrpou', 'ЄДРПОУ код', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">

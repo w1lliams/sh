@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
+use Elasticquent\ElasticquentTrait;
 
 class Organization extends Model
 {
   use RevisionableTrait;
+  use ElasticquentTrait;
 
   /**
    * @var array
@@ -96,6 +98,14 @@ class Organization extends Model
   public function organizations()
   {
     return $this->hasMany('App\Organization', 'parent_id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function parent()
+  {
+    return $this->belongsTo('App\Organization', 'parent_id');
   }
 
   /**

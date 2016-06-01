@@ -6,18 +6,20 @@ class Search
 {
   /**
    * Поиск организаций
-   * @param  string  $query
+   * @param  string $query
    * @param  integer $limit
+   * @return \Elasticquent\ElasticquentResultCollection
    */
   public function searchOrganizations(string $query, int $limit = 10)
   {
-    $organizations = Organization::orWhere('fullName', 'like', "%{$query}%")
-      ->orWhere('shortName', 'like', "%{$query}%")
-      ->limit($limit)
-      ->with('opf')
-      ->get();
-
-    return $organizations;
+    return Organization::searchByQuery([
+      'bool' => [
+        'should' => [
+          ['match' => ['fullName' => $query]],
+          ['match' => ['shortName' => $query]],
+        ]
+      ]
+    ]);
   }
 
   /**

@@ -10,7 +10,9 @@
         "barryvdh/laravel-debugbar": "^2.1",
         "laravelcollective/html": "^5.2",
         "venturecraft/revisionable": "^1.27",
-        "bican/roles": "^2.1"
+        "bican/roles": "^2.1",
+        "elasticquent/elasticquent": "dev-master",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

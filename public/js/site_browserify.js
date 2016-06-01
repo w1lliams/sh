@@ -341,6 +341,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _router = require('./router');
 
+var _search = require('./widgets/search');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var app = exports.app = new (function () {
@@ -353,6 +355,7 @@ var app = exports.app = new (function () {
     value: function init() {
       _router.router.start();
       this._initToken();
+      new _search.SearchWidget();
     }
   }, {
     key: '_initToken',
@@ -373,7 +376,7 @@ $(function () {
   app.init();
 });
 
-},{"./router":6}],5:[function(require,module,exports){
+},{"./router":6,"./widgets/search":7}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -384,8 +387,6 @@ exports.miscController = undefined;
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _controller = require('../../base/controller');
-
-var _search = require('../widgets/search');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -408,9 +409,7 @@ var MiscController = function (_Controller) {
     /**
      * Главная страница
      */
-    value: function home() {
-      this.widget(_search.SearchWidget);
-    }
+    value: function home() {}
   }]);
 
   return MiscController;
@@ -418,7 +417,7 @@ var MiscController = function (_Controller) {
 
 var miscController = exports.miscController = new MiscController();
 
-},{"../../base/controller":1,"../widgets/search":7}],6:[function(require,module,exports){
+},{"../../base/controller":1}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -492,14 +491,9 @@ var SearchWidget = exports.SearchWidget = function (_Widget) {
   }, {
     key: '_events',
     value: function _events() {
-      var _this2 = this;
-
       return {
         'change ui.input': 'search',
-        'submit ui.form': function submitUiForm(e) {
-          e.preventDefault();
-          _this2.search();
-        },
+        'submit ui.form': 'search',
         'click ui.results': function clickUiResults(e) {
           return e.stopPropagation();
         }
@@ -507,7 +501,8 @@ var SearchWidget = exports.SearchWidget = function (_Widget) {
     }
   }, {
     key: 'search',
-    value: function search() {
+    value: function search(e) {
+      e.preventDefault();
       $.ajax({
         url: '/api/search',
         method: 'post',
@@ -521,7 +516,7 @@ var SearchWidget = exports.SearchWidget = function (_Widget) {
       // предприятия
       var html = '<div class="category text-muted"><div class="head">Предприятия:</div>';
       html += _.map(data.organizations, function (organization) {
-        return '<a href="/organization/' + organization.id + '">\n        <span class="title">' + organization.fullName + '</span>\n        <span class="sub-title">' + (organization.opf ? organization.opf.name : '') + '</span>\n      </a>';
+        return '<a href="/organization/' + organization.id + '">\n        <span class="title">' + organization.fullName + '</span>\n        <span class="sub-title">' + (organization.address || '') + '</span>\n      </a>';
       }).join('');
       html += '</div>';
 

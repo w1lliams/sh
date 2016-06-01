@@ -10,9 +10,18 @@ stophabnode:
   volumes_from:
     - stophabapp
 
+stophabelastic:
+  image: elasticsearch
+  restart: always
+  volumes:
+    - /data/stophab/elasticsearch:/usr/share/elasticsearch/data
+    - ./elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
 stophabphp:
   build: ./php
   restart: always
+  links:
+    - stophabelastic:elastic
   volumes_from:
     - stophabapp
   extra_hosts:

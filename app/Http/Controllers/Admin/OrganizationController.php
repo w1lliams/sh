@@ -70,7 +70,7 @@ class OrganizationController extends Controller
           'opfs'     => Opf::lists('name', 'id'),
           'cities'   => City::lists('name', 'id'),
           'type'     => 2, // Подразделение
-          'parent'   => $organization->id,
+          'parent'   => $organization,
 
           'organization' => $organization,
           'phone' => $request->old('phone', []),
@@ -94,6 +94,7 @@ class OrganizationController extends Controller
           'opfs'     => Opf::lists('name', 'id'),
           'cities'   => City::lists('name', 'id'),
           'type'     => $organization->type_id,
+          'parent'   => $organization->parent,
 
           'organization' => $organization,
           'phone' => $organization->phone,
@@ -133,7 +134,9 @@ class OrganizationController extends Controller
     /**
      * Удаление запроса к организации
      * @param  Organization $organization
-     * @param  Inquiry      $inquiry
+     * @param OrganizationInquiry $inquiry
+     * @return
+     * @throws \Exception
      */
     public function removeInquiry(Organization $organization, OrganizationInquiry $inquiry)
     {
@@ -162,9 +165,7 @@ class OrganizationController extends Controller
     public function create(Request $request, Organization $organization = null)
     {
         $rules = [
-          'status'    => 'required|numeric',
           'city'      => 'numeric',
-          'opf'       => 'required|numeric',
           'type'      => 'required|numeric',
           'fullName'  => 'required|string|max:512',
           'shortName' => 'string|max:255',
@@ -174,9 +175,16 @@ class OrganizationController extends Controller
         ];
 
         // для подразделений edrpou необязательное поле
-        if(!empty($request->parent) || (!is_null($organization) && !empty($organization->parent_id)))
+        if(!empty($request->parent) || (!is_null($organization) && !empty($organization->parent_id))) {
             $rules['edrpou'] = 'numeric';
-        else $rules['edrpou'] = 'required|numeric';
+            $rules['status'] = 'numeric';
+            $rules['opf']    = 'numeric';
+        }
+        else  {
+            $rules['edrpou'] = 'required|numeric';
+            $rules['status'] = 'required|numeric';
+            $rules['opf']    = 'required|numeric';
+        }
 
         $this->validate($request, $rules);
 

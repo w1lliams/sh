@@ -1,9 +1,11 @@
 import {router} from './router';
+import {SearchWidget} from './widgets/search';
 
 export const app = new class {
   init() {
     router.start();
     this._initToken();
+    new SearchWidget(); 
   }
 
   _initToken() {

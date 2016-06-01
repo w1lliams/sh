@@ -30,15 +30,13 @@ export class SearchWidget extends Widget {
   _events() {
     return {
       'change ui.input': 'search',
-      'submit ui.form': (e) => {
-        e.preventDefault();
-        this.search();
-      },
+      'submit ui.form': 'search',
       'click ui.results': (e) => e.stopPropagation()
     };
   }
 
-  search() {
+  search(e) {
+    e.preventDefault();
     $.ajax({
       url: '/api/search',
       method: 'post',
@@ -53,7 +51,7 @@ export class SearchWidget extends Widget {
     html += _.map(data.organizations, (organization) => {
       return `<a href="/organization/${organization.id}">
         <span class="title">${organization.fullName}</span>
-        <span class="sub-title">${organization.opf ? organization.opf.name : ''}</span>
+        <span class="sub-title">${organization.address || ''}</span>
       </a>`;
     }).join('');
     html += '</div>';
