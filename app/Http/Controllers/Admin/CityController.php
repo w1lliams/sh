@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\City;
+use App\Organization;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -43,10 +44,18 @@ class CityController extends Controller
    */
   public function delete(City $city)
   {
+    if(Organization::where('city_id', $city->id)->exists()) {
+      dd('Есть организации с таким городом');
+    }
+
     $city->delete();
     return redirect()->route('admin::city');
   }
 
+  /**
+   * @param Request $request
+   * @return mixed
+   */
   public function search(Request $request)
   {
     $cities = City::where('name', 'like', "%{$request->name}%")->limit(10)->get();

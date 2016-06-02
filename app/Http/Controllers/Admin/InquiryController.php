@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Inquiry;
+use App\OrganizationInquiry;
 use Illuminate\Http\Request;
 
 class InquiryController extends Controller
@@ -37,7 +38,12 @@ class InquiryController extends Controller
      */
     public function delete(Inquiry $inquiry)
     {
-        $inquiry->delete();
-        return redirect()->route('admin::inquiry');
+        $exists = OrganizationInquiry::where('inquiry_id', $inquiry->id)->pluck('organization_id');
+        if(count($exists) == 0) {
+            $inquiry->delete();
+            return redirect()->route('admin::inquiry');
+        } else {
+            echo('in organizations: '. implode(', ', array_unique($exists->all())));
+        }
     }
 }

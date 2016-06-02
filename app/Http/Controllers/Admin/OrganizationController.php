@@ -229,4 +229,17 @@ class OrganizationController extends Controller
           ->get();
         return response()->json($organizations);
     }
+
+    /**
+     * Удаление организации
+     * @param Organization $organization
+     * @throws \Exception
+     */
+    public function delete(Organization $organization)
+    {
+        // удаляем подразделения
+        Organization::where('parent_id', $organization->id)->delete();
+        $organization->delete();
+        return redirect()->route('admin::organization');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Organization;
 use App\Status;
 use Illuminate\Http\Request;
 
@@ -39,6 +40,10 @@ class StatusController extends Controller
    */
   public function delete(Status $status)
   {
+    if(Organization::where('status_id', $status->id)->exists()) {
+      dd('Есть организации с таким статусом');
+    }
+
     $status->delete();
     return redirect()->route('admin::status');
   }

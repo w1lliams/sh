@@ -6,6 +6,7 @@
         <li role="presentation" @if($menu == 'add_department') class="active" @endif><a href="{{route('admin::add_department', $organization->id)}}">Добавить подразделение</a></li>
     @endif
     <li role="presentation" @if($menu == 'inquiries') class="active" @endif><a href="{{route('admin::organization_inquiries', $organization->id)}}">Взаимодействия (Запросы)</a></li>
+    <li role="presentation"><a onclick="return confirm('Точно удалить организацию безвозвратно?');" href="{{route('admin::delete_organization', $organization->id)}}">Удалить организацию</a></li>
 </ul>
 <br>
 <br>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Organization;
 use App\Type;
 use Illuminate\Http\Request;
 
@@ -39,6 +40,10 @@ class TypeController extends Controller
      */
     public function delete(Type $type)
     {
+        if(Organization::where('type_id', $type->id)->exists()) {
+            dd('Есть организации с таким типом');
+        }
+
         $type->delete();
         return redirect()->route('admin::type');
     }

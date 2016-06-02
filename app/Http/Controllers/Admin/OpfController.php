@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Opf;
+use App\Organization;
 use Illuminate\Http\Request;
 
 class OpfController extends Controller
@@ -39,6 +40,10 @@ class OpfController extends Controller
      */
     public function delete(Opf $opf)
     {
+        if(Organization::where('opf_id', $opf->id)->exists()) {
+            dd('Есть организации с таким ОПФ');
+        }
+
         $opf->delete();
         return redirect()->route('admin::opf');
     }

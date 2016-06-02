@@ -22,6 +22,7 @@ Route::group(['middleware' => ['web', 'role:admin'], 'namespace' => 'Admin', 'pr
     Route::get('organization/create',                                 'OrganizationController@createPage');
     Route::post('organization/create',                                'OrganizationController@create');
     Route::get('organization/{organization}/edit',                    'OrganizationController@editPage')->name('edit_organization');
+    Route::get('organization/{organization}/delete',                  'OrganizationController@delete')->name('delete_organization');
     Route::post('organization/{organization}/edit',                   'OrganizationController@create');
     Route::get('organization/{organization}/addDepartment',           'OrganizationController@addDepartmentPage')->name('add_department');
     Route::get('organization/{organization}/inquiry',                 'OrganizationController@inquiryPage')->name('organization_inquiries');

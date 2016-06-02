@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 {!! Form::label('city', 'Город', ['class' => 'control-label']) !!}<br>
-                {!! Form::select('city[]', $cities->toArray(), request('city'), ['class' => 'multiselect', 'multiple']) !!}
+                {!! Form::select('city[]', $cities->toArray() + ['' => 'Без города'], request('city'), ['class' => 'multiselect', 'multiple']) !!}
             </div>
             <div class="form-group">
                 {!! Form::label('type', 'Тип', ['class' => 'control-label']) !!}<br>

@@ -120,7 +120,6 @@ class Organization extends Model
   {
     $inCriteria = function($paramName, $fieldName) use ($query, $params) {
       if(isset($params[$paramName])) {
-        $params[$paramName] = array_filter($params[$paramName]);
         if (!empty($params[$paramName]))
           $query->whereIn($fieldName, $params[$paramName]);
       }

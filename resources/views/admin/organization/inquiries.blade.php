@@ -31,9 +31,13 @@
             </form>
 
             <span class="inquiry" data-id="{{$organizationInquiry->id}}" data-note="{{$organizationInquiry->note}}">
-              {{$organizationInquiry->inquiry->name}} <span class="text-muted">({{$organizationInquiry->created_at}})</span>
-              <br>
-              {{$organizationInquiry->note}}
+              @if($organizationInquiry->inquiry)
+                  {{$organizationInquiry->inquiry->name}} <span class="text-muted">({{$organizationInquiry->created_at}})</span>
+                  <br>
+                  {{$organizationInquiry->note}}
+              @else
+                  {{$organizationInquiry->inquiry_id}}
+              @endif
             </span>
           </div>
         @empty
