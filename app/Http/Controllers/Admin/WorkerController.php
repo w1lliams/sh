@@ -138,8 +138,10 @@ class WorkerController extends Controller
       if($departmentName == 'main')
         $departmentName = '';
 
-      foreach ($departmentData['workers'] as $workerData) {
-        $this->_createWorker($workers, $workerData, $snapshot, $organization, $departmentName);
+      if(isset($departmentData['workers'])) {
+        foreach ($departmentData['workers'] as $workerData) {
+          $this->_createWorker($workers, $workerData, $snapshot, $organization, $departmentName);
+        }
       }
 
       // подразделы
