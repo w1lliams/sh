@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install \
   pdo_mysql
 
+COPY php.ini /usr/local/etc/php/
+
 WORKDIR /var/tmp
 RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
 RUN php composer-setup.php
