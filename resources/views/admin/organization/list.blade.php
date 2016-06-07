@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 {!! Form::label('city', 'Город', ['class' => 'control-label']) !!}<br>
-                {!! Form::select('city[]', $cities->toArray() + ['' => 'Без города'], request('city'), ['class' => 'multiselect', 'multiple']) !!}
+                {!! Form::select('city[]', $cities->toArray() + ['nocity' => 'Без города'], request('city'), ['class' => 'multiselect', 'multiple']) !!}
             </div>
             <div class="form-group">
                 {!! Form::label('type', 'Тип', ['class' => 'control-label']) !!}<br>
@@ -91,7 +91,7 @@
                             </td>
                             <td>{{$department->chief->fio or ''}}</td>
                             <td>{{$department->type->name or ''}}</td>
-                            <td>{{$department->opf->name or ''}}</td>
+                            <td>{{$organization->opf->name or ''}}</td>
                             <td>{{$department->city->name or '' }}</td>
                             <td>{{$department->address}}</td>
                         </tr>

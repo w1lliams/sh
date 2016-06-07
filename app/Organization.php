@@ -118,10 +118,11 @@ class Organization extends Model
    */
   public function scopeFilter($query, array $params, $withDepartments = false)
   {
-    $inCriteria = function($paramName, $fieldName) use ($query, $params) {
+    $inCriteria = function($paramName, $fieldName) use ($query, &$params) {
       if(isset($params[$paramName])) {
-        if (!empty($params[$paramName]))
+        if (!empty($params[$paramName])) {
           $query->whereIn($fieldName, $params[$paramName]);
+        }
       }
     };
 
@@ -131,7 +132,16 @@ class Organization extends Model
     $inCriteria('status', 'status_id');
     $inCriteria('opf', 'opf_id');
     $inCriteria('type', 'type_id');
-    $inCriteria('city', 'city_id');
+
+    if(isset($params['city']) && ($key = array_search('nocity', $params['city'])) !== false) {
+      $params['city'][] = '';
+      unset($params['city'][$key]);
+      $inCriteria('city', 'city_id');
+      $query->orWhereNull('city_id');
+    }
+    else {
+      $inCriteria('city', 'city_id');
+    }
 
     if(!empty($params['chief'])) {
       $query->whereHas('chief', function($query) use ($params) {
