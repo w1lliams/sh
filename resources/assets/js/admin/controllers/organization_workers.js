@@ -14,9 +14,9 @@ class Controller {
   /**
    * Страница импорта файла работников
    */
-  index () {
+  index (organizationId) {
     $('input[name=file]').on('change', this._onSelectFile.bind(this));
-    $('.done').click(this._saveWorkers.bind(this));
+    $('.done').click(this._saveWorkers.bind(this, organizationId));
   }
 
   /**
@@ -36,16 +36,16 @@ class Controller {
    * @returns {Promise}
    * @private
    */
-  _saveWorkers () {
+  _saveWorkers (organizationId) {
     return $.ajax({
-      url: `/admin/api/organization/${this.originOrganization.id}/push_workers`,
+      url: `/admin/api/organization/${organizationId}/push_workers`,
       method: 'post',
       data: {
         workers: this.workers,
         date: this.organization.date
       },
       success: () => {
-        window.location.href = `/admin/organization/${this.originOrganization.id}/workers`;
+        window.location.href = `/admin/organization/${organizationId}/workers`;
       }
     });
   }

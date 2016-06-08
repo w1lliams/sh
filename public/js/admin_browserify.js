@@ -266,9 +266,9 @@ var Controller = function () {
 
   }, {
     key: 'index',
-    value: function index() {
+    value: function index(organizationId) {
       $('input[name=file]').on('change', this._onSelectFile.bind(this));
-      $('.done').click(this._saveWorkers.bind(this));
+      $('.done').click(this._saveWorkers.bind(this, organizationId));
     }
 
     /**
@@ -295,18 +295,16 @@ var Controller = function () {
 
   }, {
     key: '_saveWorkers',
-    value: function _saveWorkers() {
-      var _this = this;
-
+    value: function _saveWorkers(organizationId) {
       return $.ajax({
-        url: '/admin/api/organization/' + this.originOrganization.id + '/push_workers',
+        url: '/admin/api/organization/' + organizationId + '/push_workers',
         method: 'post',
         data: {
           workers: this.workers,
           date: this.organization.date
         },
         success: function success() {
-          window.location.href = '/admin/organization/' + _this.originOrganization.id + '/workers';
+          window.location.href = '/admin/organization/' + organizationId + '/workers';
         }
       });
     }
@@ -320,7 +318,7 @@ var Controller = function () {
   }, {
     key: '_onSelectFile',
     value: function _onSelectFile(e) {
-      var _this2 = this;
+      var _this = this;
 
       this.clear();
       var file = e.target.files[0];
@@ -334,15 +332,15 @@ var Controller = function () {
       _helpers.helpers.showPreloader();
       var fileReader = new FileReader();
       fileReader.onload = function (e) {
-        _this2.lines = e.target.result.split("\n");
+        _this.lines = e.target.result.split("\n");
 
-        _this2._checkFile(edrpou).then(function (opt) {
-          _this2.organization = opt.organization;
-          _this2.workers = opt.workers;
-          _this2.fioErrors = opt.fioErrors;
+        _this._checkFile(edrpou).then(function (opt) {
+          _this.organization = opt.organization;
+          _this.workers = opt.workers;
+          _this.fioErrors = opt.fioErrors;
 
           return Promise.resolve();
-        }).then(_this2._showFile.bind(_this2)).then(_this2._showOrganization.bind(_this2)).then(_this2._checkErrors.bind(_this2)).then(_helpers.helpers.hidePreloader).catch(_helpers.helpers.hidePreloader);
+        }).then(_this._showFile.bind(_this)).then(_this._showOrganization.bind(_this)).then(_this._checkErrors.bind(_this)).then(_helpers.helpers.hidePreloader).catch(_helpers.helpers.hidePreloader);
       };
       fileReader.readAsText(file, 'cp1251');
     }
@@ -358,25 +356,25 @@ var Controller = function () {
   }, {
     key: '_showOrganization',
     value: function _showOrganization() {
-      var _this3 = this;
+      var _this2 = this;
 
       return new Promise(function (resolve, reject) {
         $.ajax({
           url: '/admin/api/organization/search',
           method: 'get',
           data: {
-            edrpou: _this3.organization.edrpou
+            edrpou: _this2.organization.edrpou
           },
           success: function success(data) {
             var $el = $('.organization');
             $el.html('');
 
             if (!data || data.length == 0) {
-              alert('<p class="alert alert-danger">Организация с ЕДРПОУ ' + _this3.organization.edrpou + ' не найдена</p>');
+              alert('<p class="alert alert-danger">Организация с ЕДРПОУ ' + _this2.organization.edrpou + ' не найдена</p>');
               reject();
             } else {
-              _this3.originOrganization = data[0];
-              $el.html('[' + _this3.organization.edrpou + '] ' + _this3.organization.text + ' = [' + _this3.originOrganization.edrpou + '] ' + _this3.originOrganization.fullName);
+              _this2.originOrganization = data[0];
+              $el.html('[' + _this2.organization.edrpou + '] ' + _this2.organization.text + ' = [' + _this2.originOrganization.edrpou + '] ' + _this2.originOrganization.fullName);
               resolve();
             }
           }
@@ -431,10 +429,10 @@ var Controller = function () {
   }, {
     key: '_checkFile',
     value: function _checkFile(edrpou) {
-      var _this4 = this;
+      var _this3 = this;
 
       return new Promise(function (resolve, reject) {
-        var organization = _this4._parseFirstLine(_this4.lines[0]);
+        var organization = _this3._parseFirstLine(_this3.lines[0]);
         organization.edrpou = edrpou;
 
         // получаем сотрудников
@@ -443,27 +441,27 @@ var Controller = function () {
             currentSubCategory = null,
             matches = void 0;
 
-        for (var i = 1; i < _this4.lines.length; i++) {
-          var line = _this4.lines[i].trim();
+        for (var i = 1; i < _this3.lines.length; i++) {
+          var line = _this3.lines[i].trim();
           if (line.length == 0) continue;
 
           // проверяем на неразрещенные символы
-          matches = _this4.CHECK_SYMBOLS.exec(line);
+          matches = _this3.CHECK_SYMBOLS.exec(line);
           if (matches) {
-            _this4.addError('Неразрещенный символ', i, matches.index);
+            _this3.addError('Неразрещенный символ', i, matches.index);
           }
 
           // =категория
           matches = /^=([^=]+)$/.exec(line);
           if (matches) {
-            if (currentCategory) _this4.addError('Открытие категории, но предыдущая еще не закрылась', i);
+            if (currentCategory) _this3.addError('Открытие категории, но предыдущая еще не закрылась', i);
             currentCategory = matches[1];
             continue;
           }
 
           // закрытие категории "=="
           if (/^\s*==\s*$/.test(line)) {
-            if (!currentCategory) _this4.addError('Закрытие категории, но открытия не было', i);
+            if (!currentCategory) _this3.addError('Закрытие категории, но открытия не было', i);
             currentCategory = null;
             continue;
           }
@@ -471,15 +469,15 @@ var Controller = function () {
           // -подкатегория
           matches = /^-([^-].*)$/.exec(line);
           if (matches) {
-            if (currentSubCategory) _this4.addError('Открытие подкатегории, но предыдущая еще не закрылась', i);
-            if (!currentCategory) _this4.addError('Открытие подкатегории, но родительская категория не была найдена', i);
+            if (currentSubCategory) _this3.addError('Открытие подкатегории, но предыдущая еще не закрылась', i);
+            if (!currentCategory) _this3.addError('Открытие подкатегории, но родительская категория не была найдена', i);
             currentSubCategory = matches[1];
             continue;
           }
 
           // закрытие подкатегории "--"
           if (/^\s*--\s*$/.test(line)) {
-            if (!currentSubCategory) _this4.addError('Закрытие подкатегории, но открытия не было', i);
+            if (!currentSubCategory) _this3.addError('Закрытие подкатегории, но открытия не было', i);
             currentSubCategory = null;
             continue;
           }
@@ -497,18 +495,18 @@ var Controller = function () {
             curCategoryWorkers = workers[cat].sub[currentSubCategory];
           } else curCategoryWorkers = workers[cat].workers;
 
-          _this4._parseWorker(line, {
+          _this3._parseWorker(line, {
             workers: curCategoryWorkers,
             line: i
           });
         }
 
-        if (currentCategory) _this4.addError('Неверно открыты/закрыты категории.', _this4.lines.length);
+        if (currentCategory) _this3.addError('Неверно открыты/закрыты категории.', _this3.lines.length);
 
         // проверяем работников по БД
-        _this4._checkWorkers(workers).then(function (fioErrors) {
+        _this3._checkWorkers(workers).then(function (fioErrors) {
           resolve({ fioErrors: fioErrors, workers: workers, organization: organization });
-        }.bind(_this4));
+        }.bind(_this3));
       });
     }
 
@@ -647,7 +645,7 @@ var Controller = function () {
   }, {
     key: '_showFile',
     value: function _showFile() {
-      var _this5 = this;
+      var _this4 = this;
 
       var $el = $('.file');
       $el.html('');
@@ -655,12 +653,12 @@ var Controller = function () {
       // выводим построчно весь файл
 
       var _loop = function _loop(i) {
-        var line = _this5.lines[i],
+        var line = _this4.lines[i],
             lineErrors = void 0;
 
         // ошибки в этой строке
-        if (_this5.errors[i]) {
-          lineErrors = _this5.errors[i].map(function (err) {
+        if (_this4.errors[i]) {
+          lineErrors = _this4.errors[i].map(function (err) {
             // если есть позиция символа, выделяем его
             if (err[1]) {
               var s = line.substr(err[1], 1);
@@ -673,7 +671,7 @@ var Controller = function () {
         // если в строке работник и по нему есть ошибки, выводим их
         if (i != 0 && !/^(--|==)/.test(line) && line.length != 0) {
           var matches = /([^,]+),/.exec(line);
-          if (matches && _this5.fioErrors.indexOf(matches[1]) >= 0) {
+          if (matches && _this4.fioErrors.indexOf(matches[1]) >= 0) {
             line = '<span class="warning-sym">' + matches[1] + '</span>' + line.substr(matches[1].length);
           }
         }
