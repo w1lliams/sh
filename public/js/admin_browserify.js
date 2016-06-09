@@ -250,8 +250,9 @@ var Controller = function () {
     _classCallCheck(this, Controller);
 
     this.clear();
-    this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),-=.\/0123456789;:I]/;
+    this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),\-=.\/0123456789;:I]/;
     this.CHECK_LETTERS = /[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}/;
+    this.CHECK_FIO = /[^\-.АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя ]/;
   }
 
   _createClass(Controller, [{
@@ -332,7 +333,7 @@ var Controller = function () {
       _helpers.helpers.showPreloader();
       var fileReader = new FileReader();
       fileReader.onload = function (e) {
-        _this.lines = e.target.result.split("\n");
+        _this.lines = e.target.result.replace(/[\t ]+/g, ' ').split("\n");
 
         _this._checkFile(edrpou).then(function (opt) {
           _this.organization = opt.organization;
@@ -559,7 +560,14 @@ var Controller = function () {
         return;
       }
 
-      opt.workers.push({ fio: matches[1].trim(), position: position });
+      var fio = matches[1].trim();
+      matches = this.CHECK_FIO.exec(fio);
+      if (matches) {
+        this.addError('Неразрещенный символ', opt.line, matches.index);
+        return;
+      }
+
+      opt.workers.push({ fio: fio, position: position });
     }
 
     /**

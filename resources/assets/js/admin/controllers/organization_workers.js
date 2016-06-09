@@ -3,8 +3,9 @@ import {helpers} from '../helpers';
 class Controller {
   constructor() {
     this.clear();
-    this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),-=.\/0123456789;:I]/;
+    this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),\-=.\/0123456789;:I]/;
     this.CHECK_LETTERS = /[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}/;
+    this.CHECK_FIO = /[^\-.АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя ]/;
   }
 
   clear () {
@@ -68,7 +69,7 @@ class Controller {
     helpers.showPreloader();
     const fileReader = new FileReader;
     fileReader.onload = (e) => {
-      this.lines = e.target.result.split("\n");
+      this.lines = e.target.result.replace(/[\t ]+/g, ' ').split("\n");
 
       this._checkFile(edrpou).then((opt) => {
         this.organization = opt.organization;
@@ -289,7 +290,14 @@ class Controller {
       return;
     }
 
-    opt.workers.push({fio: matches[1].trim(), position: position});
+    const fio = matches[1].trim();
+    matches = this.CHECK_FIO.exec(fio);
+    if(matches) {
+      this.addError('Неразрещенный символ', opt.line, matches.index);
+      return;
+    }
+
+    opt.workers.push({fio, position});
   }
 
   /**
