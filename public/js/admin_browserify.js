@@ -259,6 +259,8 @@ var Controller = function () {
     key: 'clear',
     value: function clear() {
       this.errors = {};
+      this.warnings = {};
+      this.fioDuplicates = [];
     }
 
     /**
@@ -286,6 +288,22 @@ var Controller = function () {
 
       if (!this.errors[line]) this.errors[line] = [];
       this.errors[line].push([str, symbol]);
+    }
+
+    /**
+     * Сохраняем ошибки в одном месте
+     * @param str
+     * @param line
+     * @param symbol
+     */
+
+  }, {
+    key: 'addWarning',
+    value: function addWarning(str, line) {
+      var symbol = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+      if (!this.warnings[line]) this.warnings[line] = [];
+      this.warnings[line].push([str, symbol]);
     }
 
     /**
@@ -548,19 +566,26 @@ var Controller = function () {
   }, {
     key: '_parseWorker',
     value: function _parseWorker(value, opt) {
-      var matches = /([^,]+),(.*)$/.exec(value);
-      if (!matches) {
+      var lineMatches = /([^,]+),(.*)$/.exec(value);
+      if (!lineMatches) {
         this.addError('Невозможно распознать ФИО и должность', opt.line);
         return;
       }
 
-      var position = matches[2].trim();
+      var fio = lineMatches[1].trim();
+      var position = lineMatches[2].trim();
+
       if (!this.CHECK_LETTERS.test(position)) {
         this.addError('Невозможно распознать ФИО и должность', opt.line);
         return;
       }
 
-      var fio = matches[1].trim();
+      // проверяем чтобы первая буква должности была строчная
+      var matches = /^[^абвгґдеєжзиіїйклмнопрстуфхцчшщьюя]/.exec(position);
+      if (matches) {
+        this.addWarning('Проверте должность', opt.line, matches.index + lineMatches[1].length + (lineMatches[2].length - position.length) + 1);
+      }
+
       matches = this.CHECK_FIO.exec(fio);
       if (matches) {
         this.addError('Неразрещенный символ', opt.line, matches.index);
@@ -636,6 +661,13 @@ var Controller = function () {
         }
       }
 
+      // проверяем фамилии на дубликаты
+      for (var _i = 0; _i < data.length; _i++) {
+        if (data.indexOf(data[_i], _i + 1) >= 0) {
+          this.fioDuplicates.push(data[_i]);
+        }
+      }
+
       return $.ajax({
         url: '/admin/api/worker/check_new_workers',
         method: 'post',
@@ -661,37 +693,50 @@ var Controller = function () {
       // выводим построчно весь файл
 
       var _loop = function _loop(i) {
-        var line = _this4.lines[i],
-            lineErrors = void 0;
+        var line = _this4.lines[i];
 
-        // ошибки в этой строке
-        if (_this4.errors[i]) {
-          lineErrors = _this4.errors[i].map(function (err) {
+        var getLineErrors = function getLineErrors(lineErrors) {
+          var cssClass = arguments.length <= 1 || arguments[1] === undefined ? 'error-sym' : arguments[1];
+
+          if (!lineErrors) return null;
+
+          return lineErrors.map(function (err) {
             // если есть позиция символа, выделяем его
-            if (err[1]) {
+            if (err[1] >= 0) {
               var s = line.substr(err[1], 1);
-              line = line.substr(0, err[1]) + ('<span class="error-sym">' + s + '</span>') + line.substr(err[1] + 1);
+              line = line.substr(0, err[1]) + ('<span class="' + cssClass + '">' + s + '</span>') + line.substr(err[1] + 1);
             }
             return err[0] + '<br>';
           });
-        }
+        };
+
+        var lineErrors = getLineErrors(_this4.errors[i]);
+        var lineWarnings = getLineErrors(_this4.warnings[i], 'warning-sym');
 
         // если в строке работник и по нему есть ошибки, выводим их
         if (i != 0 && !/^(--|==)/.test(line) && line.length != 0) {
           var matches = /([^,]+),/.exec(line);
-          if (matches && _this4.fioErrors.indexOf(matches[1]) >= 0) {
+          if (!matches) return 'continue';
+
+          if (_this4.fioErrors.indexOf(matches[1]) >= 0) {
             line = '<span class="warning-sym">' + matches[1] + '</span>' + line.substr(matches[1].length);
+          }
+          // отмечаем ФИО как дубликат
+          if (_this4.fioDuplicates.indexOf(matches[1]) >= 0) {
+            line = '<span class="duplicate-sym">' + line + '</span>';
           }
         }
 
         $el.append(line + '<br>');
         if (lineErrors) $el.append('<p class="alert alert-danger">' + lineErrors + '</p>');
+        if (!lineErrors && lineWarnings) $el.append('<p class="alert alert-warning">' + lineWarnings + '</p>');
       };
 
       for (var i = 0; i < this.lines.length; i++) {
-        _loop(i);
-      }
+        var _ret = _loop(i);
 
+        if (_ret === 'continue') continue;
+      }
       return Promise.resolve();
     }
   }]);

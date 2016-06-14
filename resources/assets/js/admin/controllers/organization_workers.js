@@ -10,6 +10,8 @@ class Controller {
 
   clear () {
     this.errors = {};
+    this.warnings = {};
+    this.fioDuplicates = [];
   }
 
   /**
@@ -30,6 +32,18 @@ class Controller {
     if(!this.errors[line])
       this.errors[line] = [];
     this.errors[line].push([str, symbol]);
+  }
+
+  /**
+   * Сохраняем ошибки в одном месте
+   * @param str
+   * @param line
+   * @param symbol
+   */
+  addWarning (str, line, symbol = null) {
+    if(!this.warnings[line])
+      this.warnings[line] = [];
+    this.warnings[line].push([str, symbol]);
   }
 
   /**
@@ -278,19 +292,26 @@ class Controller {
    * @private
    */
   _parseWorker (value, opt) {
-    let matches = /([^,]+),(.*)$/.exec(value);
-    if(!matches) {
+    const lineMatches = /([^,]+),(.*)$/.exec(value);
+    if(!lineMatches) {
       this.addError('Невозможно распознать ФИО и должность', opt.line);
       return;
     }
 
-    const position = matches[2].trim();
+    const fio = lineMatches[1].trim();
+    const position = lineMatches[2].trim();
+
     if (!this.CHECK_LETTERS.test(position)) {
       this.addError('Невозможно распознать ФИО и должность', opt.line);
       return;
     }
 
-    const fio = matches[1].trim();
+    // проверяем чтобы первая буква должности была строчная
+    let matches = /^[^абвгґдеєжзиіїйклмнопрстуфхцчшщьюя]/.exec(position);
+    if(matches) {
+      this.addWarning('Проверте должность', opt.line, matches.index + lineMatches[1].length + (lineMatches[2].length - position.length) + 1);
+    }
+
     matches = this.CHECK_FIO.exec(fio);
     if(matches) {
       this.addError('Неразрещенный символ', opt.line, matches.index);
@@ -317,6 +338,13 @@ class Controller {
           data.push(worker.fio);
     }
 
+    // проверяем фамилии на дубликаты
+    for(let i = 0; i < data.length; i++) {
+      if(data.indexOf(data[i], i + 1) >= 0) {
+        this.fioDuplicates.push(data[i]);
+      }
+    }
+
     return $.ajax({
       url: '/admin/api/worker/check_new_workers',
       method: 'post',
@@ -336,33 +364,44 @@ class Controller {
 
     // выводим построчно весь файл
     for(let i = 0; i < this.lines.length; i++) {
-      let line = this.lines[i], lineErrors;
+      let line = this.lines[i];
 
-      // ошибки в этой строке
-      if(this.errors[i]) {
-        lineErrors = this.errors[i].map((err) => {
+      const getLineErrors = (lineErrors, cssClass = 'error-sym') => {
+        if(!lineErrors) return null;
+
+        return lineErrors.map((err) => {
           // если есть позиция символа, выделяем его
-          if(err[1]) {
+          if(err[1] >= 0) {
             var s = line.substr(err[1], 1);
-            line = line.substr(0, err[1]) + `<span class="error-sym">${s}</span>` + line.substr(err[1] + 1);
+            line = line.substr(0, err[1]) + `<span class="${cssClass}">${s}</span>` + line.substr(err[1] + 1);
           }
           return err[0] + '<br>';
         });
-      }
+      };
+
+      let lineErrors = getLineErrors(this.errors[i]);
+      let lineWarnings = getLineErrors(this.warnings[i], 'warning-sym');
 
       // если в строке работник и по нему есть ошибки, выводим их
       if(i != 0 && !/^(--|==)/.test(line) && line.length != 0) {
         let matches = /([^,]+),/.exec(line);
-        if(matches && this.fioErrors.indexOf(matches[1]) >= 0) {
+        if(!matches) continue;
+
+        if(this.fioErrors.indexOf(matches[1]) >= 0) {
           line = `<span class="warning-sym">${matches[1]}</span>` + line.substr(matches[1].length);
+        }
+        // отмечаем ФИО как дубликат
+        if(this.fioDuplicates.indexOf(matches[1]) >= 0) {
+          line = `<span class="duplicate-sym">${line}</span>`;
         }
       }
 
       $el.append(line + '<br>');
       if(lineErrors)
         $el.append(`<p class="alert alert-danger">${lineErrors}</p>`);
+      if(!lineErrors && lineWarnings)
+        $el.append(`<p class="alert alert-warning">${lineWarnings}</p>`);
     }
-
     return Promise.resolve();
   }
 }
