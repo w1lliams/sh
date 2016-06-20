@@ -5152,6 +5152,10 @@ body {
     width: 65px; }
   .info-block h5 {
     margin-top: 0; }
+  .info-block h5 a, .info-block h3 a {
+    color: #444; }
+    .info-block h5 a:hover, .info-block h3 a:hover {
+      text-decoration: none; }
 
 .g-head {
   background-color: #ec3f33;

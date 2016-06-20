@@ -13,6 +13,7 @@ class OrganizationController extends Controller
 {
     /**
      * @param Organization $organization
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function organizationPage(Organization $organization)
     {
@@ -28,6 +29,17 @@ class OrganizationController extends Controller
           'snapshot' => $snapshot,
           'workers' => $workers,
           'fixed' => true
+        ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function organizationsPage()
+    {
+        $organizations = Organization::whereNotNull('snapshot_id')->with('snapshot')->paginate(20);
+        return view('site.organizations', [
+            'organizations' => $organizations
         ]);
     }
 }

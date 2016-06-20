@@ -100,6 +100,15 @@ body {
   h5 {
     margin-top: 0;
   }
+
+  h5, h3 {
+    a {
+      color: $headings-color;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .g-head {

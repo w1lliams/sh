@@ -5,7 +5,7 @@ class Controller {
     this.clear();
     this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),\-=.\/0123456789;:I]/;
     this.CHECK_LETTERS = /[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}/;
-    this.CHECK_FIO = /[^\-.АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя ]/;
+    this.CHECK_FIO = /[^\-.АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя' ]/;
   }
 
   clear () {
@@ -383,7 +383,7 @@ class Controller {
       let lineWarnings = getLineErrors(this.warnings[i], 'warning-sym');
 
       // если в строке работник и по нему есть ошибки, выводим их
-      if(i != 0 && !/^(--|==)/.test(line) && line.length != 0) {
+      if(i != 0 && !/^(-|=)/.test(line) && line.length != 0) {
         let matches = /([^,]+),/.exec(line);
         if(!matches) continue;
 

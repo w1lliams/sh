@@ -9,5 +9,5 @@
 
     <div class="results"></div>
   </form>
-  <p class="stat-text">Пошук серед 19711 чиновників та 153 організацій, <a href="#">показати всі</a></p>
+  <p class="stat-text">Пошук серед 19711 чиновників та 153 організацій, <a href="{{route('organizations')}}">показати всі</a></p>
 </div>

@@ -252,7 +252,7 @@ var Controller = function () {
     this.clear();
     this.CHECK_SYMBOLS = /[^АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя№ "'(),\-=.\/0123456789;:I]/;
     this.CHECK_LETTERS = /[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}/;
-    this.CHECK_FIO = /[^\-.АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя ]/;
+    this.CHECK_FIO = /[^\-.АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгґдеєжзиіїйклмнопрстуфхцчшщьюя' ]/;
   }
 
   _createClass(Controller, [{
@@ -714,7 +714,7 @@ var Controller = function () {
         var lineWarnings = getLineErrors(_this4.warnings[i], 'warning-sym');
 
         // если в строке работник и по нему есть ошибки, выводим их
-        if (i != 0 && !/^(--|==)/.test(line) && line.length != 0) {
+        if (i != 0 && !/^(-|=)/.test(line) && line.length != 0) {
           var matches = /([^,]+),/.exec(line);
           if (!matches) return 'continue';
 

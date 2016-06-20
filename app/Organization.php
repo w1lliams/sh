@@ -109,6 +109,23 @@ class Organization extends Model
   }
 
   /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function snapshots()
+  {
+    return $this->hasMany('App\Snapshot');
+  }
+
+  /**
+   * Последний снимок сотрудников
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function snapshot()
+  {
+    return $this->belongsTo('App\Snapshot');
+  }
+
+  /**
    * Поиск организаций по параметрам
    * @param $query
    * @param array $params

@@ -10,6 +10,7 @@ use App\Snapshot;
 use App\Worker;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 
 class WorkerController extends Controller
@@ -92,6 +93,11 @@ class WorkerController extends Controller
     return redirect()->route('admin::worker_notes', $worker->id);
   }
 
+  /**
+   * @param Note $note
+   * @return \Illuminate\Http\RedirectResponse
+   * @throws \Exception
+   */
   public function deleteNote(Note $note)
   {
     $note->delete();
@@ -133,6 +139,9 @@ class WorkerController extends Controller
     $snapshot->organization()->associate($organization);
     $snapshot->save();
 
+//    $organization->snapshot()->associate($snapshot);
+//    $organization->save();
+
     // разделы
     foreach ($request->get('workers') as $departmentName => $departmentData) {
       if($departmentName == 'main')
@@ -153,6 +162,8 @@ class WorkerController extends Controller
       }
     }
 
+    $snapshot->count = count($workers);
+    $snapshot->save();
     Worker::insert($workers);
   }
 
