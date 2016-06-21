@@ -195,16 +195,18 @@ class Controller {
         // =категория
         matches = /^=([^=]+)$/.exec(line);
         if(matches) {
-          if(currentCategory)
+          if(currentCategory) {
             this.addError('Открытие категории, но предыдущая еще не закрылась', i);
+          }
           currentCategory = matches[1];
           continue;
         }
 
         // закрытие категории "=="
-        if(/^\s*==\s*$/.test(line)) {
-          if(!currentCategory)
+        if(/^\s*==/.test(line)) {
+          if(!currentCategory) {
             this.addError('Закрытие категории, но открытия не было', i);
+          }
           currentCategory = null;
           continue;
         }
@@ -250,7 +252,7 @@ class Controller {
       }
 
       if (currentCategory)
-        this.addError('Неверно открыты/закрыты категории.', this.lines.length);
+        this.addError('Неверно открыты/закрыты категории.', this.lines.length - 1);
 
       // проверяем работников по БД
       this._checkWorkers(workers).then(function(fioErrors) {
@@ -369,18 +371,16 @@ class Controller {
       const getLineErrors = (lineErrors, cssClass = 'error-sym') => {
         if(!lineErrors) return null;
 
+        const symbols = line.split('');
         return lineErrors.map((err) => {
           // если есть позиция символа, выделяем его
           if(err[1] >= 0) {
-            var s = line.substr(err[1], 1);
-            line = line.substr(0, err[1]) + `<span class="${cssClass}">${s}</span>` + line.substr(err[1] + 1);
+            symbols[err[1]] = `<span class="${cssClass}">${symbols[err[1]]}</span>`;
+            line = symbols.join('');
           }
           return err[0] + '<br>';
         });
       };
-
-      let lineErrors = getLineErrors(this.errors[i]);
-      let lineWarnings = getLineErrors(this.warnings[i], 'warning-sym');
 
       // если в строке работник и по нему есть ошибки, выводим их
       if(i != 0 && !/^(-|=)/.test(line) && line.length != 0) {
@@ -395,6 +395,9 @@ class Controller {
           line = `<span class="duplicate-sym">${line}</span>`;
         }
       }
+
+      let lineErrors = getLineErrors(this.errors[i]);
+      let lineWarnings = getLineErrors(this.warnings[i], 'warning-sym');
 
       $el.append(line + '<br>');
       if(lineErrors)

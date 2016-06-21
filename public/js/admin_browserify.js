@@ -473,14 +473,18 @@ var Controller = function () {
           // =категория
           matches = /^=([^=]+)$/.exec(line);
           if (matches) {
-            if (currentCategory) _this3.addError('Открытие категории, но предыдущая еще не закрылась', i);
+            if (currentCategory) {
+              _this3.addError('Открытие категории, но предыдущая еще не закрылась', i);
+            }
             currentCategory = matches[1];
             continue;
           }
 
           // закрытие категории "=="
-          if (/^\s*==\s*$/.test(line)) {
-            if (!currentCategory) _this3.addError('Закрытие категории, но открытия не было', i);
+          if (/^\s*==/.test(line)) {
+            if (!currentCategory) {
+              _this3.addError('Закрытие категории, но открытия не было', i);
+            }
             currentCategory = null;
             continue;
           }
@@ -520,7 +524,7 @@ var Controller = function () {
           });
         }
 
-        if (currentCategory) _this3.addError('Неверно открыты/закрыты категории.', _this3.lines.length);
+        if (currentCategory) _this3.addError('Неверно открыты/закрыты категории.', _this3.lines.length - 1);
 
         // проверяем работников по БД
         _this3._checkWorkers(workers).then(function (fioErrors) {
@@ -700,18 +704,16 @@ var Controller = function () {
 
           if (!lineErrors) return null;
 
+          var symbols = line.split('');
           return lineErrors.map(function (err) {
             // если есть позиция символа, выделяем его
             if (err[1] >= 0) {
-              var s = line.substr(err[1], 1);
-              line = line.substr(0, err[1]) + ('<span class="' + cssClass + '">' + s + '</span>') + line.substr(err[1] + 1);
+              symbols[err[1]] = '<span class="' + cssClass + '">' + symbols[err[1]] + '</span>';
+              line = symbols.join('');
             }
             return err[0] + '<br>';
           });
         };
-
-        var lineErrors = getLineErrors(_this4.errors[i]);
-        var lineWarnings = getLineErrors(_this4.warnings[i], 'warning-sym');
 
         // если в строке работник и по нему есть ошибки, выводим их
         if (i != 0 && !/^(-|=)/.test(line) && line.length != 0) {
@@ -726,6 +728,9 @@ var Controller = function () {
             line = '<span class="duplicate-sym">' + line + '</span>';
           }
         }
+
+        var lineErrors = getLineErrors(_this4.errors[i]);
+        var lineWarnings = getLineErrors(_this4.warnings[i], 'warning-sym');
 
         $el.append(line + '<br>');
         if (lineErrors) $el.append('<p class="alert alert-danger">' + lineErrors + '</p>');
