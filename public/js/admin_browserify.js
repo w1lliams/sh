@@ -350,6 +350,7 @@ var Controller = function () {
 
       _helpers.helpers.showPreloader();
       var fileReader = new FileReader();
+
       fileReader.onload = function (e) {
         _this.lines = e.target.result.replace(/[\t ]+/g, ' ').split("\n");
 
@@ -455,7 +456,7 @@ var Controller = function () {
         organization.edrpou = edrpou;
 
         // получаем сотрудников
-        var workers = { main: { workers: [] } },
+        var workers = { main: { workers: [], sub: {} } },
             currentCategory = null,
             currentSubCategory = null,
             matches = void 0;
@@ -473,7 +474,7 @@ var Controller = function () {
           // =категория
           matches = /^=([^=]+)$/.exec(line);
           if (matches) {
-            if (currentCategory) {
+            if (currentCategory || currentSubCategory) {
               _this3.addError('Открытие категории, но предыдущая еще не закрылась', i);
             }
             currentCategory = matches[1];
@@ -516,7 +517,9 @@ var Controller = function () {
           if (currentSubCategory) {
             if (!workers[cat].sub[currentSubCategory]) workers[cat].sub[currentSubCategory] = [];
             curCategoryWorkers = workers[cat].sub[currentSubCategory];
-          } else curCategoryWorkers = workers[cat].workers;
+          } else {
+            curCategoryWorkers = workers[cat].workers;
+          }
 
           _this3._parseWorker(line, {
             workers: curCategoryWorkers,

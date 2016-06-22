@@ -82,6 +82,7 @@ class Controller {
 
     helpers.showPreloader();
     const fileReader = new FileReader;
+
     fileReader.onload = (e) => {
       this.lines = e.target.result.replace(/[\t ]+/g, ' ').split("\n");
 
@@ -177,7 +178,7 @@ class Controller {
       organization.edrpou = edrpou;
 
       // получаем сотрудников
-      let workers = {main: {workers: []}},
+      let workers = {main: {workers: [], sub: {}}},
         currentCategory = null,
         currentSubCategory = null,
         matches;
@@ -195,7 +196,7 @@ class Controller {
         // =категория
         matches = /^=([^=]+)$/.exec(line);
         if(matches) {
-          if(currentCategory) {
+          if(currentCategory || currentSubCategory) {
             this.addError('Открытие категории, но предыдущая еще не закрылась', i);
           }
           currentCategory = matches[1];
@@ -243,7 +244,9 @@ class Controller {
             workers[cat].sub[currentSubCategory] = [];
           curCategoryWorkers = workers[cat].sub[currentSubCategory];
         }
-        else curCategoryWorkers = workers[cat].workers;
+        else {
+          curCategoryWorkers = workers[cat].workers;
+        }
 
         this._parseWorker(line, {
           workers: curCategoryWorkers,
