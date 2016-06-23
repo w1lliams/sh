@@ -483,6 +483,10 @@ var Controller = function () {
 
           // закрытие категории "=="
           if (/^\s*==/.test(line)) {
+            if (currentSubCategory) {
+              _this3.addError('Закрытие категории, но подкатегория не была закрыта', i);
+            }
+
             if (!currentCategory) {
               _this3.addError('Закрытие категории, но открытия не было', i);
             }
