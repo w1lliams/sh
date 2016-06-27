@@ -468,7 +468,7 @@ var Controller = function () {
           // проверяем на неразрещенные символы
           matches = _this3.CHECK_SYMBOLS.exec(line);
           if (matches) {
-            _this3.addError('Неразрещенный символ', i, matches.index);
+            _this3.addError('Неразрещенный символ ' + matches[0], i, matches.index);
           }
 
           // =категория
@@ -599,7 +599,7 @@ var Controller = function () {
 
       matches = this.CHECK_FIO.exec(fio);
       if (matches) {
-        this.addError('Неразрещенный символ', opt.line, matches.index);
+        this.addError('Неразрещенный символ ' + matches[0], opt.line, matches.index);
         return;
       }
 

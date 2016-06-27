@@ -190,7 +190,7 @@ class Controller {
         // проверяем на неразрещенные символы
         matches = this.CHECK_SYMBOLS.exec(line);
         if(matches) {
-          this.addError('Неразрещенный символ', i, matches.index);
+          this.addError(`Неразрещенный символ ${matches[0]}`, i, matches.index);
         }
 
         // =категория
@@ -323,7 +323,7 @@ class Controller {
 
     matches = this.CHECK_FIO.exec(fio);
     if(matches) {
-      this.addError('Неразрещенный символ', opt.line, matches.index);
+      this.addError(`Неразрещенный символ ${matches[0]}`, opt.line, matches.index);
       return;
     }
 

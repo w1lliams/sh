@@ -24,12 +24,48 @@ class Search
 
   /**
    * Поиск сотрудников
-   * @param  string  $query
+   * @param  string $query
    * @param  integer $limit
+   * @return \Elasticquent\ElasticquentResultCollection
    */
   public function searchWorkers(string $query, int $limit = 10)
   {
-    $workers = Worker::limit($limit)->get();
-    return $workers;
+    $result = Worker::searchByQuery(
+      ['match' => [
+        'fio' => [
+          'query' => $query,
+          'operator' => 'and'
+        ]
+      ]],
+
+      ['orgs' => [
+        'terms' => [
+          'field' => 'organization_id',
+          'size' => 5
+        ],
+        'aggregations' => [
+          'fio' => [
+            'terms' => ['field' => 'static_fio'],
+            'aggregations' => [
+              'top' => [
+                'top_hits' => [
+                  'size' => 1
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]], null, 0
+    );
+
+    $ids = [];
+    $aggregations = $result->getAggregations();
+    foreach($aggregations['orgs']['buckets'] as $data) {
+      foreach($data['fio']['buckets'] as $data2) {
+        $ids[] = $data2['top']['hits']['hits'][0]['_id'];
+      }
+    }
+
+    return Worker::whereIn('id', $ids)->with('organization')->get();
   }
 }

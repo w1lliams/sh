@@ -522,7 +522,7 @@ var SearchWidget = exports.SearchWidget = function (_Widget) {
 
       html += '<div class="category text-muted"><div class="head">Работники:</div>';
       html += _.map(data.workers, function (worker) {
-        return '<a href="/worker/' + worker.id + '">\n        <span class="title">' + worker.fio + '</span>\n        <span class="sub-title">' + worker.position + '</span>\n      </a>';
+        return '<a href="/worker/' + worker.id + '">\n        <span class="title">' + worker.fio + '</span>\n        <span class="sub-title">' + worker.organization.fullName + '</span>\n      </a>';
       }).join('');
       html += '</div>';
 

@@ -60,7 +60,7 @@ export class SearchWidget extends Widget {
     html += _.map(data.workers, (worker) => {
       return `<a href="/worker/${worker.id}">
         <span class="title">${worker.fio}</span>
-        <span class="sub-title">${worker.position}</span>
+        <span class="sub-title">${worker.organization.fullName}</span>
       </a>`;
     }).join('');
     html += '</div>';

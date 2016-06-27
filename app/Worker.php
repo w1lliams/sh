@@ -5,14 +5,50 @@ namespace App;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
+use Elasticquent\ElasticquentTrait;
 
 class Worker extends Model
 {
   use RevisionableTrait;
+  use ElasticquentTrait;
+
   /**
    * @var array
    */
   protected $fillable = ['fio', 'position', 'department', 'subDepartment'];
+
+  /**
+   * elastic search mapping
+   * @var array
+   */
+  protected $mappingProperties = [
+    'fio' => [
+      'type' => 'string',
+      'analyzer' => 'standard'
+    ],
+
+    'static_fio' => [
+      'type' => 'string',
+      'index' => 'not_analyzed'
+    ],
+
+    'organization_id' => [
+      'type' => 'long'
+    ]
+  ];
+
+  /**
+   * @return array
+   */
+  public function getIndexDocumentData()
+  {
+    return [
+      'id' => $this->id,
+      'fio' => $this->fio,
+      'static_fio' => $this->fio,
+      'organization_id' => $this->organization_id
+    ];
+  }
 
 
   /**
