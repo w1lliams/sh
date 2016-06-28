@@ -41,11 +41,13 @@ class Search
       ['orgs' => [
         'terms' => [
           'field' => 'organization_id',
-          'size' => 5
+          'size' => 10
         ],
         'aggregations' => [
           'fio' => [
-            'terms' => ['field' => 'static_fio'],
+            'terms' => [
+              'field' => 'static_fio',
+            ],
             'aggregations' => [
               'top' => [
                 'top_hits' => [
@@ -65,6 +67,8 @@ class Search
         $ids[] = $data2['top']['hits']['hits'][0]['_id'];
       }
     }
+
+    $ids = array_slice($ids, 0, 20);
 
     return Worker::whereIn('id', $ids)->with('organization')->get();
   }

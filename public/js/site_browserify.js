@@ -492,9 +492,12 @@ var SearchWidget = exports.SearchWidget = function (_Widget) {
     key: '_events',
     value: function _events() {
       return {
-        'change ui.input': 'search',
+        'keyup ui.input': _.debounce(this.search.bind(this), 500),
         'submit ui.form': 'search',
         'click ui.results': function clickUiResults(e) {
+          return e.stopPropagation();
+        },
+        'click ui.form': function clickUiForm(e) {
           return e.stopPropagation();
         }
       };
@@ -502,6 +505,7 @@ var SearchWidget = exports.SearchWidget = function (_Widget) {
   }, {
     key: 'search',
     value: function search(e) {
+
       e.preventDefault();
       $.ajax({
         url: '/api/search',
@@ -513,18 +517,28 @@ var SearchWidget = exports.SearchWidget = function (_Widget) {
   }, {
     key: 'renderResults',
     value: function renderResults(data) {
-      // предприятия
-      var html = '<div class="category text-muted"><div class="head">Предприятия:</div>';
-      html += _.map(data.organizations, function (organization) {
-        return '<a href="/organization/' + organization.id + '">\n        <span class="title">' + organization.fullName + '</span>\n        <span class="sub-title">' + (organization.address || '') + '</span>\n      </a>';
-      }).join('');
-      html += '</div>';
+      var html = '';
 
-      html += '<div class="category text-muted"><div class="head">Работники:</div>';
-      html += _.map(data.workers, function (worker) {
-        return '<a href="/worker/' + worker.id + '">\n        <span class="title">' + worker.fio + '</span>\n        <span class="sub-title">' + worker.organization.fullName + '</span>\n      </a>';
-      }).join('');
-      html += '</div>';
+      // предприятия
+      if (data.organizations.length > 0) {
+        html += '<div class="category text-muted"><div class="head">Предприятия:</div>';
+        html += _.map(data.organizations, function (organization) {
+          return '<a href="/organization/' + organization.id + '">\n        <span class="title">' + organization.fullName + '</span>\n        <span class="sub-title">' + (organization.address || '') + '</span>\n      </a>';
+        }).join('');
+        html += '</div>';
+      }
+
+      if (data.workers.length > 0) {
+        html += '<div class="category text-muted"><div class="head">Работники:</div>';
+        html += _.map(data.workers, function (worker) {
+          return '<a href="/worker/' + worker.id + '">\n        <span class="title">' + worker.fio + '</span>\n        <span class="sub-title">' + worker.organization.fullName + '</span>\n      </a>';
+        }).join('');
+        html += '</div>';
+      }
+
+      if (html.length == 0) {
+        html = '\n        <h5>Не знайдено жодного працивника або организации</h5>\n        Ви можете <a href="/add">додати организацию</a> та найближчим часом ми опубликуемо перелик ии працивникив\n      ';
+      }
 
       this.ui.results.html(html).show();
     }
