@@ -1,5 +1,13 @@
 @if($organization)
-    <p>{{$organization->fullName}}</p>
+    <p>
+        {{$organization->fullName}}
+        <b>
+            @if(!empty($organization->parent_id))
+                {{$parent->edrpou}} /
+            @endif
+            {{$organization->edrpou}}
+        </b>
+    </p>
 @endif
 <ul class="nav nav-pills">
     <li role="presentation" @if($menu == 'edit') class="active" @endif><a href="{{route('admin::edit_organization', $organization->id)}}">Редактирование</a></li>
