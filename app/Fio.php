@@ -86,10 +86,9 @@ class Fio extends Model
   private static function _checkNames(array $names, $Model, &$result)
   {
     $existsNames = call_user_func($Model.'::whereIn', 'nameUA', array_keys($names))->pluck('nameUA')->all();
-    if(count($existsNames) != count($names)) {
-      foreach($names as $name => $fio) {
-        if(!in_array($name, $existsNames))
-          $result[] = $fio;
+    foreach($names as $name => $fio) {
+      if(!in_array($name, $existsNames)) {
+        $result[] = $fio;
       }
     }
   }
