@@ -239,6 +239,10 @@ class OrganizationController extends Controller
     {
         // удаляем подразделения
         Organization::where('parent_id', $organization->id)->delete();
+        // удаляем сотрудников
+        Worker::where('organization_id', $organization->id)->delete();
+        Snapshot::where('organization_id', $organization->id)->delete();
+        // удаляем саму организацию
         $organization->delete();
         return redirect()->route('admin::organization');
     }
