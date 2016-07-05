@@ -23,7 +23,7 @@ export default new class
     data.fio = answer.trim();
 
     // спрашиваем должность
-    if(_.isEmpty(answer = prompt('должность', source[1].trim())))
+    if(_.isEmpty(answer = prompt('должность', source.slice(1).join(',').trim())))
       return;
     data.position = answer.trim();
 

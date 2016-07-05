@@ -848,7 +848,7 @@ exports.default = new (function () {
       data.fio = answer.trim();
 
       // спрашиваем должность
-      if (_.isEmpty(answer = prompt('должность', source[1].trim()))) return;
+      if (_.isEmpty(answer = prompt('должность', source.slice(1).join(',').trim()))) return;
       data.position = answer.trim();
 
       return $.ajax({

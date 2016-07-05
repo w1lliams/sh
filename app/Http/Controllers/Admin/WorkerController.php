@@ -164,7 +164,12 @@ class WorkerController extends Controller
 
     $snapshot->count = count($workers);
     $snapshot->save();
-    Worker::insert($workers);
+    
+    foreach($workers as $w) {
+      $worker = new Worker;
+      $worker->fill($w);
+      $worker->save();
+    }
   }
 
   /**
