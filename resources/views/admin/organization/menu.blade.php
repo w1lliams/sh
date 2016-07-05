@@ -3,7 +3,7 @@
         {{$organization->fullName}}
         <b>
             @if(!empty($organization->parent_id))
-                {{$parent->edrpou}} /
+                {{$organization->parent->edrpou}} /
             @endif
             {{$organization->edrpou}}
         </b>
