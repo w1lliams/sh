@@ -6,8 +6,8 @@
     <ul class="workers-list">
         @foreach($workers as $departmentName => $department)
             <li class="department">
+                <span class="department-name">{{$departmentName}}</span>
                 @if(!empty($department['workers']))
-                    <span class="department-name">{{$departmentName}}</span>
                     <ul>
                     @foreach($department['workers'] as $worker)
                         <li class="worker">
