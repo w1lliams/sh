@@ -25,8 +25,8 @@ class OrganizationController extends Controller
     public function fetch(Request $request)
     {
         $organizations = Organization::filter($request->all())
-          ->with('status', 'city', 'opf', 'type', 'chief', 'organizations', 'organizations.city',
-            'organizations.type', 'organizations.chief', 'organizations.status', 'organizations.opf')
+          ->with('status', 'city', 'opf', 'type', 'organizations', 'organizations.city',
+            'organizations.type', 'organizations.status', 'organizations.opf')
           ->orderBy('id', 'desc')
           ->get();
 
@@ -86,7 +86,6 @@ class OrganizationController extends Controller
      */
     public function editPage(Organization $organization)
     {
-        $organization->load('chief');
         FormFacade::model($organization);
 
         return view('admin.organization.create', [
@@ -195,23 +194,10 @@ class OrganizationController extends Controller
         $organization->status()->associate($request->status);
 
         // если передали родительскую организацию, сохраняем связь
-        if(!empty($request->parent))
+        if(!empty($request->parent)) {
             $organization->parent_id = $request->parent;
+        }
 
-        // редактирование существующего начальника
-        if(isset($request->chief['id']) && !is_null($chief = Worker::find($request->chief['id']))) {
-            $chief->fio = $request->chief['fio'];
-            $organization->chief()->associate($chief);
-            $chief->save();
-        }
-        // создание нового сотрудника "руководитель"
-        elseif (!empty($request->chief['fio'])) {
-            $chief = new Worker;
-            $chief->fio = $request->chief['fio'];
-            $chief->position = 'Керівник';
-            $chief->save();
-            $organization->chief()->associate($chief);
-        }
         $organization->save();
 
         $request->session()->flash('save', 'done');

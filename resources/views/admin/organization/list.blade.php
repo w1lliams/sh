@@ -73,7 +73,7 @@
                             </div>
                         @endif
                     </td>
-                    <td>{{$organization->chief->fio or ''}}</td>
+                    <td>{{$organization->chief}}</td>
                     <td>{{$organization->type->name or ''}}</td>
                     <td>{{$organization->opf->name or ''}}</td>
                     <td>{{$organization->city->name or '' }}</td>
@@ -89,7 +89,7 @@
                             <td>
                                 <a href="{{url("admin/organization/{$department->id}/edit")}}">{{$department->fullName}}</a>
                             </td>
-                            <td>{{$department->chief->fio or ''}}</td>
+                            <td>{{$department->chief}}</td>
                             <td>{{$department->type->name or ''}}</td>
                             <td>{{$organization->opf->name or ''}}</td>
                             <td>{{$department->city->name or '' }}</td>

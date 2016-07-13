@@ -14,7 +14,7 @@ class Organization extends Model
   /**
    * @var array
    */
-  protected $fillable = ['shortName', 'edrpou', 'fullName', 'postCode', 'address', 'email', 'phone'];
+  protected $fillable = ['shortName', 'edrpou', 'fullName', 'postCode', 'address', 'email', 'phone', 'chief'];
 
   /**
    * @return []
@@ -82,14 +82,6 @@ class Organization extends Model
   public function type()
   {
     return $this->belongsTo('App\Type');
-  }
-
-  /**
-   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-   */
-  public function chief()
-  {
-    return $this->belongsTo('App\Worker');
   }
 
   /**
@@ -161,9 +153,7 @@ class Organization extends Model
     }
 
     if(!empty($params['chief'])) {
-      $query->whereHas('chief', function($query) use ($params) {
-        $query->where('fio', 'like', "%{$params['chief']}%");
-      });
+      $query->where('chief', 'like', "%{$params['chief']}%");
     }
 
     if(!empty($params['edrpou']))

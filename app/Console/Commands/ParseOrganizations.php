@@ -215,11 +215,8 @@ class ParseOrganizations extends Command
 
         // если указан руководитель, добавляем его в БД
         if(isset($data['Kerivnik'])) {
-            $worker = new Worker;
-            $worker->position = 'Керівник';
-
             // поднимаем первые буквы в вверхний регист, остальные в нижний
-            $worker->fio = implode(' ', array_map(function ($item) {
+            $chief = implode(' ', array_map(function ($item) {
                 $parts = explode('-', $item);
                 if(count($parts) == 1)
                     return mb_convert_case($item, MB_CASE_TITLE);
@@ -229,9 +226,7 @@ class ParseOrganizations extends Command
                     }, $parts));
                 }
             }, explode(' ', mb_strtolower($data['Kerivnik']))));
-            $worker->organization()->associate($organization);
-            $worker->save();
-            $organization->chief()->associate($worker);
+            $organization->chief = $chief;
             $organization->save();
         }
 

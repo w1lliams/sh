@@ -106,12 +106,10 @@
                 </div>
             </div>
 
-            {{Form::hidden('chief[id]')}}
-
             <div class="form-group">
-                {!! Form::label('chief[fio]', 'Руководитель', ['class' => 'col-md-2 control-label']) !!}
+                {!! Form::label('chief', 'Руководитель', ['class' => 'col-md-2 control-label']) !!}
                 <div class="col-md-10">
-                    {!! Form::text('chief[fio]', old('chief.fio'), ['class' => 'form-control']) !!}
+                    {!! Form::text('chief', old('chief'), ['class' => 'form-control']) !!}
                 </div>
             </div>
 

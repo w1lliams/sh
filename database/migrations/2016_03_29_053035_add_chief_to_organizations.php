@@ -13,7 +13,7 @@ class AddChiefToOrganizations extends Migration
     public function up()
     {
         Schema::table('organizations', function (Blueprint $table) {
-            $table->integer('chief_id');
+            $table->string('chief');
         });
     }
 
@@ -25,7 +25,7 @@ class AddChiefToOrganizations extends Migration
     public function down()
     {
         Schema::table('organizations', function (Blueprint $table) {
-            $table->dropColumn(['chief_id']);
+            $table->dropColumn(['chief']);
         });
     }
 }
