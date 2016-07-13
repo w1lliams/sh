@@ -17,7 +17,7 @@
             <i class="sprite tile organization"></i>
           </div>
           <div class="info">
-            <h1>вси органи</h1>
+            <h1>Всі органи, організації, підприємства</h1>
           </div>
         </div>
 
@@ -27,8 +27,8 @@
                   <div class="info">
                       <h5 class="mb-0"><a href="{{route('organization', $organization->id)}}">{{$organization->fullName}}</a></h5>
                       <p>
-                          Всёго прцивникив: {{$organization->snapshot->count}} (Станом на: {{$organization->snapshot->date->format('d.m.Y')}})
-                          <br><a href="{{route('organization', $organization->id)}}">Показати працуивникив</a>
+                          Всього працівників: {{$organization->snapshot->count}} (Станом на: {{$organization->snapshot->date->format('d.m.Y')}})
+                          <br><a href="{{route('organization', $organization->id)}}">Показати працівників</a>
                       </p>
                   </div>
               </div>

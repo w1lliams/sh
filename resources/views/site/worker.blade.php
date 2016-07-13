@@ -18,17 +18,17 @@
           <div class="info">
             <h1>{{$worker->fio}}</h1>
             <div class="position  text-muted">
+              {{$worker->position}}
               @if(!empty($worker->department))
-                {{$worker->department}},
+                {{$worker->department}}
               @endif
               @if(!empty($worker->subDepartment))
                 {{$worker->subDepartment}},
               @endif
-              {{$worker->position}}
             </div>
 
             <div class="organization  text-muted">
-              {{$worker->organization->fullName}}, <a href="{{route('organization', $worker->organization->id)}}">вси працивники</a>
+              {{$worker->organization->fullName}}, <a href="{{route('organization', $worker->organization->id)}}">всі працівники</a>
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
               <i class="sprite tile news"></i>
             </div>
             <div class="info">
-              <h5>Публикации в СМИ</h5>
+              <h5>Публікації в ЗМІ</h5>
               @each('site.parts.note', $worker->publications, 'note')
             </div>
           </div>
@@ -51,7 +51,7 @@
               <i class="sprite tile money"></i>
             </div>
             <div class="info">
-              <h5>Доходы</h5>
+              <h5>Доходи</h5>
               @each('site.parts.note', $worker->finance, 'note')
             </div>
           </div>
@@ -63,7 +63,7 @@
               <i class="sprite tile realty"></i>
             </div>
             <div class="info">
-              <h5>Недвижимость</h5>
+              <h5>Нерухомість</h5>
               @each('site.parts.note', $worker->realty, 'note')
             </div>
           </div>
@@ -75,7 +75,7 @@
               <i class="sprite tile cars"></i>
             </div>
             <div class="info">
-              <h5>Автомобили</h5>
+              <h5>Автомобілі</h5>
               @each('site.parts.note', $worker->cars, 'note')
             </div>
           </div>
@@ -87,7 +87,7 @@
               <i class="sprite tile law"></i>
             </div>
             <div class="info">
-              <h5>Дела в судах</h5>
+              <h5>Справи в судах</h5>
               @each('site.parts.note', $worker->law, 'note')
             </div>
           </div>
@@ -99,7 +99,7 @@
               <i class="sprite tile business"></i>
             </div>
             <div class="info">
-              <h5>Предпринимательство</h5>
+              <h5>Підприємства та підприємництво</h5>
               @each('site.parts.note', $worker->business, 'note')
             </div>
           </div>
