@@ -14,6 +14,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $this->getCounters();
         return view('site.home');
     }
 }

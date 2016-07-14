@@ -24,6 +24,8 @@ class OrganizationController extends Controller
           $workers = Worker::structure($workers);
         }
 
+        $this->getCounters();
+
         return view('site.organization', [
           'organization' => $organization,
           'snapshot' => $snapshot,
@@ -38,6 +40,7 @@ class OrganizationController extends Controller
     public function organizationsPage()
     {
         $organizations = Organization::whereNotNull('snapshot_id')->with('snapshot')->paginate(20);
+        $this->getCounters();
         return view('site.organizations', [
             'organizations' => $organizations
         ]);

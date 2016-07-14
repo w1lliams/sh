@@ -40,11 +40,14 @@
                   @if($departmentName != 'main')
                     <div class="department-name">{{$departmentName}}</div>
                   @endif
-                  @foreach($department['workers'] as $worker)
-                      <div class="worker @if($departmentName != 'main') department-worker @endif">
-                        <a href="{{route('worker', $worker->id)}}">{{$worker->fio}}</a>, {{$worker->position}}
-                      </div>
-                  @endforeach
+
+                  @if(isset($department['workers']))
+                      @foreach($department['workers'] as $worker)
+                          <div class="worker @if($departmentName != 'main') department-worker @endif">
+                            <a href="{{route('worker', $worker->id)}}">{{$worker->fio}}</a>, {{$worker->position}}
+                          </div>
+                      @endforeach
+                  @endif
 
                   @if(!empty($department['sub']))
                     @foreach($department['sub'] as $subDepartmentName => $subWorkers)

@@ -15,6 +15,7 @@ class WorkerController extends Controller
      */
     public function workerPage(Worker $worker)
     {
+        $this->getCounters();
         return view('site.worker', [
           'worker' => $worker
         ]);

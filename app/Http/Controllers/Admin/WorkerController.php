@@ -139,8 +139,8 @@ class WorkerController extends Controller
     $snapshot->organization()->associate($organization);
     $snapshot->save();
 
-//    $organization->snapshot()->associate($snapshot);
-//    $organization->save();
+    $organization->snapshot()->associate($snapshot);
+    $organization->save();
 
     // разделы
     foreach ($request->get('workers') as $departmentName => $departmentData) {
