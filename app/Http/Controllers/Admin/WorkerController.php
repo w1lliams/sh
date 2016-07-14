@@ -164,11 +164,10 @@ class WorkerController extends Controller
 
     $snapshot->count = count($workers);
     $snapshot->save();
-    $lastWorker = Worker::orderBy('id', 'desc')->first();
     Worker::insert($workers);
 
     // индексуруем работников
-    $newWorkers = Worker::where('id', '>', $lastWorker->id)->get();
+    $newWorkers = Worker::where('snapshot_id', $snapshot->id)->get();
     $newWorkers->addToIndex();
   }
 
