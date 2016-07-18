@@ -17,6 +17,31 @@ class Worker extends Model
    */
   protected $fillable = ['fio', 'position', 'department', 'subDepartment'];
 
+  protected $indexSettings = [
+    'analysis' => [
+      'filter' => [
+        'ngram_filter' => [
+          'type' => 'ngram',
+          'min_gram' => 2,
+          'max_gram' => 30
+        ]
+      ],
+
+      'analyzer' => [
+        'index_ngram' => [
+          'type' => 'custom',
+          'tokenizer' => 'keyword',
+          'filter' => ['lowercase', 'ngram_filter']
+        ],
+        'search_ngram' => [
+          'type' => 'custom',
+          'tokenizer' => 'keyword',
+          'filter' => ['lowercase']
+        ]
+      ]
+    ]
+  ];
+
   /**
    * elastic search mapping
    * @var array
@@ -24,12 +49,13 @@ class Worker extends Model
   protected $mappingProperties = [
     'fio' => [
       'type' => 'string',
-      'analyzer' => 'standard'
+      'index' => 'not_analyzed'
     ],
 
-    'static_fio' => [
+    'search' => [
       'type' => 'string',
-      'index' => 'not_analyzed'
+      'analyzer' => 'index_ngram',
+      'search_analyzer' => 'search_ngram'
     ],
 
     'organization_id' => [
@@ -45,11 +71,10 @@ class Worker extends Model
     return [
       'id' => $this->id,
       'fio' => $this->fio,
-      'static_fio' => $this->fio,
+      'search' => $this->fio,
       'organization_id' => $this->organization_id
     ];
   }
-
 
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

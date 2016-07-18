@@ -17,6 +17,47 @@ class Organization extends Model
   protected $fillable = ['shortName', 'edrpou', 'fullName', 'postCode', 'address', 'email', 'phone', 'chief'];
 
   /**
+   * elastic search mapping
+   * @var array
+   */
+  protected $mappingProperties = [
+    'fullName' => [
+      'type' => 'string',
+      'index' => 'not_analyzed'
+    ],
+
+    'shortName' => [
+      'type' => 'string',
+      'index' => 'not_analyzed'
+    ],
+
+    'address' => [
+      'type' => 'string',
+      'index' => 'not_analyzed'
+    ],
+
+    'search' => [
+      'type' => 'string',
+      'analyzer' => 'index_ngram',
+      'search_analyzer' => 'search_ngram'
+    ]
+  ];
+
+  /**
+   * @return array
+   */
+  public function getIndexDocumentData()
+  {
+    return [
+      'id' => $this->id,
+      'shortName' => $this->shortName,
+      'fullName' => $this->fullName,
+      'search' => $this->shortName .' '. $this->fullName,
+      'address' => $this->address
+    ];
+  }
+
+  /**
    * @return []
    */
   public function getPhoneAttribute()

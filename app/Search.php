@@ -13,10 +13,10 @@ class Search
   public function searchOrganizations(string $query, int $limit = 10)
   {
     return Organization::searchByQuery([
-      'bool' => [
-        'should' => [
-          ['match' => ['fullName' => $query]],
-          ['match' => ['shortName' => $query]],
+      'match' => [
+        'search' => [
+          'query' => $query,
+          'operator' => 'and'
         ]
       ]
     ]);
@@ -32,7 +32,7 @@ class Search
   {
     $result = Worker::searchByQuery(
       ['match' => [
-        'fio' => [
+        'search' => [
           'query' => $query,
           'operator' => 'and'
         ]
@@ -46,7 +46,7 @@ class Search
         'aggregations' => [
           'fio' => [
             'terms' => [
-              'field' => 'static_fio',
+              'field' => 'fio',
             ],
             'aggregations' => [
               'top' => [
