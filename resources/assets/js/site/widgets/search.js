@@ -47,26 +47,31 @@ export class SearchWidget extends Widget {
     });
   }
 
-  renderResults(data) {
+  /**
+   * Выводим результаты поиска
+   * @param organizations
+   * @param workers
+   */
+  renderResults({organizations, workers}) {
     let html = '';
 
     // предприятия
-    if(data.organizations.length > 0) {
+    if(organizations.length > 0) {
       html += '<div class="category text-muted"><div class="head">Предприятия:</div>';
-      html += _.map(data.organizations, (organization) => {
+      html += _.map(organizations, organization => {
         return `<a href="/organization/${organization.id}">
-        <span class="title">${organization.fullName}</span>
+        <span class="title">${this.highlight(organization.fullName)}</span>
         <span class="sub-title">${organization.address || ''}</span>
       </a>`;
       }).join('');
       html += '</div>';
     }
 
-    if(data.workers.length > 0) {
+    if(workers.length > 0) {
       html += '<div class="category text-muted"><div class="head">Работники:</div>';
-      html += _.map(data.workers, (worker) => {
+      html += _.map(workers, worker => {
         return `<a href="/worker/${worker.id}">
-        <span class="title">${worker.fio}</span>
+        <span class="title">${this.highlight(worker.fio)}</span>
         <span class="sub-title">${worker.organization.fullName}</span>
       </a>`;
       }).join('');
@@ -81,5 +86,16 @@ export class SearchWidget extends Widget {
     }
 
     this.ui.results.html(html).show();
+  }
+
+  /**
+   * Подсветка совпадения
+   * @param {string} val
+   * @returns {string}
+   */
+  highlight(val) {
+    const q = this.ui.input.val().trim();
+    const r = new RegExp(_.escapeRegExp(q), 'gi');
+    return val.replace(r, '<span class="highlight">$&</span>');
   }
 }
