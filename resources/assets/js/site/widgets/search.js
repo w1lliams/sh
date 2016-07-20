@@ -37,8 +37,11 @@ export class SearchWidget extends Widget {
   }
 
   search(e) {
-
     e.preventDefault();
+    if(this.ui.input.val().length < 2) {
+      return;
+    }
+
     $.ajax({
       url: '/api/search',
       method: 'post',
@@ -72,7 +75,7 @@ export class SearchWidget extends Widget {
       html += _.map(workers, worker => {
         return `<a href="/worker/${worker.id}">
         <span class="title">${this.highlight(worker.fio)}</span>
-        <span class="sub-title">${worker.organization.fullName}</span>
+        <span class="sub-title">${this.highlight(worker.organization.fullName)}</span>
       </a>`;
       }).join('');
       html += '</div>';
@@ -95,7 +98,10 @@ export class SearchWidget extends Widget {
    */
   highlight(val) {
     const q = this.ui.input.val().trim();
-    const r = new RegExp(_.escapeRegExp(q), 'gi');
-    return val.replace(r, '<span class="highlight">$&</span>');
+    for(const word of q.split(/\s+/)) {
+      val = val.replace(new RegExp(_.escapeRegExp(word), 'gi'), '<span class="highlight">$&</span>')
+    }
+
+    return val;
   }
 }

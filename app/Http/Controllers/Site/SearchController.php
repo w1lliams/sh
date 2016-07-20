@@ -19,8 +19,8 @@ class SearchController extends Controller
     $workers = $search->searchWorkers($request->q, 5);
 
     return response()->json([
-      'organizations' => $search->searchOrganizations($request->q, 5),
-      'workers'       => $search->searchWorkers($request->q, 5)
+      'organizations' => $search->searchOrganizations($request->q, 10),
+      'workers'       => $search->searchWorkers($request->q, 10)
     ]);
   }
 }

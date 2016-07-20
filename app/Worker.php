@@ -21,22 +21,31 @@ class Worker extends Model
     'analysis' => [
       'filter' => [
         'ngram_filter' => [
-          'type' => 'ngram',
+          'type' => 'edgeNGram',
           'min_gram' => 2,
-          'max_gram' => 30
+          'max_gram' => 30,
+        ]
+      ],
+
+      'tokenizer' => [
+        'ngram_tokenizer' => [
+          'type' => 'edgeNGram',
+          'min_gram' => 2,
+          'max_gram' => 30,
+          'token_chars' => ['letter', 'digit']
         ]
       ],
 
       'analyzer' => [
         'index_ngram' => [
           'type' => 'custom',
-          'tokenizer' => 'keyword',
-          'filter' => ['lowercase', 'ngram_filter']
+          'tokenizer' => 'ngram_tokenizer',
+//          'filter' => ['standard', 'lowercase', 'ngram_filter']
+          'filter' => ['lowercase']
         ],
         'search_ngram' => [
           'type' => 'custom',
-          'tokenizer' => 'keyword',
-          'filter' => ['lowercase']
+          'tokenizer' => 'lowercase',
         ]
       ]
     ]
@@ -71,7 +80,11 @@ class Worker extends Model
     return [
       'id' => $this->id,
       'fio' => $this->fio,
-      'search' => $this->fio,
+      'search' => [
+        $this->fio,
+        $this->organization->fullName,
+        $this->organization->shortName
+      ],
       'organization_id' => $this->organization_id
     ];
   }

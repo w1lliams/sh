@@ -19,7 +19,7 @@ class Search
           'operator' => 'and'
         ]
       ]
-    ]);
+    ], null, null, $limit);
   }
 
   /**
@@ -30,46 +30,55 @@ class Search
    */
   public function searchWorkers(string $query, int $limit = 10)
   {
-    $result = Worker::searchByQuery(
-      ['match' => [
+
+    return Worker::searchByQuery([
+      'match' => [
         'search' => [
           'query' => $query,
           'operator' => 'and'
         ]
-      ]],
+      ]
+    ], null, null, $limit)->load('organization');
 
-      ['orgs' => [
-        'terms' => [
-          'field' => 'organization_id',
-          'size' => 10
-        ],
-        'aggregations' => [
-          'fio' => [
-            'terms' => [
-              'field' => 'fio',
-            ],
-            'aggregations' => [
-              'top' => [
-                'top_hits' => [
-                  'size' => 1
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]], null, 0
-    );
-
-    $ids = [];
-    $aggregations = $result->getAggregations();
-    foreach($aggregations['orgs']['buckets'] as $data) {
-      foreach($data['fio']['buckets'] as $data2) {
-        $ids[] = $data2['top']['hits']['hits'][0]['_id'];
-      }
-    }
-
-    $ids = array_slice($ids, 0, 20);
-
-    return Worker::whereIn('id', $ids)->with('organization')->get();
+//    $result = Worker::searchByQuery(
+//      ['match' => [
+//        'search' => [
+//          'query' => $query,
+//          'operator' => 'and',
+//        ]
+//      ]],
+//
+//      ['orgs' => [
+//        'terms' => [
+//          'field' => 'organization_id',
+//          'size' => 10
+//        ],
+//        'aggregations' => [
+//          'fio' => [
+//            'terms' => [
+//              'field' => 'fio',
+//            ],
+//            'aggregations' => [
+//              'top' => [
+//                'top_hits' => [
+//                  'size' => 1
+//                ]
+//              ]
+//            ]
+//          ]
+//        ]
+//      ]], null, 0
+//    );
+//
+//    $ids = [];
+//    $aggregations = $result->getAggregations();
+//    foreach($aggregations['orgs']['buckets'] as $data) {
+//      foreach($data['fio']['buckets'] as $data2) {
+//        $ids[] = $data2['top']['hits']['hits'][0]['_id'];
+//      }
+//    }
+//    $ids = array_slice($ids, 0, 20);
+//
+//    return Worker::whereIn('id', $ids)->with('organization')->get();
   }
 }
