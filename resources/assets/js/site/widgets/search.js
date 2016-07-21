@@ -60,7 +60,7 @@ export class SearchWidget extends Widget {
 
     // предприятия
     if(organizations.length > 0) {
-      html += '<div class="category text-muted"><div class="head">Предприятия:</div>';
+      html += '<div class="category text-muted"><div class="head">Підприємства:</div>';
       html += _.map(organizations, organization => {
         return `<a href="/organization/${organization.id}">
         <span class="title">${this.highlight(organization.fullName)}</span>
@@ -71,7 +71,7 @@ export class SearchWidget extends Widget {
     }
 
     if(workers.length > 0) {
-      html += '<div class="category text-muted"><div class="head">Работники:</div>';
+      html += '<div class="category text-muted"><div class="head">Працівники:</div>';
       html += _.map(workers, worker => {
         return `<a href="/worker/${worker.id}">
         <span class="title">${this.highlight(worker.fio)}</span>
@@ -83,8 +83,8 @@ export class SearchWidget extends Widget {
 
     if(html.length == 0) {
       html = `
-        <h5>Не знайдено жодного працивника або организации</h5>
-        Ви можете <a href="/add">додати организацию</a> та найближчим часом ми опубликуемо перелик ии працивникив
+        <h5>Не знайдено жодного працівника або організації</h5>
+        Ви можете <a href="/add">додати організацію</a> та найближчим часом ми опублікуємо перелік її працівників
       `;
     }
 
