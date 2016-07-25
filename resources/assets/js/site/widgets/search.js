@@ -74,6 +74,7 @@ export class SearchWidget extends Widget {
       html += '<div class="category text-muted"><div class="head">Працівники:</div>';
       html += _.map(workers, worker => {
         return `<a href="/worker/${worker.id}">
+        ${worker.notes_count > 0 ? '<i class="sprite info"></i>' : ''}
         <span class="title">${this.highlight(worker.fio)}</span>
         <span class="sub-title">${this.highlight(worker.organization.fullName)}</span>
       </a>`;

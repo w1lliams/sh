@@ -69,7 +69,11 @@ class Worker extends Model
 
     'organization_id' => [
       'type' => 'long'
-    ]
+    ],
+
+    'notesCount' => [
+      'type' => 'long'
+    ],
   ];
 
   /**
@@ -85,7 +89,8 @@ class Worker extends Model
         $this->organization->fullName,
         $this->organization->shortName
       ],
-      'organization_id' => $this->organization_id
+      'organization_id' => $this->organization_id,
+      'notes_count' => $this->notes_count
     ];
   }
 

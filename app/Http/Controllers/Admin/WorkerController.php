@@ -90,6 +90,7 @@ class WorkerController extends Controller
     ]);
 
     $worker->notes()->create($request->all());
+    $this->calcNotesCount($worker);
     return redirect()->route('admin::worker_notes', $worker->id);
   }
 
@@ -101,6 +102,7 @@ class WorkerController extends Controller
   public function deleteNote(Note $note)
   {
     $note->delete();
+    $this->calcNotesCount(Worker::find($note->worker_id));
     return redirect()->route('admin::worker_notes', $note->worker_id);
   }
 
@@ -200,6 +202,17 @@ class WorkerController extends Controller
     Worker::where('snapshot_id', $request->get('snapshot'))
       ->where($field, $request->get('name'))
       ->update([$field => $request->get('newName')]);
+  }
+
+  /**
+   * Пересчитываем кол-во заметок у работника
+   * @param Worker $worker
+   */
+  protected function calcNotesCount(Worker $worker)
+  {
+    $worker->notes_count = count($worker->notes);
+    $worker->save();
+    $worker->addToIndex();
   }
 
   /**

@@ -36,16 +36,24 @@
       a {
         display: block;
         line-height: 1;
-        padding: 10px;
+        padding: 10px 20px;
         &:hover {
           text-decoration: none;
           background-color: $orange-base;
         }
+
+        i {
+          position: absolute;
+          margin-left: -17px;
+          margin-top: 4px;
+        }
+
         .title {
           font-size: 1.2rem;
           color: #000;
           display: block;
         }
+
         .sub-title {
           display: block;
           font-size: .85rem;

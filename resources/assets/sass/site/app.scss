@@ -86,6 +86,12 @@ body {
   &.business {
     background-position: -252px -52px;
   }
+
+  &.info {
+    width: 12px;
+    height: 12px;
+    background-position: -124px -92px;
+  }
 }
 
 .info-block {
@@ -94,7 +100,7 @@ body {
 
   .icon {
     @include flex-shrink(0);
-    width: 65px;
+    width: 75px;
   }
 
   h5 {

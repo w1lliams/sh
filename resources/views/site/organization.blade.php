@@ -44,6 +44,9 @@
                   @if(isset($department['workers']))
                       @foreach($department['workers'] as $worker)
                           <div class="worker @if($departmentName != 'main') department-worker @endif">
+                              @if($worker->notes_count > 0)
+                                  <i class="sprite info"></i>
+                              @endif
                             <a href="{{route('worker', $worker->id)}}">{{$worker->fio}}</a>, {{$worker->position}}
                           </div>
                       @endforeach
@@ -54,6 +57,9 @@
                       <div class="subdepartment-name">{{$subDepartmentName}}:</div>
                       @foreach($subWorkers as $worker)
                         <div class="worker subdepartment-worker">
+                            @if($worker->notes_count > 0)
+                                <i class="sprite info"></i>
+                            @endif
                           <a href="{{route('worker', $worker->id)}}">{{$worker->fio}}</a>, {{$worker->position}}
                         </div>
                       @endforeach
