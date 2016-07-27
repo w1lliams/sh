@@ -114,11 +114,12 @@ class OrganizationController extends Controller
       ]);
     }
 
-    /**
-     * Привязываем к огранизации новый запрос
-     * @param Request      $request
-     * @param Organization $organization
-     */
+  /**
+   * Привязываем к огранизации новый запрос
+   * @param Request $request
+   * @param Organization $organization
+   * @return \Illuminate\Http\RedirectResponse
+   */
     public function addInquiry(Request $request, Organization $organization)
     {
       $inquiry = new OrganizationInquiry();
@@ -130,13 +131,12 @@ class OrganizationController extends Controller
       return redirect()->route('admin::organization_inquiries', $organization->id);
     }
 
-    /**
-     * Удаление запроса к организации
-     * @param  Organization $organization
-     * @param OrganizationInquiry $inquiry
-     * @return
-     * @throws \Exception
-     */
+  /**
+   * Удаление запроса к организации
+   * @param  Organization $organization
+   * @param OrganizationInquiry $inquiry
+   * @return \Illuminate\Http\RedirectResponse
+   */
     public function removeInquiry(Organization $organization, OrganizationInquiry $inquiry)
     {
       $inquiry->delete();
@@ -163,6 +163,7 @@ class OrganizationController extends Controller
      */
     public function create(Request $request, Organization $organization = null)
     {
+      dd('wtf');
         $rules = [
           'city'      => 'numeric',
           'type'      => 'required|numeric',
@@ -216,11 +217,12 @@ class OrganizationController extends Controller
         return response()->json($organizations);
     }
 
-    /**
-     * Удаление организации
-     * @param Organization $organization
-     * @throws \Exception
-     */
+  /**
+   * Удаление организации
+   * @param Organization $organization
+   * @return \Illuminate\Http\RedirectResponse
+   * @throws \Exception
+   */
     public function delete(Organization $organization)
     {
         // удаляем подразделения

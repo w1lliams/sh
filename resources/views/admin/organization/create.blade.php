@@ -10,7 +10,7 @@
         @if(session()->get('save'))
         <p class="alert alert-success">Сохранено</p>
         @endif
-        <form action="{{isset($organization) && !isset($parent) ? url('admin/organization/'. $organization->id .'/edit') : url('admin/organization/create')}}" method="post" class="form-horizontal">
+        <form action="{{isset($organization) && $parent != $organization ? url('admin/organization/'. $organization->id .'/edit') : url('admin/organization/create')}}" method="post" class="form-horizontal">
             {{ csrf_field() }}
 
             {{-- нужно для определения того что добавляется подразделение к предприятию --}}

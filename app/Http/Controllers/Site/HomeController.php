@@ -9,12 +9,20 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     /**
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
         $this->getCounters();
         return view('site.home');
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function help()
+    {
+        $this->getCounters();
+        return view('site.help');
     }
 }

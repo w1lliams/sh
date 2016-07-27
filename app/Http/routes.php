@@ -70,6 +70,7 @@ Route::group(['middleware' => ['web', 'role:admin'], 'namespace' => 'Admin', 'pr
 // site
 Route::group(['middleware' => ['web'], 'namespace' => 'Site'], function () {
   Route::get('/', 'HomeController@index')->name('home');
+  Route::get('/help', 'HomeController@help')->name('help');
   Route::get('worker/{worker}', 'WorkerController@workerPage')->name('worker');
   Route::get('organization/{organization}', 'OrganizationController@organizationPage')->name('organization');
   Route::get('organization', 'OrganizationController@organizationsPage')->name('organizations');
