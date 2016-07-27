@@ -163,7 +163,6 @@ class OrganizationController extends Controller
      */
     public function create(Request $request, Organization $organization = null)
     {
-      dd('wtf');
         $rules = [
           'city'      => 'numeric',
           'type'      => 'required|numeric',
