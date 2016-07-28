@@ -84,7 +84,7 @@
                     @foreach($organization->organizations as $department)
                         <tr class="department department{{$organization->id}}">
                             <td class="relation"></td>
-                            <td>{{$department->status->name or ''}}</td>
+                            <td>{{$organization->status->name or ''}}</td>
                             <td><a href="{{url("admin/organization/{$department->id}/edit")}}">{{$department->edrpou}}</a></td>
                             <td>
                                 <a href="{{url("admin/organization/{$department->id}/edit")}}">{{$department->fullName}}</a>
