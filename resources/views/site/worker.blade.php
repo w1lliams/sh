@@ -105,6 +105,8 @@
                       </div>
                   </div>
               @endif
+
+                  <a href="{{route('feedback', ['w' => $worker->id])}}">add feedback</a>
         @endif
 
       </div>

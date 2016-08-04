@@ -8,3 +8,17 @@
     font-size: 1.4rem;
   }
 }
+
+.feedback-page {
+  textarea {
+    height: 100px;
+  }
+
+  .btn {
+    margin-top: 15px;
+  }
+
+  .alert-success {
+    padding: 10px;
+  }
+}

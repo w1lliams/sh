@@ -30,6 +30,8 @@
                     </ul>
                 </li>
 
+                <li><a href="{{url('admin/feedback')}}">Отзывы</a></li>
+
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="translate">Перевод <span class="caret"></span></a>
                     <ul class="dropdown-menu" aria-labelledby="translate">

@@ -55,6 +55,9 @@ Route::group(['middleware' => ['web', 'role:admin'], 'namespace' => 'Admin', 'pr
     Route::post('city/create',                          ['uses' => 'CityController@create']);
     Route::delete('city/{city}',                        ['uses' => 'CityController@delete']);
 
+    Route::get('feedback',                              ['uses' => 'FeedbackController@main', 'as' => 'feedback']);
+    Route::get('feedback/{feedback}/delete',            ['uses' => 'FeedbackController@delete', 'as' => 'delete_feedback']);
+
     // API
     Route::group(['prefix' => 'api'], function () {
         Route::get('organization/search',                         'OrganizationController@search');
@@ -71,6 +74,8 @@ Route::group(['middleware' => ['web', 'role:admin'], 'namespace' => 'Admin', 'pr
 Route::group(['middleware' => ['web'], 'namespace' => 'Site'], function () {
   Route::get('/', 'HomeController@index')->name('home');
   Route::get('/help', 'HomeController@help')->name('help');
+  Route::get('/feedback', 'HomeController@feedbackPage')->name('feedback');
+  Route::post('/feedback', 'HomeController@saveFeedback')->name('save_feedback');
   Route::get('worker/{worker}', 'WorkerController@workerPage')->name('worker');
   Route::get('organization/{organization}', 'OrganizationController@organizationPage')->name('organization');
   Route::get('organization', 'OrganizationController@organizationsPage')->name('organizations');
