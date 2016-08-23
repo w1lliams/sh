@@ -18,6 +18,7 @@ class Controller {
    * Страница импорта файла работников
    */
   index (organizationId) {
+    console.log('adsd ');
     $('input[name=file]').on('change', this._onSelectFile.bind(this));
     $('.done').click(this._saveWorkers.bind(this, organizationId));
   }

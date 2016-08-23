@@ -11,8 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => 'web'], function () {
+  Route::auth();
+
+  // открытые роуты админки
+  Route::group(['namespace' => 'Admin'], function () {
+    Route::get('translate', 'TranslateController@fioPage')->name('translate');
+    Route::post('admin/api/translate/fio', 'TranslateController@fio');
+
+    Route::get('check_list', 'WorkerController@checkPage');
+    Route::post('admin/api/worker/check_new_workers', 'WorkerController@checkNewWorkers');
+    Route::get('admin/api/organization/search', 'OrganizationController@search');
+  });
 });
 
 // роуты админки
@@ -60,9 +70,7 @@ Route::group(['middleware' => ['web', 'role:admin'], 'namespace' => 'Admin', 'pr
 
     // API
     Route::group(['prefix' => 'api'], function () {
-        Route::get('organization/search',                         'OrganizationController@search');
         Route::post('organization_inquiry/{inquiry}',             'OrganizationController@editInquiry');
-        Route::post('worker/check_new_workers',                   'WorkerController@checkNewWorkers');
         Route::post('worker/change_department',                   'WorkerController@updateDepartment');
         Route::post('worker/{worker}',                            'WorkerController@update');
         Route::post('organization/{organization}/push_workers',   'WorkerController@pushWorkers');
@@ -83,14 +91,4 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Site'], function () {
   Route::group(['prefix' => 'api'], function () {
     Route::post('search', 'SearchController@searchApi');
   });
-});
-
-Route::group(['middleware' => 'web'], function () {
-    Route::auth();
-
-    // открытые роуты админки
-    Route::group(['namespace' => 'Admin'], function () {
-      Route::get('translate', 'TranslateController@fioPage')->name('translate');
-      Route::post('admin/api/translate/fio', 'TranslateController@fio');
-    });
 });

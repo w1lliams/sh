@@ -122,6 +122,11 @@ class WorkerController extends Controller
     return response()->json($result);
   }
 
+  public function checkPage()
+  {
+    return view('admin.check');
+  }
+
   /**
    * Добавляем в БД всех сотрудников организации
    *

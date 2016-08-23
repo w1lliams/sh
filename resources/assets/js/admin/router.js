@@ -19,6 +19,7 @@ export default class Router {
       [organizationCreate.index.bind(organizationCreate), /admin\/organization\/\d+\/addDepartment$/],
       [organizationInquiry.index.bind(organizationInquiry), /admin\/organization\/\d+\/inquiry$/],
       [addWorkers.index.bind(addWorkers), /admin\/organization\/(\d+)\/addWorkers$/],
+      [addWorkers.index.bind(addWorkers), /check_list$/],
       [workers.index.bind(workers), /admin\/organization\/(\d+)\/snapshot\/(\d+)$/],
       [translate.fio.bind(translate), /translate$/]
     ];
