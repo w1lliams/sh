@@ -16,13 +16,13 @@
             {{--<i class="sprite tile search"></i>--}}
           </div>
           <div class="info">
-            <h1>Повидомлення</h1>
+            <h1>Повідомлення для СтопХаб</h1>
 
             @include('common.errors')
 
             @if(session('done'))
               <div class="alert-success">
-                Ваш отзыв успешно добавлен
+                Ваше повідомлення надіслано
               </div>
             @endif
 
@@ -31,14 +31,14 @@
               {{csrf_field()}}
 
               <div class="form-group">
-                <label for="input-text1">Сообщение</label>
+                <label for="input-text1">Текст повідомлення</label>
                 <textarea name="text" id="input-text1" class="form-control"></textarea>
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Добавьте файл</label>
+                <label for="exampleInputFile">Додайте файл (не обов'язково)</label>
                 <input name="file" type="file" id="exampleInputFile">
               </div>
-              <button type="submit" class="btn btn-success">Надислаты</button>
+              <button type="submit" class="btn btn-success">Надіслати</button>
             </form>
           </div>
         </div>

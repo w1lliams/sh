@@ -89,9 +89,22 @@ body {
     background-position: -252px -52px;
   }
 
+  &.otherpositions {
+    background-position: -252px 0;
+  }
+
   &.search {
     background-position: -304px 0;
   }
+
+  &.share {
+    background-position: -96px -104px;
+  }
+
+  &.comments {
+    background-position: -304px -104px;
+  }
+
 
   &.info {
     width: 12px;

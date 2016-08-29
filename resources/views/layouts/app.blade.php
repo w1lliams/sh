@@ -35,7 +35,7 @@
     </div>
 
     <div class="info">
-      <p>ГО "Громадський рух "СтопХаб". Для зв'язку з нами використовуйте <a style="text-decoration: underline !important; color: #ffffff;" href="http://formdesigner.ru/form/view/16931" target=_blank>форму зворотнього зв'язку</a>.</p>
+      <p>ГО "Громадський рух "СтопХаб". Для зв'язку з нами використовуйте <a style="text-decoration: underline !important; color: #ffffff;" href="/feedback">форму зворотнього зв'язку</a>.</p>
       <p>СтопХаб  © 2015-<?php echo date('Y') ?>. Всі права захищені.</p>
     </div>
 
