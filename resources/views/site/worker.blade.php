@@ -181,7 +181,11 @@
 
                       </div>
                   </div>
-
+          @if(!empty($worker->organization->parent_id))
+            {{$worker->organization->parent->edrpou}}
+          @else
+              {{$worker->organization->edrpou}}
+          @endif
       </div>
 
       @include('site.parts.donate')
