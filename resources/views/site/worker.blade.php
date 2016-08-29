@@ -18,8 +18,8 @@
           <div class="info">
             <h1>{{$worker->fio}}</h1>
             <div class="position  text-muted">
-              {{$worker->position}}@if(!empty($worker->department)).
-                {{$worker->department}}.
+              {{$worker->position}}@if(!empty($worker->department));
+                {{$worker->department}}
               @endif
               @if(!empty($worker->subDepartment))
                 {{$worker->subDepartment}},
@@ -174,9 +174,20 @@
 			  Відгуки можна залишати анонімно та без реєстрації. Для абсолютної анонімності встановіть та використовуйте <a href=https://www.torproject.org/projects/torbrowser.html.en target=_blank>браузер Tor</a>. Будьте ввічливими, відверто агресивні повідомлення та такі, що суперечать чинному законодавству можуть бути видалені.
 
 
-
-
-
+				<div id="hypercomments_widget"></div>
+				<script type="text/javascript">
+				_hcwp = window._hcwp || [];
+				_hcwp.push({widget:"Stream", widget_id: 79729, xid: "MDExMjc3OTlf0JPQvtC70ZbQutC+0LIg0JLQvtC70L7QtNC40LzQuNGAINCS0L7Qu9C+0LTQuNC80LjRgNC+0LLQuNGH"});
+				(function() {
+				if("HC_LOAD_INIT" in window)return;
+				HC_LOAD_INIT = true;
+				var lang = "uk";
+				var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+				hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/79729/"+lang+"/widget.js";
+				var s = document.getElementsByTagName("script")[0];
+				s.parentNode.insertBefore(hcc, s.nextSibling);
+				})();
+				</script>
 
 
                       </div>
