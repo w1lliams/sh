@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      @include('site.parts.donate')
+@include('site.parts.donate')
     </div>
   </div>
 </div>
