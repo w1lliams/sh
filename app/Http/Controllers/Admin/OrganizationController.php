@@ -199,6 +199,7 @@ class OrganizationController extends Controller
         }
 
         $organization->save();
+        $organization->addToIndex();
 
         $request->session()->flash('save', 'done');
         return redirect()->route('admin::edit_organization', $organization->id);
