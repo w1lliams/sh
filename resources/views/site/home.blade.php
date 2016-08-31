@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('head')
+  <title>dfd{{base32encode('test')}}</title>
+@endsection
+
 @section('content')
 <div class="home-page">
   <div class="search-block">

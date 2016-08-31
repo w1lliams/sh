@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('head')
+  <title>Громадський рух "СтопХаб" - Дізнайся все про чиновника! Майно, доходи, бізнес посадовців. Відгуки про чиновників.</title>
+@endsection
+
 @section('content')
 <div class="help-page">
   <div class="g-search-block">
