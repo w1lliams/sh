@@ -8,6 +8,7 @@
     </div>
   </div>
 
+
   <div class="container">
     <div class="row">
       <div class="col-md-9 content-block">
@@ -44,6 +45,22 @@
                   @if(isset($department['workers']))
                       @foreach($department['workers'] as $worker)
                           <div class="worker @if($departmentName != 'main') department-worker @endif">
+
+			<?
+				// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Плюсуем их к notes_count
+				include_once resource_path().'/classes/base32.php';
+				$WorkerRealty = array(); $WorkerCars = array(); $WorkerBusiness = array();
+				$Base32fio = $base32->encode($worker->fio);
+				$WorkerDataDirectory = public_path().'/data/'.$Base32fio; 
+				if(is_dir($WorkerDataDirectory)) {
+					$WorkerDataFiles = scandir($WorkerDataDirectory);
+					foreach ($WorkerDataFiles as $file) {if (stripos($file, 'neruh_') === 0) array_push($WorkerRealty, $file); elseif (stripos($file, 'avto_') === 0) array_push($WorkerCars, $file); elseif (stripos($file, 'pidpr_') === 0) array_push($WorkerBusiness, $file);}
+					if (count($WorkerRealty)>0)	$worker->notes_count++;
+					if (count($WorkerCars)>0)	$worker->notes_count++;
+					if (count($WorkerBusiness)>0)	$worker->notes_count++;
+					}                                          
+			?>
+
                               @if($worker->notes_count > 0)
                                   <i class="sprite info"></i>
                               @endif
@@ -57,6 +74,22 @@
                       <div class="subdepartment-name">{{$subDepartmentName}}:</div>
                       @foreach($subWorkers as $worker)
                         <div class="worker subdepartment-worker">
+
+			<?
+				// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Плюсуем их к notes_count
+				include_once resource_path().'/classes/base32.php';
+				$WorkerRealty = array(); $WorkerCars = array(); $WorkerBusiness = array();
+				$Base32fio = $base32->encode($worker->fio);
+				$WorkerDataDirectory = public_path().'/data/'.$Base32fio; 
+				if(is_dir($WorkerDataDirectory)) {
+					$WorkerDataFiles = scandir($WorkerDataDirectory);
+					foreach ($WorkerDataFiles as $file) {if (stripos($file, 'neruh_') === 0) array_push($WorkerRealty, $file); elseif (stripos($file, 'avto_') === 0) array_push($WorkerCars, $file); elseif (stripos($file, 'pidpr_') === 0) array_push($WorkerBusiness, $file);}
+					if (count($WorkerRealty)>0)	$worker->notes_count++;
+					if (count($WorkerCars)>0)	$worker->notes_count++;
+					if (count($WorkerBusiness)>0)	$worker->notes_count++;
+					}                                          
+			?>
+
                             @if($worker->notes_count > 0)
                                 <i class="sprite info"></i>
                             @endif
@@ -76,7 +109,7 @@
             </div>
             <div class="info">
               <h3 class="mb-0">Перелік працівників</h3>
-              <p>Очікується від розпорядника інформації...</p>
+              <p>Очікується...</p>
             </div>
           </div>
         @endif

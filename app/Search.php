@@ -30,6 +30,7 @@ class Search
    */
   public function searchWorkers(string $query, int $limit = 10)
   {
+
     return Worker::searchByQuery([
       'match' => [
         'search' => [
