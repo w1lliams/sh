@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('head')
-  <title>Громадський рух "СтопХаб" - Дізнайся все про чиновника! Майно, доходи, бізнес посадовців. Відгуки про чиновників.</title>
+  <title>{{$organization->fullName}} - всі працівники: інформація, декларації, відгуки</title>
 @endsection
 
 @section('content')
@@ -50,19 +50,8 @@
                       @foreach($department['workers'] as $worker)
                           <div class="worker @if($departmentName != 'main') department-worker @endif">
 
-			<?
-				// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Плюсуем их к notes_count
-				include_once resource_path().'/classes/base32.php';
-				$WorkerRealty = array(); $WorkerCars = array(); $WorkerBusiness = array();
-				$Base32fio = $base32->encode($worker->fio);
-				$WorkerDataDirectory = public_path().'/data/'.$Base32fio; 
-				if(is_dir($WorkerDataDirectory)) {
-					$WorkerDataFiles = scandir($WorkerDataDirectory);
-					foreach ($WorkerDataFiles as $file) {if (stripos($file, 'neruh_') === 0) array_push($WorkerRealty, $file); elseif (stripos($file, 'avto_') === 0) array_push($WorkerCars, $file); elseif (stripos($file, 'pidpr_') === 0) array_push($WorkerBusiness, $file);}
-					if (count($WorkerRealty)>0)	$worker->notes_count++;
-					if (count($WorkerCars)>0)	$worker->notes_count++;
-					if (count($WorkerBusiness)>0)	$worker->notes_count++;
-					}                                          
+			<? 	// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Плюсуем их к notes_count
+				$worker->notes_count = $worker->notes_count + get_additional_notes_count($worker->fio);
 			?>
 
                               @if($worker->notes_count > 0)
@@ -79,21 +68,9 @@
                       @foreach($subWorkers as $worker)
                         <div class="worker subdepartment-worker">
 
-			<?
-				// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Плюсуем их к notes_count
-				include_once resource_path().'/classes/base32.php';
-				$WorkerRealty = array(); $WorkerCars = array(); $WorkerBusiness = array();
-				$Base32fio = $base32->encode($worker->fio);
-				$WorkerDataDirectory = public_path().'/data/'.$Base32fio; 
-				if(is_dir($WorkerDataDirectory)) {
-					$WorkerDataFiles = scandir($WorkerDataDirectory);
-					foreach ($WorkerDataFiles as $file) {if (stripos($file, 'neruh_') === 0) array_push($WorkerRealty, $file); elseif (stripos($file, 'avto_') === 0) array_push($WorkerCars, $file); elseif (stripos($file, 'pidpr_') === 0) array_push($WorkerBusiness, $file);}
-					if (count($WorkerRealty)>0)	$worker->notes_count++;
-					if (count($WorkerCars)>0)	$worker->notes_count++;
-					if (count($WorkerBusiness)>0)	$worker->notes_count++;
-					}                                          
+			<? 	// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Плюсуем их к notes_count
+				$worker->notes_count = $worker->notes_count + get_additional_notes_count($worker->fio);
 			?>
-
                             @if($worker->notes_count > 0)
                                 <i class="sprite info"></i>
                             @endif

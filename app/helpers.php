@@ -93,3 +93,24 @@ function base32decode($base32String)
   }
   return $realString;
 }
+
+
+// функция  для указанного ФИО возвращает количество дополнительных notes_count которые считаются по файлам недвижимости, авто и предпринимательской деятельности в папке /public/data/
+// если задан второй параметр true, то возвращает массив файлов с соответствующими ключами
+function get_additional_notes_count($fio, $filelist = false) {
+				$WorkerRealty = array(); $WorkerCars = array(); $WorkerBusiness = array(); $additional_notes_count = 0;
+				$WorkerDataDirectory = public_path().'/data/'.base32encode($fio); 
+				if(is_dir($WorkerDataDirectory)) {
+					$WorkerDataFiles = scandir($WorkerDataDirectory);
+					foreach ($WorkerDataFiles as $file) {if (stripos($file, 'neruh_') === 0) array_push($WorkerRealty, $file); elseif (stripos($file, 'avto_') === 0) array_push($WorkerCars, $file); elseif (stripos($file, 'pidpr_') === 0) array_push($WorkerBusiness, $file);}
+					$additional_notes_count = count($WorkerRealty)+count($WorkerCars)+count($WorkerBusiness);
+					}                                          
+				if (!$filelist) return $additional_notes_count;
+				else return array ("WorkerRealty" => $WorkerRealty, "WorkerCars" => $WorkerCars, "WorkerBusiness" => $WorkerBusiness);
+
+}
+
+// функция используется в том случае, когда в таблице фамилий, имен, отчеств не можем найти соответствующего перевода
+function replace_ukr_sumbols($phrase) {
+	return str_replace(array("Ґ", "ґ", "І", "і", "Ї", "ї", "Є", "є", "'"), array("Г", "г", "И", "и", "И", "и", "Е", "е", ""), $phrase);
+	}

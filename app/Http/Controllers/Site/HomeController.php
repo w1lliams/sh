@@ -48,13 +48,14 @@ class HomeController extends Controller
     public function saveFeedback(Request $request)
     {
       $this->validate($request, [
+        'email' => 'required|email',
         'text' => 'required',
         'worker' => 'integer',
         'file' => 'file'
       ]);
 
       $feedback = new Feedback();
-      $feedback->text = $request->text;
+      $feedback->text = "E-mail: ".$request->email."\r\nText: ".$request->text;
       $feedback->worker_id = $request->worker;
 
       if ($request->hasFile('file')) {
@@ -67,4 +68,5 @@ class HomeController extends Controller
       $request->session()->flash('done', '1');
       return redirect()->route('feedback');
     }
+
 }

@@ -9,5 +9,5 @@
 
     <div class="results"></div>
   </form>
-  <p class="stat-text">Пошук серед <b>{{$workersCount}}</b> чиновників та <b>{{$organizationCount}}</b> організацій, <a href="{{route('organizations')}}">показати всі</a></p>
+  <p class="stat-text">Пошук серед <b>{{$workersCount}}</b> чиновників та <b>{{$organizationCount}}</b> організацій, <a href="{{route('organizations')}}">показати&nbsp;всі</a></p>
 </div>

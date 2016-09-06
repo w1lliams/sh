@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('head')
-    <title>Громадський рух "СтопХаб" - Дізнайся все про чиновника! Майно, доходи, бізнес посадовців. Відгуки про чиновників.</title>
+    <title>{{$worker->fio}} - відгуки, оцінка роботи, компромат. {{$worker->organization->fullName}}</title>
 @endsection
 
 @section('content')
@@ -14,17 +14,10 @@
 
 <?
 	// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Они будут браться не из базы, а напрямую из папок
-	include_once resource_path().'/classes/base32.php';
-	$WorkerRealty = array(); $WorkerCars = array(); $WorkerBusiness = array();
-	$Base32fio = $base32->encode($worker->fio);
-	$WorkerDataDirectory = public_path().'/data/'.$Base32fio; 
-	if(is_dir($WorkerDataDirectory)) {
-		$WorkerDataFiles = scandir($WorkerDataDirectory);
-		foreach ($WorkerDataFiles as $file) {if (stripos($file, 'neruh_') === 0) array_push($WorkerRealty, $file); elseif (stripos($file, 'avto_') === 0) array_push($WorkerCars, $file); elseif (stripos($file, 'pidpr_') === 0) array_push($WorkerBusiness, $file);}
-		if (count($WorkerRealty)>0)	$worker->notes_count++;
-		if (count($WorkerCars)>0)	$worker->notes_count++;
-		if (count($WorkerBusiness)>0)	$worker->notes_count++;
-		}                                          
+	$WorkerFilesDir = '/data/'.base32encode($worker->fio);
+	$worker->notes_count +=get_additional_notes_count($worker->fio);
+	$WorkerFiles = get_additional_notes_count($worker->fio, true);	// получаем массив со списком файлов недвижимости, авто, ...
+
 ?>
 
 
@@ -73,7 +66,7 @@
                       <div class="info">
                           <h5>Публікації в ЗМІ</h5>
                           <p>@each('site.parts.note', $worker->publications, 'note')</p>
-			  <p>Якщо Вам відомі інші факти в ЗМІ про {{$worker->fio}}, Ви можете <a href="{{route('feedback', ['w' => $worker->id])}}">додати посилання</a>.<br>
+			  <p>Якщо Вам відомі інші факти в ЗМІ про особу, Ви можете <a href="{{route('feedback', ['w' => $worker->id])}}">додати посилання</a>.<br>
 			  Приймаються як посилання на сайти ЗМІ, так і повідомлення або відгуки на форумах 
 			  від коритувачів із репутацією, особистих сайтах, блогах, сторінках соцмереж публічних
 			  осіб або громадських активістів</p>
@@ -109,7 +102,7 @@
               @endif
 -->
 
-		@if(count($WorkerRealty) > 0)
+		@if(count($WorkerFiles['WorkerRealty']) > 0)
                   <div class="info-block">
                       <div class="icon">
                           <i class="sprite tile realty"></i>
@@ -117,7 +110,7 @@
                       <div class="info">
                           <h5>Результати пошуку в реєстрі нерухомості</h5>
 			  <p>За запитом "{{$worker->fio}}" в Державному реєстрі речових прав на нерухоме майно знайдено:</p>
-			  <p><? foreach ($WorkerRealty as $file) {echo "- станом на ".date("d.m.Y", strtotime(preg_replace('~[^0-9-]+~','',$file)))." року. <a href='/data/$Base32fio/$file' target=_blank>Переглянути витяг</a><br>";}?></p>
+			  <p><? foreach ($WorkerFiles['WorkerRealty'] as $file) {echo "- станом на ".date("d.m.Y", strtotime(preg_replace('~[^0-9-]+~','',$file)))." року. <a href='$WorkerFilesDir/$file' target=_blank>Переглянути витяг</a><br>";}?></p>
 			  <p>Зверніть увагу, в результатах пошуку можуть бути інші особи з ідентичними ПІБ (однофамільці).</p>
                       </div>
                   </div>
@@ -139,7 +132,7 @@
               @endif
 -->
 
-              @if(count($WorkerCars) > 0)
+              @if(count($WorkerFiles['WorkerCars']) > 0)
                   <div class="info-block">
                       <div class="icon">
                           <i class="sprite tile cars"></i>
@@ -147,7 +140,7 @@
                       <div class="info">
                           <h5>Результати пошуку в реєстрі транспортних засобів</h5>
 			  <p>За запитом "{{$worker->fio}}" в Єдиному державному реєстрі МВС знайдено:</p>
-			  <p><? foreach ($WorkerCars as $file) {echo "- станом на ".date("d.m.Y", strtotime(preg_replace('~[^0-9-]+~','',$file)))." року. <a href='/data/$Base32fio/$file' target=_blank>Переглянути результат</a><br>";}?></p>
+			  <p><? foreach ($WorkerFiles['WorkerCars'] as $file) {echo "- станом на ".date("d.m.Y", strtotime(preg_replace('~[^0-9-]+~','',$file)))." року. <a href='$WorkerFilesDir/$file' target=_blank>Переглянути результат</a><br>";}?></p>
   			  <p>Зверніть увагу, в результатах пошуку можуть бути інші особи з ідентичними ПІБ (однофамільці).</p>
                       </div>
                   </div>
@@ -174,14 +167,14 @@
                       <div class="info">
                           <h5>Результат пошуку в реєстрі юридичних осіб та підприємців</h5>
 			  <p>За запитом "{{$worker->fio}}" в Єдиному державному реєстрі юридичних осіб, фізичних осіб-підприємців та громадських формувань знайдено:</p>
-                          <p>@each('site.parts.note', $worker->business, 'note')</p>
+
   			  <p>Зверніть увагу, в результатах пошуку можуть бути інші особи з ідентичними ПІБ (однофамільці).</p>
                       </div>
                   </div>
               @endif
 -->
 
-              @if(count($WorkerBusiness) > 0)
+              @if(count($WorkerFiles['WorkerBusiness']) > 0)
                   <div class="info-block">
                       <div class="icon">
                           <i class="sprite tile business"></i>
@@ -189,7 +182,7 @@
                       <div class="info">
                           <h5>Результат пошуку в реєстрі юридичних осіб та підприємців</h5>
 			  <p>За запитом "{{$worker->fio}}" в Єдиному державному реєстрі юридичних осіб, фізичних осіб-підприємців та громадських формувань знайдено:</p>
-			  <p><? foreach ($WorkerBusiness as $file) {echo "- станом на ".date("d.m.Y", strtotime(preg_replace('~[^0-9-]+~','',$file)))." року. <a href='/data/$Base32fio/$file' target=_blank>Переглянути</a><br>";}?></p>
+			  <p><? foreach ($WorkerFiles['WorkerBusiness'] as $file) {echo "- станом на ".date("d.m.Y", strtotime(preg_replace('~[^0-9-]+~','',$file)))." року. <a href='$WorkerFilesDir/$file' target=_blank>Переглянути</a><br>";}?></p>
   			  <p>Зверніть увагу, в результатах пошуку можуть бути інші особи з ідентичними ПІБ (однофамільці).</p>
                       </div>
                   </div>
@@ -210,10 +203,10 @@
 			  Для цієї особи можна спробувати отримати інформацію про
 			  @if(count($worker->publications) == 0)публікації в ЗМІ,@endif
 			  @if(count($worker->finance) == 0)доходи,@endif
-			  @if(count($worker->realty) == 0 && count($WorkerRealty) == 0)нерухомість,@endif
-			  @if(count($worker->cars) == 0 && count($WorkerCars) == 0)автотранспортні засоби,@endif
+			  @if(count($worker->realty) == 0 && count($WorkerFiles['WorkerRealty']) == 0)нерухомість,@endif
+			  @if(count($worker->cars) == 0 && count($WorkerFiles['WorkerCars']) == 0)автотранспортні засоби,@endif
 			  @if(count($worker->law) == 0)відомості про участь у судових справах,@endif
-			  @if(count($worker->business) == 0 && count($WorkerBusiness) == 0)інформацію про участь у діяльності підприємств або здійснення підприємницької діяльності,@endif
+			  @if(count($worker->business) == 0 && count($WorkerFiles['WorkerBusiness']) == 0)інформацію про участь у діяльності підприємств або здійснення підприємницької діяльності,@endif
 			  тощо.
 			  Як це можна зробити, <a href=/help>читайте тут</a>
                       </div>
@@ -255,8 +248,9 @@
 				<div id="hypercomments_widget"></div>
 				<script type="text/javascript">
 				_hcwp = window._hcwp || [];
-				_hcwp.push({widget:"Stream", widget_id: 79747, css:"/css/comments.css", xid: "<?// задаем одинаковые id для страниц с одним сотрудником, который работает в одной организации на разных должностях или в разных отделах
-											if(!empty($worker->organization->parent_id)) echo base64_encode($worker->organization->parent->edrpou.' '.$worker->fio); else echo base64_encode($worker->organization->edrpou.' '.$worker->fio); 
+
+				_hcwp.push({widget:"Stream", widget_id: 79747, eager_load:true, title:'<?=$worker->fio.'. '.$worker->organization->fullName?>', css:"/css/comments.css",  texts : {'worker_id'  : '<? echo $worker->id;?>'}, xid: "<?// задаем одинаковые id для страниц с одним сотрудником, который работает в одной организации на разных должностях или в разных отделах
+											if(!empty($worker->organization->parent_id)) echo base32encode($worker->organization->parent->edrpou.' '.$worker->fio); else echo base32encode($worker->organization->edrpou.' '.$worker->fio); 
 											?>"});
 				(function() {
 				if("HC_LOAD_INIT" in window)return;

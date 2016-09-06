@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('head')
-  <title>Громадський рух "СтопХаб" - Дізнайся все про чиновника! Майно, доходи, бізнес посадовців. Відгуки про чиновників.</title>
+  <title>Зворотній зв'язок. Громадський рух "СтопХаб"</title>
 @endsection
 
 @section('content')
@@ -16,9 +16,11 @@
     <div class="row">
       <div class="col-md-9 content-block">
         <div class="info-block">
+<!--
           <div class="icon">
             {{--<i class="sprite tile search"></i>--}}
           </div>
+-->
           <div class="info">
             <h1>Повідомлення для СтопХаб</h1>
 
@@ -28,14 +30,19 @@
               <div class="alert-success">
                 Ваше повідомлення надіслано
               </div>
-            @endif
+            @else
 
             <form action="{{route('save_feedback')}}" enctype="multipart/form-data" method="post">
               <input type="hidden" name="worker" value="{{$workerId}}">
               {{csrf_field()}}
 
               <div class="form-group">
-                <label for="input-text1">Текст повідомлення</label>
+                <label for="input-text1">Email адреса (обов'язково)</label>
+                <input type=text name="email" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label for="input-text1">Текст повідомлення (обов'язково)</label>
                 <textarea name="text" id="input-text1" class="form-control"></textarea>
               </div>
               <div class="form-group">
@@ -44,6 +51,7 @@
               </div>
               <button type="submit" class="btn btn-success">Надіслати</button>
             </form>
+	@endif
           </div>
         </div>
       </div>

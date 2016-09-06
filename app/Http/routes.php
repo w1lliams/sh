@@ -88,6 +88,8 @@ Route::group(['middleware' => ['web'], 'namespace' => 'Site'], function () {
   Route::get('organization/{organization}', 'OrganizationController@organizationPage')->name('organization');
   Route::get('organization', 'OrganizationController@organizationsPage')->name('organizations');
 
+  Route::post('/hypercomments', 'WorkerController@getcounthypercomments');	// добавлено Брелем как Notify URL для Hypercomments для уведомления о событиях с добавлением/удалением отзыва
+
   Route::group(['prefix' => 'api'], function () {
     Route::post('search', 'SearchController@searchApi');
   });

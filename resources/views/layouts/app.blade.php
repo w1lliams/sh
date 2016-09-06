@@ -17,7 +17,7 @@
     <div class="logo-icon"><a href=/><i class="sprite logo"></i></a></div>
     <div class="info">
       <div class="title">СтопХаб</div>
-      <p>ГО "Громадський рух СтопХаб"</p>
+      <p class="hidden-xs">ГО "Громадський рух СтопХаб"</p>
     </div>
     <div class="social-links">
       <a href="http://www.facebook.com/stophab" target=_blank><i class="sprite facebook"></i></a>
