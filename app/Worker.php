@@ -45,7 +45,8 @@ class Worker extends Model
         ],
         'search_ngram' => [
           'type' => 'custom',
-          'tokenizer' => 'lowercase',
+          'tokenizer' => 'standard',
+          'filter' => ['lowercase']
         ]
       ]
     ]
