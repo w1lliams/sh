@@ -16,7 +16,8 @@ class Search
       'match' => [
         'search' => [
           'query' => $query,
-          'operator' => 'and'
+          'operator' => 'and',
+          'fuzziness' => 'AUTO',
         ]
       ]
     ], null, null, $limit);
@@ -35,7 +36,8 @@ class Search
       'match' => [
         'search' => [
           'query' => $query,
-          'operator' => 'and'
+          'operator' => 'and',
+          'fuzziness' => 'AUTO',
         ]
       ]
     ], null, null, $limit)->load('organization');
