@@ -22,7 +22,7 @@ class Worker extends Model
       'filter' => [
         'ngram_filter' => [
           'type' => 'edgeNGram',
-          'min_gram' => 2,
+          'min_gram' => 1,
           'max_gram' => 30,
         ]
       ],
@@ -30,7 +30,7 @@ class Worker extends Model
       'tokenizer' => [
         'ngram_tokenizer' => [
           'type' => 'edgeNGram',
-          'min_gram' => 2,
+          'min_gram' => 1,
           'max_gram' => 30,
           'token_chars' => ['letter', 'digit']
         ]
