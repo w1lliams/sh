@@ -60,7 +60,7 @@ export class SearchWidget extends Widget {
 
     // предприятия
     if(organizations.length > 0) {
-      html += '<div class="category text-muted"><div class="head">Підприємства:</div>';
+      html += '<div class="category text-muted"><div class="head">Організації та підприємства:</div>';
       html += _.map(organizations, organization => {
         return `<a href="/organization/${organization.id}">
         <span class="title">${this.highlight(organization.fullName)}</span>

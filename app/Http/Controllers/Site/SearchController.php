@@ -27,4 +27,5 @@ class SearchController extends Controller
       'workers'       => $resultworkers
     ]);
   }
+
 }

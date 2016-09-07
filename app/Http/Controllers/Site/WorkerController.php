@@ -48,7 +48,7 @@ class WorkerController extends Controller
 	    curl_close($curl);
 	  }
 
-	// file_put_contents("/var/www/sh/storage/logs/laravel.log",$out['result'],FILE_APPEND); if  ($out['result']=="error") file_put_contents("/var/www/sh/storage/logs/laravel.log",$out['description'],FILE_APPEND);
+//	file_put_contents("/var/www/sh/storage/logs/laravel.log",$out['result'],FILE_APPEND); if  ($out['result']=="error") file_put_contents("/var/www/sh/storage/logs/laravel.log",$out['description'],FILE_APPEND);
 
 	if ($out&&$out['result'] == 'success') {
 		$additional_count=$out['data'][0]['cm'];

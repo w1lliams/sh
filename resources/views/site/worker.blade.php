@@ -40,7 +40,7 @@
             </div>
 
             <div class="organization  text-muted">
-              {{$worker->organization->fullName}}, <a href="{{route('organization', $worker->organization->id)}}">всі працівники</a>
+              {{$worker->organization->fullName}}, <a href="{{route('organization', $worker->organization->id)}}">всі&nbsp;працівники</a>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
                <i class="sprite tile otherpositions"></i>
            </div>
            <div class="info">
-               <h5>Можливі інші або попередні місця роботи, однофамільці</h5>
+               <h5>Однофамільці чи можливі інші або попередні місця роботи</h5>
 		Зверніть увагу, інформація в цьому пункті знайдена автоматично за ПІБ серед всіх працівників наявних організацій, а тому в переліку можуть бути інші особи з ідентичними ПІБ (однофамільці).
            </div>
         </div>
@@ -66,7 +66,7 @@
                       <div class="info">
                           <h5>Публікації в ЗМІ</h5>
                           <p>@each('site.parts.note', $worker->publications, 'note')</p>
-			  <p>Якщо Вам відомі інші факти в ЗМІ про особу, Ви можете <a href="{{route('feedback', ['w' => $worker->id])}}">додати посилання</a>.<br>
+			  <p>Якщо Вам відомі інші факти в ЗМІ про особу, Ви можете <a href="{{route('feedback', ['w' => $worker->id])}}">додати посилання</a>.
 			  Приймаються як посилання на сайти ЗМІ, так і повідомлення або відгуки на форумах 
 			  від коритувачів із репутацією, особистих сайтах, блогах, сторінках соцмереж публічних
 			  осіб або громадських активістів</p>
@@ -200,8 +200,10 @@
                       </div>
                       <div class="info">
                           <h5>Пошук додаткової інформації про особу</h5>
-			  Для цієї особи можна спробувати отримати інформацію про
-			  @if(count($worker->publications) == 0)публікації в ЗМІ,@endif
+	                  @if(count($worker->publications) == 0)Якщо Вам відомі будь-які факти про цю особу, Ви можете <a href="{{route('feedback', ['w' => $worker->id])}}">додати посилання</a> на відповідний сайт. 
+			  Приймаються як посилання на сайти ЗМІ, так і повідомлення або відгуки на форумах від коритувачів із репутацією, особистих сайтах, блогах, сторінках соцмереж публічних осіб або громадських активістів.<br>
+  	                  @endif
+			  Для цієї особи також можна спробувати отримати інформацію про
 			  @if(count($worker->finance) == 0)доходи,@endif
 			  @if(count($worker->realty) == 0 && count($WorkerFiles['WorkerRealty']) == 0)нерухомість,@endif
 			  @if(count($worker->cars) == 0 && count($WorkerFiles['WorkerCars']) == 0)автотранспортні засоби,@endif
@@ -249,7 +251,7 @@
 				<script type="text/javascript">
 				_hcwp = window._hcwp || [];
 
-				_hcwp.push({widget:"Stream", widget_id: 79747, eager_load:true, title:'<?=$worker->fio.'. '.$worker->organization->fullName?>', css:"/css/comments.css",  texts : {'worker_id'  : '<? echo $worker->id;?>'}, xid: "<?// задаем одинаковые id для страниц с одним сотрудником, который работает в одной организации на разных должностях или в разных отделах
+				_hcwp.push({widget:"Stream", widget_id: 79747, eager_load:true, title:'<?=$worker->fio.'. '.$worker->organization->fullName?>', css:"/css/comments.css", xid: "<?// задаем одинаковые id для страниц с одним сотрудником, который работает в одной организации на разных должностях или в разных отделах
 											if(!empty($worker->organization->parent_id)) echo base32encode($worker->organization->parent->edrpou.' '.$worker->fio); else echo base32encode($worker->organization->edrpou.' '.$worker->fio); 
 											?>"});
 				(function() {

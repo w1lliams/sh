@@ -94,6 +94,26 @@
             </div>
           </div>
         @endif
+
+
+                @if(count($organization->organizations) > 0)
+	        <div class="info-block">
+	          <div class="icon">
+	            <i class="sprite tile organization"></i>
+	          </div>
+	          <div class="info">
+	            <h3 class="mb-0">Відокремлені підрозділи та структурні одиниці</h3>
+                    @foreach($organization->organizations as $department)
+<div class="listofanotherdepartments">
+	 	    <a  href="{{url("organization/{$department->id}")}}">{{$department->fullName}}</a>
+	            <div class="small address text-muted">{{$department->address}}</div>
+</div>
+                    @endforeach
+        	  </div>
+	        </div>
+                @endif
+
+
       </div>
 
       @include('site.parts.donate')
