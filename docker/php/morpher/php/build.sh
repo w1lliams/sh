@@ -7,7 +7,7 @@ cd ../../php
 set -e
 
 phpize
-./configure --enable-hello CXXFLAGS="-O2" CFLAGS="-O2" LDFLAGS="-static"
+./configure --enable-hello CXXFLAGS="-O2 -std=c++11" CFLAGS="-O2" LDFLAGS="-static"
 make clean
 make
 cd modules

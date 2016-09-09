@@ -12,6 +12,7 @@
 
 #include "../gc.h"
 #include "../Tokenizer.h"
+#include "exceptionDict.h"
 
 using namespace std;
 
@@ -726,7 +727,7 @@ public:
         return s;
 	}
 
-	const tstring PaucalForm () const
+	tstring PaucalForm () const
 	{
         tstring s;
 
@@ -756,7 +757,11 @@ typedef const std::tstring (Phrase::*PhraseMemFun) () const;
 // набор падежных окончаний (парадигма склонения)
 class Endings 
 {
+protected:
+	~Endings() {}
+
 public:
+
 	virtual tstring operator [] (Padeg c) const = 0;
 
 	// винительный одушевленного слова равен родительному
@@ -772,10 +777,15 @@ class GramInfo;
 
 class Info
 {
+protected:
+	~Info()
+	{
+	}
+
+public:
     /// <summary>
     /// Возвращает NULL, если лемма этой статьи является словом в косвенном падеже.
     /// </summary>
-public:
 	virtual const GramInfo * Nominative () const = 0; // C#: Именительный
 };
 
@@ -1059,7 +1069,7 @@ public:
 
 		for (size_t i=0; i < count; ++i)
 		{
-			unsigned char b;
+			unsigned char b = 0;
 
 			const tstring & lemma = lemmaReader.GetNext (&b);
 
@@ -1070,7 +1080,7 @@ public:
 	class CompareByLemmas
 	{
 	public:
-		bool operator () (const Entry & e1, const Entry & e2)
+		bool operator () (const Entry & e1, const Entry & e2) const
 		{
 			return e1.Lemma.compare (e2.Lemma) < 0;
 		}
@@ -1304,7 +1314,7 @@ public:
 
 		for (size_t i=0; i < entryCount; ++i) // цикл по статьям
 		{
-			unsigned char c;
+			unsigned char c = 0;
 
 			const tstring & lemma = lemmaReader.GetNext (&c);
 
@@ -1327,7 +1337,7 @@ public:
 
         for (size_t i=0; i < count; ++i)
         {
-            unsigned char b;
+            unsigned char b = 0;
 
             const tstring & lemma = lemmaReader2.GetNext (&b);
 
@@ -1544,6 +1554,8 @@ private:
 class IMorpher 
 {
 public:
+	virtual ~IMorpher() {}
+
 	virtual Phrase * Analyse (const tstring & s, Attributes attributes) const = 0;
 };
 
@@ -3783,7 +3795,25 @@ public:
 
 	// Вызывающий должен сделать delete возвращенному значению,
 	// а также свойству Phrase.Plural, если оно не NULL.
-	Phrase * Analyse (const tstring & s, Attributes attributes) const
+	virtual Phrase * Analyse (const tstring & s, Attributes attributes) const
+	{
+		Phrase * phrasePtr = AnalyseInternal (s, attributes);
+
+		Exception searchException = {{s.c_str()}};
+
+		Exception * exceptionDictEnd = exceptionDict + exceptionDict_size;
+
+		Exception * it = std::lower_bound (exceptionDict, exceptionDictEnd, searchException, 
+			[] (const Exception & e1, const Exception & e2) {return tstrcmp (e1.singular.nominative, e2.singular.nominative) < 0; });
+
+		if (it != exceptionDictEnd)
+		{
+		}
+
+		return phrasePtr;
+	}
+
+	Phrase * AnalyseInternal (const tstring & s, Attributes attributes) const
 	{
 		if (s == _T("Проектная документация без сметы и результаты инженерных изысканий"))
 		{

@@ -57,9 +57,9 @@ int main ()
 		puts ("parse() should return NULL for non-Russian input.");
 	}
 
-	puts ("Press any key to exit ... ");
+//	puts ("Press any key to exit ... ");
 
-	getchar ();
+//	getchar ();
 
 	return 0;
 }

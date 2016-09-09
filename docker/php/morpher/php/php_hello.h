@@ -5,6 +5,9 @@
 
 PHP_FUNCTION(morpher_inflect);
 PHP_FUNCTION(morpher_get_gender);
+PHP_FUNCTION(morpher_spell);
+PHP_FUNCTION(morpher_ukr_inflect);
+PHP_FUNCTION(morpher_ukr_get_gender);
 
 extern zend_module_entry hello_module_entry;
 #define phpext_hello_ptr &hello_module_entry
