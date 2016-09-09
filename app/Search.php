@@ -17,7 +17,6 @@ class Search
         'search' => [
           'query' => $query,
           'operator' => 'and',
-          'fuzziness' => 'AUTO',
         ]
       ]
     ], null, null, $limit);
@@ -37,7 +36,6 @@ class Search
         'search' => [
           'query' => $query,
           'operator' => 'and',
-          'fuzziness' => 'AUTO',
         ]
       ]
     ], null, null, $limit)->load('organization');

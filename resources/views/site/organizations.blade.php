@@ -30,10 +30,12 @@
                   <div class="icon"></div>
                   <div class="info">
                       <h5 class="mb-0"><a href="{{route('organization', $organization->id)}}">{{$organization->fullName}}</a></h5>
-                      <p>
-                          Всього працівників: {{$organization->snapshot->count}} (Станом на: {{$organization->snapshot->date->format('d.m.Y')}})
-                          <br><a href="{{route('organization', $organization->id)}}">Показати працівників</a>
-                      </p>
+                      @if(isset($organization->snapshot))
+                          <p>
+                              Всього працівників: {{$organization->snapshot->count}} (Станом на: {{$organization->snapshot->date->format('d.m.Y')}})
+                              <br><a href="{{route('organization', $organization->id)}}">Показати працівників</a>
+                          </p>
+                      @endif
                   </div>
               </div>
         @endforeach
