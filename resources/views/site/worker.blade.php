@@ -47,15 +47,22 @@
         </div>
 
 
-        <div class="info-block">
-           <div class="icon">
-               <i class="sprite tile otherpositions"></i>
-           </div>
-           <div class="info">
-               <h5>Однофамільці чи можливі інші або попередні місця роботи</h5>
-		Зверніть увагу, інформація в цьому пункті знайдена автоматично за ПІБ серед всіх працівників наявних організацій, а тому в переліку можуть бути інші особи з ідентичними ПІБ (однофамільці).
-           </div>
-        </div>
+        @if(count($sameWorkers) > 0)
+            <div class="info-block">
+               <div class="icon">
+                   <i class="sprite tile otherpositions"></i>
+               </div>
+               <div class="info">
+                   <h5>Однофамільці чи можливі інші або попередні місця роботи</h5>
+                    Зверніть увагу, інформація в цьому пункті знайдена автоматично за ПІБ серед всіх працівників наявних організацій, а тому в переліку можуть бути інші особи з ідентичними ПІБ (однофамільці).
+                   <div class="same-workers">
+                       @foreach($sameWorkers as $w)
+                           <div><a href="{{route('worker', $w->id)}}">{{$w->fio}} <span class="text-muted">{{$w->organization->fullName}}</span></a></div>
+                       @endforeach
+                   </div>
+               </div>
+            </div>
+        @endif
 
 
         @if($worker->notes_count > 0)

@@ -16,28 +16,32 @@ class WorkerController extends Controller
     public function workerPage(Worker $worker)
     {
         $this->getCounters();
-        return view('site.worker', [
-          'worker' => $worker
-        ]);
+        $sameWorkers = Worker::where('fio', $worker->fio)
+          ->where('id', '<>', $worker->id)
+          ->with('organization')
+          ->get();
+
+
+        return view('site.worker', compact('worker', 'sameWorkers'));
     }
 
 
   /**
-   * При получении уведомления от нотификатор Гиперкоммента, - обращаемся к ним по API и получаем количество отзывов для сотрудника и плюсуем его в базе к notes_count
+   * пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅ API пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅ notes_count
    * @param Request $request
    */
     public function getcounthypercomments(Request $request)
     {
 
-	 // засовываем всё что пришло от сервера-нотификатора HyperComments в массив
+	 // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ HyperComments пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	 $hcData=json_decode($request['data'],true);
 
 	 $hcSecretkey = 'df28fhdjDJn3ujy7bsdhga73g63k6egx';
-	 if($request['signature']<>md5($hcSecretkey.$request['data'].$request['time'])) exit('Error: invalid data'); // проверяем, по ключу а запрос ли это от hypercomment-ов 
+	 if($request['signature']<>md5($hcSecretkey.$request['data'].$request['time'])) exit('Error: invalid data'); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ hypercomment-пїЅпїЅ 
 
 	 $worker_id = basename($hcData[0]['link']);
 
-	 // обращаемся по API и получаем количество РОДИТЕЛЬСКИХ отзывов (cm2) для этой страницы. Ответы на отзывы (cm2) не учитываем, т.к. работает достаточно глючно
+	 // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ API пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (cm2) пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (cm2) пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ.пїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	 if( $curl = curl_init() ) {
 	    curl_setopt($curl, CURLOPT_URL, 'http://c1api.hypercomments.com/1.0/streams/get');
 	    curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
