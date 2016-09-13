@@ -44,6 +44,7 @@
       </div>
 
       @include('site.parts.donate')
+      @include('site.parts.vkandfb')
     </div>
   </div>
 </div>

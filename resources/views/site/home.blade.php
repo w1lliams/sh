@@ -60,7 +60,6 @@
 
       </div>
 
-
       @include('site.parts.donate')
     </div>
   </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('head')
-    <title>{{$worker->fio}} - відгуки, оцінка роботи, компромат. {{$worker->organization->fullName}}</title>
+    <title>{{$worker->fio}} - відгуки, оцінка роботи. {{$worker->organization->fullName}}@if(!empty($worker->organization->city->name)) (м. {{$worker->organization->city->name}})@endif</title>
 @endsection
 
 @section('content')
@@ -13,6 +13,7 @@
   </div>
 
 <?
+//
 	// Смотрим, есть ли для этого работника файлы недвижимости, авто или предпринимательства. Они будут браться не из базы, а напрямую из папок
 	$WorkerFilesDir = '/data/'.base32encode($worker->fio);
 	$worker->notes_count +=get_additional_notes_count($worker->fio);
@@ -40,7 +41,7 @@
             </div>
 
             <div class="organization  text-muted">
-              {{$worker->organization->fullName}}, <a href="{{route('organization', $worker->organization->id)}}">всі&nbsp;працівники</a>
+              {{$worker->organization->fullName}}@if(!empty($worker->organization->city->name)) (м. {{$worker->organization->city->name}})@endif, <a href="{{route('organization', $worker->organization->id)}}">всі&nbsp;працівники</a>
             </div>
           </div>
         </div>
@@ -80,7 +81,7 @@
                           <i class="sprite tile money"></i>
                       </div>
                       <div class="info">
-                          <h5>Доходи</h5>
+                          <h5>Доходи <?=morpher_ukr_inflect($worker->fio, 'rod')?></h5>
                           @each('site.parts.note', $worker->finance, 'note')
                       </div>
                   </div>
@@ -199,7 +200,7 @@
                           <i class="sprite tile search"></i>
                       </div>
                       <div class="info">
-                          <h5>Пошук додаткової інформації про особу</h5>
+                          <h5>Пошук додаткової інформації про <?=morpher_ukr_inflect($worker->fio, 'zna')?></h5>
 	                  @if(count($worker->publications) == 0)Якщо Вам відомі будь-які факти про цю особу, Ви можете <a href="{{route('feedback', ['w' => $worker->id])}}">додати посилання</a> на відповідний сайт. 
 			  Приймаються як посилання на сайти ЗМІ, так і повідомлення або відгуки на форумах від коритувачів із репутацією, особистих сайтах, блогах, сторінках соцмереж публічних осіб або громадських активістів.<br>
   	                  @endif
@@ -244,7 +245,7 @@
                       </div>
                       <div class="info">
                           <h5>Відгуки, подяки, скарги</h5>
-			  Відгуки можна залишати анонімно та без реєстрації. Для абсолютної анонімності встановіть та використовуйте <a href=https://www.torproject.org/projects/torbrowser.html.en target=_blank>браузер Tor</a>. Будьте ввічливими, відверто агресивні повідомлення та такі, що суперечать чинному законодавству можуть бути видалені.
+			  Відгуки про <?=morpher_ukr_inflect($worker->fio, 'zna')?> можна залишати анонімно та без реєстрації. Для абсолютної анонімності встановіть та використовуйте <a href=https://www.torproject.org/projects/torbrowser.html.en target=_blank>браузер Tor</a>. Будьте ввічливими, відверто агресивні повідомлення та такі, що суперечать чинному законодавству можуть бути видалені.
 
 
 				<div id="hypercomments_widget"></div>
@@ -271,6 +272,8 @@
       </div>
 
       @include('site.parts.donate')
+      @include('site.parts.vkandfb')
+
     </div>
   </div>
 </div>
