@@ -1,4 +1,4 @@
-<div class="col-md-3 g-donate-block">
+<div class="col-md-12 g-donate-block">
   <div class="author">
     <div class="image">
       <i class="sprite brel"></i>

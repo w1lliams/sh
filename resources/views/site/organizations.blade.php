@@ -43,8 +43,11 @@
       {!! $organizations->render() !!}
       </div>
 
+     <div class="col-md-3">
       @include('site.parts.donate')
       @include('site.parts.vkandfb')
+     </div>
+
     </div>
   </div>
 </div>

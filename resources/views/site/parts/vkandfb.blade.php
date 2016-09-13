@@ -1,4 +1,4 @@
-﻿<div class="col-md-3 pull-right" style="margin-top:30px; padding-left:0px; padding-right:0px;" id="totalwidth">
+﻿<div class="col-md-12" style="margin-top:30px; padding-left:0px; padding-right:0px;" id="totalwidth">
 
 		<script type="text/javascript" src="//vk.com/js/api/openapi.js?127"></script>
 		<div id="vk_groups"></div>
@@ -6,7 +6,7 @@
 		VK.Widgets.Group("vk_groups", {mode: 3, width: (document.getElementById('totalwidth').offsetWidth), color1: 'FFFFFF', color2: '000000', color3: '5E81A8'}, 94720527);
 		</script>                                                                                                    
 </div>
-<div class="col-md-3 pull-right" style="margin-top:15px;" >
+<div class="col-md-12" style="margin-top:15px;" >
 		<!-- Facebook like -->
 		<div id="fb-root"></div>
 		<script>(function(d, s, id) {
